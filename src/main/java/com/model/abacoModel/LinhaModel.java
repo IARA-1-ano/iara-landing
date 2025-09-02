@@ -1,4 +1,11 @@
 package com.model.abacoModel;
 
-public class LinhaModel {
+import com.model.AbstractModel;
+
+public class LinhaModel extends AbstractModel {
+//    construtor
+    public LinhaModel(int id, String nome){
+        super(id, nome);
+    }
+
 }
