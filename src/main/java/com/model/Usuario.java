@@ -5,6 +5,7 @@ import java.time.LocalDate;
 // tabela: usuario
 public class Usuario {
   // Atributos
+  private int id;
   private String nome;
   private String email;
   private String senha;
@@ -14,9 +15,10 @@ public class Usuario {
   private int fkFabrica;
 
   // Construtores
-  public Usuario(String nome, String email, String senha, NivelAcesso nivelAcesso, LocalDate dtCriacao,
+  public Usuario(int id, String nome, String email, String senha, NivelAcesso nivelAcesso, LocalDate dtCriacao,
       boolean status, int fkFabrica) {
 
+    this.id = id;
     this.nome = nome;
     this.email = email;
     this.senha = senha;
@@ -31,6 +33,10 @@ public class Usuario {
   }
 
   // Getters
+  public int getId() {
+    return id;
+  }
+
   public String getNome() {
     return nome;
   }
@@ -60,6 +66,10 @@ public class Usuario {
   }
 
   // Setters
+  public void setId(int id) {
+    this.id = id;
+  }
+
   public void setNome(String nome) {
     this.nome = nome;
   }
