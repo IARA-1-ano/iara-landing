@@ -1,8 +1,10 @@
 package com.model;
 
 // tabela: fabrica
-public class Fabrica extends AbstractModel {
+public class Fabrica {
   // Atributos
+  private int id;
+  private String nome;
   private String cnpj; // coluna: cnpj_unidade
   private boolean status; // coluna: status
   private String email; // coluna: email_corporativo
@@ -12,7 +14,8 @@ public class Fabrica extends AbstractModel {
   // Construtores
   public Fabrica(int id, String nome, String cnpj, boolean status, String email, String nomeEmpresa,
       String ramo) {
-    super(id, nome);
+    this.id = id;
+    this.nome = nome;
     this.cnpj = cnpj;
     this.status = status;
     this.email = email;
@@ -24,28 +27,44 @@ public class Fabrica extends AbstractModel {
     super();
   }
 
-  // Getters  
+  // Getters
+  public int getId() {
+    return id;
+  }
+
+  public String getNome() {
+    return nome;
+  }
+
   public String getCnpj() {
     return cnpj;
   }
-  
+
   public boolean getStatus() {
     return status;
   }
-  
+
   public String getEmail() {
     return email;
   }
-  
+
   public String getNomeEmpresa() {
     return nomeEmpresa;
   }
-  
+
   public String getRamo() {
     return ramo;
   }
 
   // Setters
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
+
   public void setCnpj(String cnpj) {
     this.cnpj = cnpj;
   }
