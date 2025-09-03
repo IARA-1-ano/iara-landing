@@ -1,5 +1,6 @@
 package com.model;
 
+// Enum para representar e tornar semântico os níveis de acesso do banco
 public enum NivelAcesso {
   USUARIO(0),
   ADMIN(1),
