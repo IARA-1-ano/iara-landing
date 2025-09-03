@@ -2,20 +2,19 @@ package com.model;
 
 import java.time.LocalDate;
 
-// TODO: incluir atributo para a coluna fk_fabrica: int
-
 // tabela: usuario
 public class Usuario extends AbstractModel {
   // Atributos
-  private String login; // coluna: login
-  private String senha; // coluna: senha
-  private NivelAcesso nivelAcesso; // coluna: nivel_acesso
-  private LocalDate dtCriacao; // coluna: data_criacao
-  private boolean status; // coluna: status
+  private String login;
+  private String senha;
+  private NivelAcesso nivelAcesso;
+  private LocalDate dtCriacao;
+  private boolean status;
+  private int fkFabrica;
 
   // Construtores
   public Usuario(int id, String nome, String login, String senha, NivelAcesso nivelAcesso, LocalDate dtCriacao,
-      boolean status) {
+      boolean status, int fkFabrica) {
     super(id, nome);
 
     this.nivelAcesso = nivelAcesso;
@@ -23,6 +22,7 @@ public class Usuario extends AbstractModel {
     this.login = login;
     this.senha = senha;
     this.status = status;
+    this.fkFabrica = fkFabrica;
   }
 
   public Usuario() {
@@ -50,6 +50,10 @@ public class Usuario extends AbstractModel {
     return status;
   }
 
+  public int getFkFabrica() {
+    return fkFabrica;
+  }
+
   // Setters
   public void setLogin(String login) {
     this.login = login;
@@ -69,5 +73,9 @@ public class Usuario extends AbstractModel {
 
   public void setStatus(boolean status) {
     this.status = status;
+  }
+
+  public void setFkFabrica(int fkFabrica) {
+    this.fkFabrica = fkFabrica;
   }
 }
