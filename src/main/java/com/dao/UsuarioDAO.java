@@ -21,7 +21,7 @@ public class UsuarioDAO extends DAO {
     super();
   }
 
-  public UsuarioDTO cadatstrar(CadastroUsuarioDTO credenciais) throws SQLException {
+  public UsuarioDTO cadastrar(CadastroUsuarioDTO credenciais) throws SQLException {
     // Armazena as informações do DTO em variáveis e declara as outras informações
     // fixas do cadastro
     String email = credenciais.getEmail();
