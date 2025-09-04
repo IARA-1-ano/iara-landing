@@ -41,6 +41,8 @@ public class UsuarioDAO extends DAO {
         """;
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+      // Completa os parâmetros faltantes
       pstmt.setString(1, nome);
       pstmt.setString(2, email);
       pstmt.setString(3, senha);
@@ -48,8 +50,11 @@ public class UsuarioDAO extends DAO {
       pstmt.setBoolean(5, status);
       pstmt.setInt(6, fkFabrica);
 
+      // Executa e commita o update
       pstmt.executeUpdate();
+      conn.commit();
 
+      // Recupera as chaves autogeradas
       try (ResultSet rs = pstmt.getGeneratedKeys()) {
         id = rs.getInt("id");
 
@@ -58,9 +63,15 @@ public class UsuarioDAO extends DAO {
         dtCriacao = temp != null ? temp.toLocalDate() : null;
       }
 
+      // Inicializa e retorna o DTO de retorno
       return new UsuarioDTO(id, nome, email, NivelAcesso.ADMIN, dtCriacao, status, fkFabrica);
 
     } catch (SQLException e) {
+
+      // Faz o rollback da operação
+      conn.rollback();
+
+      // Registra o erro no terminal e o propaga
       System.err.println(e.getMessage());
       throw e;
     }
@@ -75,11 +86,15 @@ public class UsuarioDAO extends DAO {
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-      // Completa o parâmetro faltante e executa o comando
+      // Completa o parâmetro faltante, executa o comando e commita
       pstmt.setInt(1, id);
       pstmt.executeUpdate();
+      conn.commit();
 
     } catch (SQLException e) {
+
+      // Faz o rollback da operação
+      conn.rollback();
 
       // Registra o erro no terminal e o propaga
       System.err.println(e.getMessage());
