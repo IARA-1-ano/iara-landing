@@ -1,10 +1,10 @@
 package com.model;
 
-// tabela: Fabrica
-public class Fabrica{
+// tabela: fabrica
+public class Fabrica {
   // Atributos
-  private int id; // coluna: id
-  private String nome; // coluna: nome
+  private int id;
+  private String nome;
   private String cnpj; // coluna: cnpj_unidade
   private boolean status; // coluna: status
   private String email; // coluna: email_corporativo
@@ -28,45 +28,44 @@ public class Fabrica{
   }
 
   // Getters
-  public int getId(){
-      return this.id;
+  public int getId() {
+    return id;
   }
 
-  public String getNome(){
-      return this.nome;
+  public String getNome() {
+    return nome;
   }
 
   public String getCnpj() {
     return cnpj;
   }
-  
+
   public boolean getStatus() {
     return status;
   }
-  
+
   public String getEmail() {
     return email;
   }
-  
+
   public String getNomeEmpresa() {
     return nomeEmpresa;
   }
-  
+
   public String getRamo() {
     return ramo;
   }
 
   // Setters
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setCnpj(String cnpj) {
+  public void setCnpj(String cnpj) {
     this.cnpj = cnpj;
   }
 

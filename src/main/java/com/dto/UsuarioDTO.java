@@ -1,35 +1,31 @@
-package com.model;
+package com.dto;
 
 import java.time.LocalDate;
 
+import com.model.NivelAcesso;
+
 // tabela: usuario
-public class Usuario {
+public class UsuarioDTO {
   // Atributos
   private int id;
   private String nome;
   private String email;
-  private String senha;
   private NivelAcesso nivelAcesso;
   private LocalDate dtCriacao;
   private boolean status;
   private int fkFabrica;
 
   // Construtores
-  public Usuario(int id, String nome, String email, String senha, NivelAcesso nivelAcesso, LocalDate dtCriacao,
+  public UsuarioDTO(int id, String nome, String email, NivelAcesso nivelAcesso, LocalDate dtCriacao,
       boolean status, int fkFabrica) {
 
     this.id = id;
     this.nome = nome;
     this.email = email;
-    this.senha = senha;
     this.nivelAcesso = nivelAcesso;
     this.dtCriacao = dtCriacao;
     this.status = status;
     this.fkFabrica = fkFabrica;
-  }
-
-  public Usuario() {
-    super();
   }
 
   // Getters
@@ -43,10 +39,6 @@ public class Usuario {
 
   public String getEmail() {
     return email;
-  }
-
-  public String getSenha() {
-    return senha;
   }
 
   public NivelAcesso getNivelAcesso() {
@@ -76,10 +68,6 @@ public class Usuario {
 
   public void setEmail(String email) {
     this.email = email;
-  }
-
-  public void setSenha(String password) {
-    this.senha = password;
   }
 
   public void setNivelAcesso(NivelAcesso accessLevel) {

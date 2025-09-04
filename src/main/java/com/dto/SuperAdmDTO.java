@@ -1,24 +1,18 @@
-package com.model;
+package com.dto;
 
-// tabela: super_adm
-public class SuperAdm {
-  // Atributos
+public class SuperAdmDTO {
   private int id;
   private String nome;
   private String cargo;
   private String email;
-  private String senha;
 
-  // Construtores
-  public SuperAdm(int id, String nome, String cargo, String email, String senha) {
+  public SuperAdmDTO(int id, String nome, String cargo, String email) {
     this.id = id;
     this.nome = nome;
     this.cargo = cargo;
     this.email = email;
-    this.senha = senha;
   }
 
-  // Getters
   public int getId() {
     return id;
   }
@@ -33,10 +27,6 @@ public class SuperAdm {
 
   public String getEmail() {
     return email;
-  }
-
-  public String getSenha() {
-    return senha;
   }
 
   // Setters
@@ -54,9 +44,5 @@ public class SuperAdm {
 
   public void setEmail(String email) {
     this.email = email;
-  }
-
-  public void setSenha(String senha) {
-    this.senha = senha;
   }
 }
