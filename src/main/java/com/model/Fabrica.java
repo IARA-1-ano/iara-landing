@@ -23,10 +23,6 @@ public class Fabrica {
     this.ramo = ramo;
   }
 
-  public Fabrica() {
-    super();
-  }
-
   // Getters
   public int getId() {
     return id;

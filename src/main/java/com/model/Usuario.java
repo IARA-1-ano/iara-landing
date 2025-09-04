@@ -28,10 +28,6 @@ public class Usuario {
     this.fkFabrica = fkFabrica;
   }
 
-  public Usuario() {
-    super();
-  }
-
   // Getters
   public int getId() {
     return id;
