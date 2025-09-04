@@ -5,16 +5,65 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
-import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.dto.CadastroUsuarioDTO;
 import com.dto.UsuarioDTO;
 import com.model.NivelAcesso;
+
+// TODO: alterar a assinatura de listarUsuarios() para listar() apenas
+// TODO: fazer o hash da senha com o método do Chris antes de guardar no banco
 
 public class UsuarioDAO extends DAO {
   public UsuarioDAO() throws SQLException {
     super();
+  }
+
+  public UsuarioDTO cadatstrar(CadastroUsuarioDTO credenciais) throws SQLException {
+    // Armazena as informações do DTO em variáveis e declara as outras informações
+    // fixas do cadastro
+    String email = credenciais.getEmail();
+    String senha = credenciais.getSenha();
+    String nome = credenciais.getNome();
+    int fkFabrica = credenciais.getFkFabrica();
+    int nivelAcesso = NivelAcesso.ADMIN.nivel();
+    boolean status = true;
+    LocalDate dtCriacao;
+    int id;
+
+    // Prepara o comando
+    String sql = """
+        INSERT INTO usuario(nome, email, senha, nivel_acesso, status, fk_fabrica)
+        VALUES (?, ?, ?, ?, ?, ?)
+        RETURNING id, data_criacao
+        """;
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setString(1, nome);
+      pstmt.setString(2, email);
+      pstmt.setString(3, senha);
+      pstmt.setInt(4, nivelAcesso);
+      pstmt.setBoolean(5, status);
+      pstmt.setInt(6, fkFabrica);
+
+      pstmt.executeUpdate();
+
+      try (ResultSet rs = pstmt.getGeneratedKeys()) {
+        id = rs.getInt("id");
+
+        // Conversão da data
+        Date temp = rs.getDate("data_criacao");
+        dtCriacao = temp != null ? temp.toLocalDate() : null;
+      }
+
+      return new UsuarioDTO(id, nome, email, NivelAcesso.ADMIN, dtCriacao, status, fkFabrica);
+
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+      throw e;
+    }
   }
 
   public void remover(UsuarioDTO usuario) throws SQLException {
@@ -51,7 +100,7 @@ public class UsuarioDAO extends DAO {
         String nome = rs.getString("nome");
         String email = rs.getString("email");
         NivelAcesso nivelAcesso = NivelAcesso.fromInteger(rs.getInt("nivel_acesso"));
-        
+
         // Conversão da data
         Date temp = rs.getDate("data_criacao");
         LocalDate dtCriacao = (temp == null ? null : temp.toLocalDate());
