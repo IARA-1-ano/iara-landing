@@ -13,6 +13,7 @@ public class SuperAdmDTO {
     this.email = email;
   }
 
+  // Getters
   public int getId() {
     return id;
   }

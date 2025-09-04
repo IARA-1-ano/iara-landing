@@ -2,16 +2,14 @@ package com.model;
 
 // tabela: fabrica
 public class Fabrica {
-  // Atributos
   private int id;
   private String nome;
-  private String cnpj; // coluna: cnpj_unidade
-  private boolean status; // coluna: status
-  private String email; // coluna: email_corporativo
-  private String nomeEmpresa; // coluna: nome_industria
-  private String ramo; // coluna: ramo
+  private String cnpj;
+  private boolean status;
+  private String email;
+  private String nomeEmpresa;
+  private String ramo;
 
-  // Construtores
   public Fabrica(int id, String nome, String cnpj, boolean status, String email, String nomeEmpresa,
       String ramo) {
     this.id = id;

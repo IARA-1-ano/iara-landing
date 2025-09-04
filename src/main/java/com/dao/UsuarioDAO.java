@@ -13,8 +13,6 @@ import com.dto.CadastroUsuarioDTO;
 import com.dto.UsuarioDTO;
 import com.model.NivelAcesso;
 
-// TODO: fazer o hash da senha com o método do Chris antes de guardar no banco
-
 public class UsuarioDAO extends DAO {
   public UsuarioDAO() throws SQLException {
     super();

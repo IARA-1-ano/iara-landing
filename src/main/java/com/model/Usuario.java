@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 // tabela: usuario
 public class Usuario {
-  // Atributos
   private int id;
   private String nome;
   private String email;
@@ -14,7 +13,6 @@ public class Usuario {
   private boolean status;
   private int fkFabrica;
 
-  // Construtores
   public Usuario(int id, String nome, String email, String senha, NivelAcesso nivelAcesso, LocalDate dtCriacao,
       boolean status, int fkFabrica) {
 
