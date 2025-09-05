@@ -5,12 +5,12 @@ public class Fabrica {
   private int id;
   private String nome;
   private String cnpj;
-  private boolean status;
+  private Boolean status;
   private String email;
   private String nomeEmpresa;
   private String ramo;
 
-  public Fabrica(int id, String nome, String cnpj, boolean status, String email, String nomeEmpresa,
+  public Fabrica(int id, String nome, String cnpj, Boolean status, String email, String nomeEmpresa,
       String ramo) {
     this.id = id;
     this.nome = nome;
@@ -34,7 +34,7 @@ public class Fabrica {
     return cnpj;
   }
 
-  public boolean getStatus() {
+  public Boolean getStatus() {
     return status;
   }
 
@@ -63,7 +63,7 @@ public class Fabrica {
     this.cnpj = cnpj;
   }
 
-  public void setStatus(boolean status) {
+  public void setStatus(Boolean status) {
     this.status = status;
   }
 
