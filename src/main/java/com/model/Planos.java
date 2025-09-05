@@ -3,13 +3,13 @@ package com.model;
 //tabela: Planos
 public class Planos{
 //    Atributos
-    private int id;
+    private Integer id;
     private String nome;
-    private double valor;
+    private Double valor;
     private String descricao;
 
 //    Construtor
-    public Planos(int id, String nome, double valor, String descricao){
+    public Planos(Integer id, String nome, Double valor, String descricao){
         this.id = id;
         this.nome = nome;
         this.valor = valor;
@@ -23,7 +23,7 @@ public class Planos{
 
 //    Getters
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -31,7 +31,7 @@ public class Planos{
         return nome;
     }
 
-    public double getValor() {
+    public Double getValor() {
         return valor;
     }
 
@@ -49,7 +49,7 @@ public class Planos{
         this.nome = nome;
     }
 
-    public void setValor(double valor) {
+    public void setValor(Double valor) {
         this.valor = valor;
     }
 

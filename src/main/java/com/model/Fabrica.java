@@ -3,17 +3,17 @@ package com.model;
 // tabela: fabrica
 public class Fabrica {
   // Atributos
-  private int id;
-  private String nome;
+  private int id; // coluna: id
+  private String nome; // coluna: nome
   private String cnpj; // coluna: cnpj_unidade
   private boolean status; // coluna: status
   private String email; // coluna: email_corporativo
   private String nomeEmpresa; // coluna: nome_industria
   private String ramo; // coluna: ramo
-
+  private Endereco endereco;
   // Construtores
   public Fabrica(int id, String nome, String cnpj, boolean status, String email, String nomeEmpresa,
-      String ramo) {
+      String ramo, Endereco endereco) {
     this.id = id;
     this.nome = nome;
     this.cnpj = cnpj;
@@ -21,6 +21,7 @@ public class Fabrica {
     this.email = email;
     this.nomeEmpresa = nomeEmpresa;
     this.ramo = ramo;
+    this.endereco = endereco;
   }
 
   public Fabrica() {
@@ -56,6 +57,10 @@ public class Fabrica {
     return ramo;
   }
 
+  public Endereco getEndereco(){
+      return this.endereco;
+  }
+
   // Setters
   public void setId(int id) {
     this.id = id;
@@ -83,5 +88,9 @@ public class Fabrica {
 
   public void setRamo(String sector) {
     this.ramo = sector;
+  }
+
+  public void setEndereco(Endereco endereco){
+      this.endereco = endereco;
   }
 }
