@@ -9,6 +9,7 @@ public class AtualizarListarPlanosDTO extends Planos {
     }
 
     //Cancelando métodos com ID
+    @Override
     public Integer getId(){
         throw new UnsupportedOperationException();
     }

@@ -9,10 +9,12 @@ public class AtualizarListarEnderecoDTO extends Endereco {
     }
 
     //Cancelando métodos com ID
+    @Override
     public Integer getId(){
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void setId(Integer id){
         throw new UnsupportedOperationException();
     }

@@ -45,7 +45,7 @@ public class PlanosDAO extends DAO{
             //Salvando alterações no banco
             if (pstmt.executeUpdate()!=1){
                 throw new SQLException();
-            };
+            }
             //Confirmando transações
             this.conn.commit();
         } catch(SQLException e){
