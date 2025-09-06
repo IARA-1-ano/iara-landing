@@ -5,7 +5,7 @@
   <title>Landing Teste</title>
 </head>
 <body>
-  <h1>Landing page para Teste</h1>
-  <a href="${pageContext.request.contextPath}/area-restrita.jsp">Área restrita</a>
+  <h1>Área Restrita</h1>
+  <a href="${pageContext.request.contextPath}/">Página inicial</a>
 </body>
 </html>
