@@ -7,14 +7,26 @@ import java.util.Objects;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-// Classe concreta para abrir e fechar conexões com o bano através de JDBC
+// Classe concreta para abrir e fechar conexões com o bano por JDBC
 public class ConnectionFactory {
-    private static final Dotenv dotenv = Dotenv.load();
+    private static Dotenv dotenv;
 
-    public Connection getConnection() throws SQLException {
+    private Dotenv getDotenv() {
+        if (dotenv == null) {
+            dotenv = Dotenv.configure().load();
+        }
+
+        return dotenv;
+    }
+
+    public Connection getConnection() throws SQLException, ClassNotFoundException {
+        Dotenv env = getDotenv();
+
+        Class.forName("org.postgresql.Driver");
+
         return DriverManager.getConnection(
-                Objects.requireNonNull(dotenv.get("DB_URL")),
-                dotenv.get("DB_USER"), dotenv.get("DB_PASSWORD")
+                Objects.requireNonNull(env.get("DB_URL")),
+                env.get("DB_USER"), env.get("DB_PASSWORD")
         );
     }
 
