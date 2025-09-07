@@ -1,17 +1,21 @@
-<%@page contentType="text/html; charset=UTF-8" language="java"%>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Landing Teste</title>
 </head>
+
 <body>
   <h1>Landing page para Teste</h1>
-  <a href="${pageContext.request.contextPath}/">Página inicial</a>
+  <a href="index.html">Página inicial</a>
 
-  <form action="${pageContext.request.contextPath}/login-handler" method="post">
+  <form action="login-handler" method="post">
     <input type="text" name="email" placeholder="Insira seu email">
     <input type="password" name="senha" placeholder="Insira a sua senha">
     <button type="submit">Entrar</button>
   </form>
 </body>
+
 </html>

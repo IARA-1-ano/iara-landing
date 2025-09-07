@@ -14,8 +14,6 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static jakarta.servlet.http.HttpServletResponse.*;
-
 @WebServlet("/login-handler")
 public class LoginServlet extends HttpServlet {
   @Override
@@ -28,50 +26,42 @@ public class LoginServlet extends HttpServlet {
 
     // Dados da resposta
     SuperAdmDTO superAdm;
-    int status = SC_INTERNAL_SERVER_ERROR;
-    String destino = "/login.jsp";
+    String destino = "login.html";
+    StatusResposta status = StatusResposta.ERRO_INTERNO;
 
-    try {
-      LoginDAO dao = new LoginDAO();
-
+    try (LoginDAO dao = new LoginDAO()) {
       // Tenta fazer login e prepara os dados da resposta de acordo
       superAdm = dao.login(credenciais);
 
       if (superAdm != null) {
-        status = SC_OK;
+        // Guarda o usuário na sessão
         session.setAttribute("usuario", superAdm);
-        destino = "/area-restrita.jsp";
+        destino = "index.html";
+        status = StatusResposta.OK;
 
       } else {
-        status = SC_UNAUTHORIZED;
+        status = StatusResposta.ACESSO_NEGADO;
       }
-
-      dao.close();
-
     } catch (SQLException e) {
-      // Se houver alguma exceção, registra no terminal e retorna com status 500
+      // Se houver alguma exceção, registra no terminal
       System.err.println("Erro ao executar operação no banco:");
       e.printStackTrace(System.err);
-
-      status = SC_INTERNAL_SERVER_ERROR;
 
     } catch (ClassNotFoundException e) {
       System.err.println("Falha ao carregar o driver postgresql:");
       e.printStackTrace(System.err);
 
-      status = SC_INTERNAL_SERVER_ERROR;
-
     } catch (Throwable e) {
       System.err.println("Erro inesperado:");
       e.printStackTrace(System.err);
 
-      status = SC_INTERNAL_SERVER_ERROR;
-
     } finally {
+      // Adiciona o status como atributo da request
+      req.setAttribute("status", status.toString());
+
       // Redireciona a request par a página jsp
-      RequestDispatcher dp = req.getRequestDispatcher(req.getContextPath() + '/' + destino);
-      resp.setStatus(status);
-      dp.forward(req, resp);
+      RequestDispatcher rd = req.getRequestDispatcher(destino);
+      rd.forward(req, resp);
     }
   }
 }
