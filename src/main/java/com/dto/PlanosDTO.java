@@ -2,9 +2,9 @@ package com.dto;
 
 import com.model.Planos;
 
-public class AtualizarListarPlanosDTO extends Planos {
+public class PlanosDTO extends Planos {
     //Construtor
-    public AtualizarListarPlanosDTO(String nome, Double valor, String descricao){
+    public PlanosDTO(String nome, Double valor, String descricao){
         super(null, nome, valor, descricao);
     }
 

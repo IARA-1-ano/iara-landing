@@ -2,9 +2,9 @@ package com.dto;
 
 import com.model.Endereco;
 
-public class AtualizarListarEnderecoDTO extends Endereco {
+public class EnderecoDTO extends Endereco {
     //Construtor
-    public AtualizarListarEnderecoDTO(String cep, int numero, String rua, String complemento){
+    public EnderecoDTO(String cep, int numero, String rua, String complemento){
         super(null, cep, numero, rua, complemento);
     }
 
