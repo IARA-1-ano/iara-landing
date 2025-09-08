@@ -1,4 +1,4 @@
-package com.controller;
+package com.controller.superadm;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

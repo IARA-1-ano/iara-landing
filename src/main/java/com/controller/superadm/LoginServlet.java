@@ -1,4 +1,4 @@
-package com.controller;
+package com.controller.superadm;
 
 import com.dao.LoginDAO;
 import com.dto.LoginDTO;
