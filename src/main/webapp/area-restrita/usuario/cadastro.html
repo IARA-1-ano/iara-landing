@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Landing Teste</title>
+</head>
+<body>
+<h1>Cadastro - Administrador</h1>
+<form action="../create-read-usuario" method="post">
+  <input type="text" name="nome" placeholder="Nome">
+  <input type="email" name="email" placeholder="Email">
+  <input type="text" pattern=".{8,}" title="A senha deve ter 8 ou mais caractéres" name="senha" placeholder="Senha">
+  <!-- TODO: implementar uma forma de listagem para que o usuário apenas selecione a fábrica que quer e apenas o id é enviado -->
+  <input type="number" name="fk_fabrica" placeholder="Id Fábrica">
+  <button type="submit">Cadastrar</button>
+</form>
+</body>
+</html>
