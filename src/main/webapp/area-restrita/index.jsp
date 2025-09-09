@@ -11,6 +11,7 @@
   <a href="${pageContext.request.contextPath}/index.html">Página inicial</a>
   <a href="logout">Logout</a>
   <a href="create-read-usuario">Usuários</a>
+  <a href="create-read-superadm">Super Admins</a>
 </body>
 
 </html>
