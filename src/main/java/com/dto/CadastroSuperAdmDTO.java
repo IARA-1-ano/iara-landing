@@ -4,11 +4,13 @@ public class CadastroSuperAdmDTO {
   private String nome;
   private String cargo;
   private String email;
+  private String senha;
 
-  public CadastroSuperAdmDTO(String nome, String cargo, String email) {
+  public CadastroSuperAdmDTO(String nome, String cargo, String email, String senha) {
     this.nome = nome;
     this.cargo = cargo;
     this.email = email;
+    this.senha = senha;
   }
 
   // Getters
@@ -24,6 +26,10 @@ public class CadastroSuperAdmDTO {
     return email;
   }
 
+  public String getSenha() {
+    return senha;
+  }
+
   // Setters
   public void setNome(String nome) {
     this.nome = nome;
@@ -35,5 +41,9 @@ public class CadastroSuperAdmDTO {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public void setSenha(String senha) {
+    this.senha = senha;
   }
 }

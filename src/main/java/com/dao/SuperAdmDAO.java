@@ -3,29 +3,30 @@ package com.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.dto.CadastroSuperAdmDTO;
 import com.dto.SuperAdmDTO;
+import com.model.SuperAdm;
 
 public class SuperAdmDAO extends DAO {
   public SuperAdmDAO() throws SQLException, ClassNotFoundException {
     super();
   }
 
-  public SuperAdmDTO cadastrar(CadastroSuperAdmDTO credenciais) throws SQLException {
+  public void cadastrar(CadastroSuperAdmDTO credenciais) throws SQLException {
     // Armazena as informações do cadastro em variáveis
     String nome = credenciais.getNome();
     String email = credenciais.getEmail();
     String cargo = credenciais.getCargo();
-    int id;
+    String senha = credenciais.getSenha();
 
     // Prepara o comando
     String sql = """
-        INSERT INTO super_adm (nome, email, cargo)
-        VALUES (?, ?, ?)
-        RETURNING id
+        INSERT INTO super_adm (nome, email, cargo, senha)
+        VALUES (?, ?, ?, ?)
         """;
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -34,31 +35,18 @@ public class SuperAdmDAO extends DAO {
       pstmt.setString(1, nome);
       pstmt.setString(2, email);
       pstmt.setString(3, cargo);
+      pstmt.setString(4, senha);
 
       // Executa o update
       pstmt.executeUpdate();
 
-      // Recupera o id gerado
-      try (ResultSet rs = pstmt.getGeneratedKeys()) {
-        if (rs.next()) {
-          id = rs.getInt("id");
-        } else {
-          throw new SQLException("Falha ao recuperar campos autogerados");
-        }
-      }
-
       // Commita as alterações no banco
       conn.commit();
 
-      return new SuperAdmDTO(id, nome, cargo, email);
-
     } catch (SQLException e) {
 
-      // Faz o rollback das alterações
+      // Faz o rollback das alterações e propaga a exceção
       conn.rollback();
-
-      // Registra o erro no terminal e o propaga
-      System.err.println(e.getMessage());
       throw e;
     }
   }
@@ -81,19 +69,10 @@ public class SuperAdmDAO extends DAO {
             rs.getString("cargo"),
             rs.getString("email"));
       }
-
-    } catch (SQLException e) {
-
-      // Registra o erro no terminal e o propaga
-      System.err.println(e.getMessage());
-      throw e;
     }
   }
 
-  public void remover(SuperAdmDTO superAdm) throws SQLException {
-    // Recupera o id
-    int id = superAdm.getId();
-
+  public void remover(int id) throws SQLException {
     // Prepara o comando
     String sql = "DELETE FROM super_adm WHERE id = ?";
 
@@ -108,39 +87,42 @@ public class SuperAdmDAO extends DAO {
 
     } catch (SQLException e) {
 
-      // Faz o rollback das modificações
+      // Faz o rollback das modificações e propaga a exceção
       conn.rollback();
-
-      // Registra o erro no terminal e o propaga
-      System.err.println(e.getMessage());
       throw e;
     }
   }
 
-  public void atualizar(SuperAdmDTO alteracoes) throws SQLException {
-    // Armazena os atributos do DTO em variáveis por praticidade
-    int id = alteracoes.getId();
-    String nome = alteracoes.getNome();
-    String cargo = alteracoes.getCargo();
-    String email = alteracoes.getEmail();
+  public void atualizar(SuperAdm original, SuperAdm alterado) throws SQLException {
+    // Desempacotamento do model alterado
+    int id = alterado.getId();
+    String nome = alterado.getNome();
+    String cargo = alterado.getCargo();
+    String email = alterado.getEmail();
+    String senha = alterado.getSenha();
 
     // Monta o comando de acordo com os campos alterados
     StringBuilder sql = new StringBuilder("UPDATE super_adm SET ");
     List<Object> valores = new ArrayList<>();
 
-    if (nome != null) {
+    if (!original.getNome().equals(nome)) {
       sql.append("nome = ?, ");
       valores.add(nome);
     }
 
-    if (cargo != null) {
+    if (!original.getCargo().equals(cargo)) {
       sql.append("cargo = ?, ");
       valores.add(cargo);
     }
 
-    if (email != null) {
+    if (!original.getEmail().equals(email)) {
       sql.append("email = ?, ");
       valores.add(email);
+    }
+
+    if (!original.getSenha().equals(senha) && !senha.isBlank()) {
+      sql.append("senha = ?, ");
+      valores.add(senha);
     }
 
     // Sái do método se nada foi alterado
@@ -152,7 +134,7 @@ public class SuperAdmDAO extends DAO {
     sql.setLength(sql.length() - 2);
 
     // Adiciona o WHERE
-    sql.append("WHERE id = ?");
+    sql.append(" WHERE id = ?");
     valores.add(id);
 
     // Prepara, preenche e executa o comando
@@ -161,18 +143,58 @@ public class SuperAdmDAO extends DAO {
         pstmt.setObject(i + 1, valores.get(i));
       }
 
+      pstmt.executeUpdate();
+
       // Commita as alterações
       conn.commit();
 
     } catch (SQLException e) {
 
-      // Faz o rollback das alterações
+      // Faz o rollback das alterações e propaga a exceção
       conn.rollback();
-
-      // Registra o erro no terminal e o propaga
-      System.err.println(e.getMessage());
       throw e;
     }
   }
 
+  public List<SuperAdmDTO> listarSuperAdms() throws SQLException {
+    List<SuperAdmDTO> superAdms = new ArrayList<>();
+
+    // Prepara o comando
+    String sql = "SELECT * FROM super_adm ORDER BY id";
+
+    try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String cargo = rs.getString("cargo");
+        String email = rs.getString("email");
+
+        superAdms.add(new SuperAdmDTO(id, nome, cargo, email));
+      }
+    }
+
+    return superAdms;
+  }
+
+  public SuperAdm getCamposAlteraveis(int id) throws SQLException {
+    // Prepara o comando
+    String sql = "SELECT * FROM super_adm WHERE id = ?";
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setInt(1, id);
+
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (rs.next()) {
+          String nome = rs.getString("nome");
+          String cargo = rs.getString("cargo");
+          String email = rs.getString("email");
+          String senha = rs.getString("senha");
+
+          return new SuperAdm(id, nome, cargo, email, senha);
+        } else {
+          throw new SQLException("Erro ao recuperar as informações do super adm");
+        }
+      }
+    }
+  }
 }

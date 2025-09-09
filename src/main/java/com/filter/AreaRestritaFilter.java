@@ -17,9 +17,9 @@ public class AreaRestritaFilter extends HttpFilter {
   @Override
   public void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws ServletException, IOException {
     // Procura o usuário logado na sessão
-    HttpSession session = req.getSession();
+    HttpSession session = req.getSession(false);
     String target = req.getRequestURI();
-    Object usuario = session.getAttribute("usuario");
+    Object usuario = (session != null ? session.getAttribute("usuario") : null);
 
     if (target.endsWith("/logout")) {
       chain.doFilter(req, resp);
