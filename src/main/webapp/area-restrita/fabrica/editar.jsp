@@ -44,7 +44,7 @@
   <input type="hidden" name="id_fabrica" value="<%= f.getId() %>">
   <input type="hidden" name="id_endereco" value="<%= e.getId() %>">
   
-  <button type="submit">Cadastrar</button>
+  <button type="submit" style="display: block">Salvar</button>
 </form>
 </body>
 </html>
