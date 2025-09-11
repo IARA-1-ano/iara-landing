@@ -1,18 +1,10 @@
 <%@ page import="com.dto.UsuarioDTO" %>
-<%@ page import="java.util.List" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
-<%@ page import="java.io.IOException" %>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
-  List<UsuarioDTO> usuarios = (List<UsuarioDTO>) request.getAttribute("usuarios");
+  Map<UsuarioDTO, String> infosUsuario = (Map<UsuarioDTO, String>) request.getAttribute("usuarios");
   DateTimeFormatter isoDmy = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-%>
-
-<%!
-  private void editar(HttpServletRequest req, HttpServletResponse resp, int id) throws IOException {
-    String destino = req.getContextPath() + "/usuario/editar?id=" + id;
-    resp.sendRedirect(destino);
-  }
 %>
 <html>
 <head>
@@ -20,7 +12,6 @@
 </head>
 <body>
 <h1>Usuários</h1>
-<%-- TODO: implementar a visualização de fábrica --%>
 <a href="${pageContext.request.contextPath}/area-restrita/index"> Voltar à área restrita</a>
 <table border="1">
   <tr>
@@ -30,9 +21,9 @@
     <th>Tipo de Acesso</th>
     <th>Data de Criação</th>
     <th>Status</th>
-    <th>Código da Fábrica</th>
+    <th>Fábrica</th>
   </tr>
-  <% for (UsuarioDTO u : usuarios) { %>
+  <% for (UsuarioDTO u : infosUsuario.keySet()) { %>
   <tr>
     <td><%= u.getId() %>
     </td>
@@ -46,7 +37,7 @@
     </td>
     <td><%= u.getStatus() ? "Ativo" : "Inativo" %>
     </td>
-    <td><%= u.getFkFabrica() %>
+    <td><%= infosUsuario.get(u) %>
     </td>
     <td>
       <form action="${pageContext.request.contextPath}/area-restrita/update-usuario" method="get">
@@ -61,6 +52,6 @@
   </tr>
   <% } %>
 </table>
-<a href="${pageContext.request.contextPath}/area-restrita/usuario/cadastro.html">Cadastrar novo Administrador</a>
+<a href="${pageContext.request.contextPath}/area-restrita/usuario/cadastro">Cadastrar novo Administrador</a>
 </body>
 </html>

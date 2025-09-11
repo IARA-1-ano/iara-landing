@@ -9,7 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FabricaDAO extends DAO {
   public FabricaDAO() throws SQLException, ClassNotFoundException {
@@ -231,5 +233,21 @@ public class FabricaDAO extends DAO {
         }
       }
     }
+  }
+
+  public Map<Integer, String> getNomes() throws SQLException {
+    // Prepara o comando o instancia o objeto da resposta
+    String sql = "SELECT id, nome FROM fabrica";
+    Map<Integer, String> nomes = new HashMap<>();
+
+    try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+      while (rs.next()) {
+        String nome = rs.getString("nome");
+        int id = rs.getInt("id");
+        nomes.put(id, nome);
+      }
+    }
+
+    return nomes;
   }
 }
