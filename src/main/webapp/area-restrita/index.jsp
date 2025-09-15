@@ -23,6 +23,7 @@
     <li><a href="${pageContext.request.contextPath}/area-restrita/create-read-superadm">Super Administradores</a></li>
     <li><a href="${pageContext.request.contextPath}/area-restrita/create-plano">Planos</a></li>
     <li><a href="${pageContext.request.contextPath}/area-restrita/create-read-fabrica">Fábricas</a></li>
+    <li><a href="${pageContext.request.contextPath}/area-restrita/create-read-pagamento">Pagamentos</a></li>
   </ul>
 </nav>
 </body>

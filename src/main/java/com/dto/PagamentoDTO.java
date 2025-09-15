@@ -5,23 +5,27 @@ import java.time.LocalDate;
 public class PagamentoDTO {
   //Atributos
   private Integer id;
+  private Double valorPago;
   private Boolean status;
   private LocalDate dataVencimento;
   private LocalDate dataPagamento;
   private String tipoPagamento;
+  private Integer fkFabrica;
 
   //Construtor
-  public PagamentoDTO(Integer id, Boolean status, LocalDate dataVencimento, LocalDate dataPagamento, String tipoPagamnto, Integer fkPlano) {
+  public PagamentoDTO(Integer id, Double valorPago, Boolean status, LocalDate dataVencimento, LocalDate dataPagamento, String tipoPagamnto, Integer fkFabrica) {
     this.id = id;
+    this.valorPago = valorPago;
     this.status = status;
     this.dataVencimento = dataVencimento;
     this.dataPagamento = dataPagamento;
     this.tipoPagamento = tipoPagamnto;
+    this.fkFabrica = fkFabrica;
   }
 
   //toString
   public String toString() {
-    return String.format("ID: %d\nStatus: %b\nData de Vencimento: %s\nData do Pagamento: %s\nTipo de Pagamento: %s\n", this.id, this.status, this.dataVencimento, this.dataPagamento, this.tipoPagamento);
+    return String.format("ID: %d\nValor: R$%.2f\nStatus: %b\nData de Vencimento: %s\nData do Pagamento: %s\nTipo de Pagamento: %s\n", this.id, this.valorPago, this.status, this.dataVencimento, this.dataPagamento, this.tipoPagamento);
   }
 
   // Getters e Setters
@@ -31,6 +35,14 @@ public class PagamentoDTO {
 
   public void setId(Integer id) {
     this.id = id;
+  }
+
+  public Double getValorPago(){
+      return this.valorPago;
+  }
+
+  public void setValorPago(Double valorPago){
+      this.valorPago = valorPago;
   }
 
   public Boolean getStatus() {
@@ -63,5 +75,13 @@ public class PagamentoDTO {
 
   public void setTipoPagamento(String tipoPagamento) {
     this.tipoPagamento = tipoPagamento;
+  }
+
+  public Integer getFkFabrica(){
+      return this.fkFabrica;
+  }
+
+  public void setFkFabrica(Integer fkFabrica){
+      this.fkFabrica = fkFabrica;
   }
 }
