@@ -1,6 +1,7 @@
 <%@ page import="com.dto.AtualizacaoUsuarioDTO" %>
 <%@ page import="com.model.NivelAcesso" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %><%--
   Created by IntelliJ IDEA.
   User: lucasdonini-ieg
   Date: 08/09/2025
@@ -10,6 +11,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
   AtualizacaoUsuarioDTO usuario = (AtualizacaoUsuarioDTO) request.getAttribute("infosUsuario");
+  Map<Integer, String> fabricas = (Map<Integer, String>) request.getAttribute("fabricas");
 %>
 <html>
 <head>
@@ -34,7 +36,11 @@
     </option>
     <% } %>
   </select>
-  <input type="number" name="fk_fabrica" value="<%= usuario.getFkFabrica() %>" placeholder="Novo id da fábrica">
+  <select name="fk_fabrica">
+    <% for (int id : fabricas.keySet()) { %>
+    <option value="<%= id %>" <%= id == usuario.getFkFabrica() ? "selected" : "" %>><%= fabricas.get(id) + " - ID: " + id %></option>
+    <% } %>
+  </select>
   <button type="submit">Salvar</button>
 </form>
 </body>

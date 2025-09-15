@@ -107,7 +107,7 @@ public class EnderecoDAO extends DAO {
       valores.add(cep);
     }
 
-    if (!original.getComplemento().equals(complemento) && !complemento.isBlank()) {
+    if (!complemento.equals(original.getComplemento()) && !complemento.isBlank()) {
       sql.append("complemento = ?, ");
       valores.add(complemento);
     }

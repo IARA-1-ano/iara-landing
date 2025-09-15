@@ -1,5 +1,6 @@
 package com.controller.usuario;
 
+import com.dao.FabricaDAO;
 import com.dao.UsuarioDAO;
 import com.dto.CadastroUsuarioDTO;
 import com.dto.UsuarioDTO;
@@ -12,7 +13,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // TODO: criar opções de filtragem para o READ
 
@@ -21,14 +24,29 @@ public class CreateReadUsuarioServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
     // Dados da resposta
+    Map<UsuarioDTO, String> map = new HashMap<>();
     List<UsuarioDTO> usuarios;
+    Map<Integer, String> infosFabricas;
     boolean erro = true;
 
-    try (UsuarioDAO dao = new UsuarioDAO()) {
+    try (UsuarioDAO uDao = new UsuarioDAO(); FabricaDAO fDao = new FabricaDAO()) {
 
       // Recupera os usuários do banco e registra na request
-      usuarios = dao.listarUsuarios();
-      req.setAttribute("usuarios", usuarios);
+      usuarios = uDao.listarUsuarios();
+
+      // Recupera as informações da fábrica
+      infosFabricas = fDao.getNomes();
+
+      // Combina os usuários com suas devidas fábricas
+      for (UsuarioDTO u : usuarios) {
+        int id = u.getFkFabrica();
+        String nome = infosFabricas.get(id);
+        String visualizacao = "%s - ID: %d".formatted(nome, id);
+        map.put(u, visualizacao);
+      }
+
+      // Salva as informações na request
+      req.setAttribute("usuarios", map);
 
       // setta erro como false
       erro = false;

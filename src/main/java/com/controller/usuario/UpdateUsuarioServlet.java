@@ -1,7 +1,9 @@
 package com.controller.usuario;
 
+import com.dao.FabricaDAO;
 import com.dao.UsuarioDAO;
 import com.dto.AtualizacaoUsuarioDTO;
+import com.model.Fabrica;
 import com.model.NivelAcesso;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -12,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 
 @WebServlet("/area-restrita/update-usuario")
 public class UpdateUsuarioServlet extends HttpServlet {
@@ -23,12 +26,18 @@ public class UpdateUsuarioServlet extends HttpServlet {
 
     // Dados da resposta
     AtualizacaoUsuarioDTO camposAlteraveis;
+    Map<Integer, String> nomesFabricas;
     boolean erro = true;
 
-    try (UsuarioDAO dao  = new UsuarioDAO()) {
+    try (UsuarioDAO uDao  = new UsuarioDAO(); FabricaDAO fDao = new FabricaDAO()) {
       // Recupera as informações atuais do usuário e prepara o display
-      camposAlteraveis = dao.getCamposAlteraveis(id);
+      camposAlteraveis = uDao.getCamposAlteraveis(id);
       req.setAttribute("infosUsuario", camposAlteraveis);
+
+      // Recupera as informações das fábricas e prepara para o display
+      nomesFabricas = fDao.getNomes();
+      req.setAttribute("fabricas", nomesFabricas);
+
       erro = false;
 
     }  catch (SQLException e) {
