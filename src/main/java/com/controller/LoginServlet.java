@@ -1,4 +1,4 @@
-package com.controller.superadm;
+package com.controller;
 
 import com.dao.LoginDAO;
 import com.dto.LoginDTO;
@@ -20,6 +20,7 @@ public class LoginServlet extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
     // Dados da requisição
     String action = req.getParameter("action");
+    HttpSession session = req.getSession();
 
     // Dados da resposta
     String destino = "/html/erro.html";
@@ -28,12 +29,15 @@ public class LoginServlet extends HttpServlet {
     try {
       switch(action) {
         case "login" -> {
-          if (!login(req)) {
+          SuperAdmDTO usuario = login(req);
+
+          if (usuario == null) {
             req.setAttribute("erro", "login falhou");
             destino = "jsp/login.jsp";
             redirect = false;
 
           } else {
+            session.setAttribute("usuario", usuario);
             destino = "/area-restrita/index";
           }
         }
@@ -68,28 +72,15 @@ public class LoginServlet extends HttpServlet {
     }
   }
 
-  private boolean login(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+  private SuperAdmDTO login(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     // Dados da requisição
     String email = req.getParameter("email");
     String senha = req.getParameter("senha");
     LoginDTO credenciais = new LoginDTO(email, senha);
-    HttpSession session = req.getSession();
-
-    // Dados da resposta
-    SuperAdmDTO superAdm;
 
     try (LoginDAO dao = new LoginDAO()) {
       // Tenta fazer login e prepara os dados da resposta de acordo
-      superAdm = dao.login(credenciais);
-
-      if (superAdm != null) {
-        // Guarda o usuário na sessão
-        session.setAttribute("usuario", superAdm);
-        return true;
-
-      } else {
-        return false;
-      }
+      return dao.login(credenciais);
     }
   }
 
