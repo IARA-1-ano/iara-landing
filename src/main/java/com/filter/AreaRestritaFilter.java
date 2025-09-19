@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-// @WebFilter(filterName = "area-restrita-filter", urlPatterns = "/area-restrita/*")
+//@WebFilter(filterName = "area-restrita-filter", urlPatterns = "/area-restrita/*")
 public class AreaRestritaFilter extends HttpFilter {
   @Override
   public void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws ServletException, IOException {
@@ -29,7 +29,7 @@ public class AreaRestritaFilter extends HttpFilter {
     if (usuario instanceof SuperAdmDTO) {
       chain.doFilter(req, resp);
     } else {
-      resp.sendRedirect(req.getContextPath() + "/login.html");
+      resp.sendRedirect(req.getContextPath() + "/jsp/login.jsp");
     }
   }
 }

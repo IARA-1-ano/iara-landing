@@ -3,6 +3,8 @@ package com.controller.superadm;
 import com.dao.LoginDAO;
 import com.dto.LoginDTO;
 import com.dto.SuperAdmDTO;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,28 +17,33 @@ import java.sql.SQLException;
 @WebServlet("/login-handler")
 public class LoginServlet extends HttpServlet {
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
     // Dados da requisição
-    String email = req.getParameter("email");
-    String senha = req.getParameter("senha");
-    LoginDTO credenciais = new LoginDTO(email, senha);
-    HttpSession session = req.getSession();
+    String action = req.getParameter("action");
 
     // Dados da resposta
-    SuperAdmDTO superAdm;
-    String destino = "/erro.html";
+    String destino = "/html/erro.html";
+    boolean redirect = true;
 
-    try (LoginDAO dao = new LoginDAO()) {
-      // Tenta fazer login e prepara os dados da resposta de acordo
-      superAdm = dao.login(credenciais);
+    try {
+      switch(action) {
+        case "login" -> {
+          if (!login(req)) {
+            req.setAttribute("erro", "login falhou");
+            destino = "jsp/login.jsp";
+            redirect = false;
 
-      if (superAdm != null) {
-        // Guarda o usuário na sessão
-        session.setAttribute("usuario", superAdm);
-        destino = "/area-restrita/index";
+          } else {
+            destino = "/area-restrita/index";
+          }
+        }
 
-      } else {
-        destino = "/login.html";
+        case "logout" -> {
+          logout(req);
+          destino = "/index.html";
+        }
+
+        default -> throw new RuntimeException("valor inválido para o parâmetro 'action': " + action);
       }
 
     } catch (SQLException e) {
@@ -53,6 +60,45 @@ public class LoginServlet extends HttpServlet {
       e.printStackTrace(System.err);
     }
 
-    resp.sendRedirect(req.getContextPath() + destino);
+    if (redirect) {
+      resp.sendRedirect(req.getContextPath() + destino);
+    } else {
+      RequestDispatcher rd = req.getRequestDispatcher(destino);
+      rd.forward(req, resp);
+    }
+  }
+
+  private boolean login(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    // Dados da requisição
+    String email = req.getParameter("email");
+    String senha = req.getParameter("senha");
+    LoginDTO credenciais = new LoginDTO(email, senha);
+    HttpSession session = req.getSession();
+
+    // Dados da resposta
+    SuperAdmDTO superAdm;
+
+    try (LoginDAO dao = new LoginDAO()) {
+      // Tenta fazer login e prepara os dados da resposta de acordo
+      superAdm = dao.login(credenciais);
+
+      if (superAdm != null) {
+        // Guarda o usuário na sessão
+        session.setAttribute("usuario", superAdm);
+        return true;
+
+      } else {
+        return false;
+      }
+    }
+  }
+
+  private void logout(HttpServletRequest req) {
+    // Dados da request
+    HttpSession session = req.getSession(false);
+
+    if (session != null) {
+      session.removeAttribute("usuario");
+    }
   }
 }
