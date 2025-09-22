@@ -19,7 +19,7 @@
   <ul>
     <li><a href="${pageContext.request.contextPath}/index.html">Página inicial</a></li>
     <li><a href="${pageContext.request.contextPath}/area-restrita/create-read-usuario">Usuários</a></li>
-    <li><a href="${pageContext.request.contextPath}/area-restrita/create-read-superadm">Super Administradores</a></li>
+    <li><a href="${pageContext.request.contextPath}/area-restrita/superadms?action=read">Super Administradores</a></li>
     <li><a href="${pageContext.request.contextPath}/area-restrita/create-plano">Planos</a></li>
     <li><a href="${pageContext.request.contextPath}/area-restrita/fabricas?action=read">Fábricas</a></li>
   </ul>
