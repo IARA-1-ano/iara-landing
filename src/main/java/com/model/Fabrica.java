@@ -10,9 +10,10 @@ public class Fabrica {
   private String nomeEmpresa;
   private String ramo;
   private Endereco endereco;
+  private int fkPlano;
 
   public Fabrica(int id, String nome, String cnpj, Boolean status, String email, String nomeEmpresa,
-      String ramo, Endereco endereco) {
+      String ramo, Endereco endereco, int fkPlano) {
     this.id = id;
     this.nome = nome;
     this.cnpj = cnpj;
@@ -21,6 +22,7 @@ public class Fabrica {
     this.nomeEmpresa = nomeEmpresa;
     this.ramo = ramo;
     this.endereco = endereco;
+    this.fkPlano = fkPlano;
   }
 
   // Getters
@@ -54,6 +56,8 @@ public class Fabrica {
 
   public Endereco getEndereco(){return this.endereco;}
 
+    public int getFkPlano(){return this.fkPlano;}
+
   // Setters
   public void setId(int id) {
     this.id = id;
@@ -84,6 +88,8 @@ public class Fabrica {
   }
 
   public void setEndereco(Endereco endereco){this.endereco = endereco;}
+
+    public void setFkPlano(int fkPlano){this.fkPlano = fkPlano;}
 
   // Outros métodos
   public String cnpjFormatado() {

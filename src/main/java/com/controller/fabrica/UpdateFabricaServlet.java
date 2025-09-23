@@ -73,6 +73,7 @@ public class UpdateFabricaServlet extends HttpServlet {
     String email = req.getParameter("email");
     String nomeEmpresa = req.getParameter("nome_empresa");
     String ramo = req.getParameter("ramo");
+    int fkPlano = Integer.parseInt(req.getParameter("fk_plano"));
 
     temp = req.getParameter("id_endereco");
     int idEndereco = Integer.parseInt(temp);
@@ -83,7 +84,7 @@ public class UpdateFabricaServlet extends HttpServlet {
     String complemento = req.getParameter("complemento");
 
     Endereco endereco = new Endereco(idEndereco, cep, numero, rua, complemento);
-    Fabrica alterado = new Fabrica(idFabrica, nome, cnpj, status, email, nomeEmpresa, ramo, endereco);
+    Fabrica alterado = new Fabrica(idFabrica, nome, cnpj, status, email, nomeEmpresa, ramo, endereco, fkPlano);
 
     // Dados da resposta
     String destino = "/erro.html";

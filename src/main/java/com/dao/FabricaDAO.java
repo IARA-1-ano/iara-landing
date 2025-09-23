@@ -26,12 +26,13 @@ public class FabricaDAO extends DAO {
     String nomeEmpresa = credenciais.getNomeEmpresa();
     String ramo = credenciais.getRamo();
     int idEndereco = credenciais.getFkEndereco();
+    int fkPlano = credenciais.getFkPlano();
     boolean status = true;
 
     // Preparação do comando
     String sql = """
-        INSERT INTO fabrica (nome, cnpj_unidade, email_corporativo, nome_industria, status, ramo, id_endereco)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO fabrica (nome, cnpj_unidade, email_corporativo, nome_industria, status, ramo, id_endereco, fk_plano)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """;
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -43,6 +44,7 @@ public class FabricaDAO extends DAO {
       pstmt.setBoolean(5, status);
       pstmt.setString(6, ramo);
       pstmt.setInt(7, idEndereco);
+      pstmt.setInt(8, fkPlano);
 
       // Execução do update
       pstmt.executeUpdate();
@@ -58,20 +60,68 @@ public class FabricaDAO extends DAO {
     }
   }
 
-  public List<Fabrica> listarFabricas() throws SQLException {
+  public List<Fabrica> listarFabricas(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
     List<Fabrica> fabricas = new ArrayList<>();
 
-    String sql = """
-        SELECT
-            f.id as "id_fabrica", f.*,
-            e.id as "id_endereco", e.*
+    //Prepara o comando
+    StringBuilder sql = new StringBuilder("""
+        SELECT f.id as "id_fabrica", f.*, e.id as "id_endereco", e.*
         FROM fabrica f
         JOIN endereco e ON e.id = f.id_endereco
-        ORDER BY f.id
-        """;
+       """);
 
-    try (Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(sql)) {
+    //Verificando o campo do filtro
+      if (campoFiltro!=null){
+          switch(campoFiltro){
+              case "id_industria" -> sql.append(" WHERE f.id_industria = ?");
+              case "id_endereco" -> sql.append(" WHERE e.id = ?");
+              case "nome" -> sql.append(" WHERE f.nome = ?");
+              case "cnpj_unidade" -> sql.append(" WHERE f.cnpj_unidade = ?");
+              case "status" -> sql.append(" WHERE f.status = ?");
+              case "email_corporativo" -> sql.append(" WHERE f.email_corporativo = ?");
+              case "nome_industria" -> sql.append(" WHERE f.nome_industria = ?");
+              case "ramo" -> sql.append(" WHERE f.ramo = ?");
+              case "fk_plano" -> sql.append(" WHERE f.fk_plano = ?");
+              case "cep" -> sql.append(" WHERE e.cep = ?");
+              case "numero" -> sql.append(" WHERE e.numero = ?");
+              case "rua" -> sql.append(" WHERE e.rua = ?");
+              default -> sql.append(" WHERE e.complemento = ?");
+          }
+      }
+
+      //Verificando campo e direcao para ordernar a consulta
+      if (campoSequencia!=null){
+          switch (campoSequencia) {
+              case "id_industria" -> sql.append(" ORDER BY f.id_industria");
+              case "id_endereco" -> sql.append(" ORDER BY e.id");
+              case "nome" -> sql.append(" ORDER BY f.nome");
+              case "cnpj_unidade" -> sql.append(" ORDER BY f.cnpj_unidade");
+              case "status" -> sql.append(" ORDER BY f.status = ?");
+              case "email_corporativo" -> sql.append(" ORDER BY f.email_corporativo");
+              case "nome_industria" -> sql.append(" ORDER BY f.nome_industria");
+              case "ramo" -> sql.append(" ORDER BY f.ramo");
+              case "fk_plano" -> sql.append(" ORDER BY f.fk_plano");
+              case "cep" -> sql.append(" ORDER BY e.cep");
+              case "numero" -> sql.append(" ORDER BY e.numero");
+              case "rua" -> sql.append(" ORDER BY e.rua");
+              default -> sql.append(" ORDER BY e.complemento");
+          }
+
+          //Verificando direção da sequencia
+          switch(direcaoSequencia){
+              case "crescente" -> sql.append(" ASC");
+              case "decrescente" -> sql.append(" DESC");
+          }
+      }
+
+    try (PreparedStatement pstmt = conn.prepareStatement(String.valueOf(sql))) {
+        //Definindo parâmetro vazio
+        if (campoFiltro!=null){
+            pstmt.setObject(1, valorFiltro);
+        }
+
+        //Instanciando um ResultSet
+        ResultSet rs = pstmt.executeQuery();
 
       while (rs.next()) {
         // Informações da fábrica
@@ -82,6 +132,7 @@ public class FabricaDAO extends DAO {
         String email = rs.getString("email_corporativo");
         String nomeEmpresa = rs.getString("nome_industria");
         String ramo = rs.getString("ramo");
+        int fkPlano = rs.getInt("fk_plano");
 
         // Informações do endereco
         int idEndereco = rs.getInt("id_endereco");
@@ -92,7 +143,7 @@ public class FabricaDAO extends DAO {
 
         // Cria e armazena os objetos
         Endereco endereco = new Endereco(idEndereco, cep, numero, rua, complemento);
-        Fabrica fabrica = new Fabrica(idFabrica, nome, cnpj, status, email, nomeEmpresa, ramo, endereco);
+        Fabrica fabrica = new Fabrica(idFabrica, nome, cnpj, status, email, nomeEmpresa, ramo, endereco, fkPlano);
         fabricas.add(fabrica);
       }
 
@@ -109,6 +160,7 @@ public class FabricaDAO extends DAO {
     String email = alteracoes.getEmail();
     String nomeEmpresa = alteracoes.getNomeEmpresa();
     String ramo = alteracoes.getRamo();
+    int fkPlano = alteracoes.getFkPlano();
 
     // Contrução do script dinâmico
     StringBuilder sql = new StringBuilder("UPDATE fabrica SET ");
@@ -216,6 +268,7 @@ public class FabricaDAO extends DAO {
           String email = rs.getString("email_corporativo");
           String nomeEmpresa = rs.getString("nome_industria");
           String ramo = rs.getString("ramo");
+          int fkPlano = rs.getInt("fk_plano");
 
           // Informações do endereco
           int idEndereco = rs.getInt("id_endereco");
@@ -226,7 +279,7 @@ public class FabricaDAO extends DAO {
 
           // Cria e retorna o objeto
           Endereco endereco = new Endereco(idEndereco, cep, numero, rua, complemento);
-          return new Fabrica(idFabrica, nome, cnpj, status, email, nomeEmpresa, ramo, endereco);
+          return new Fabrica(idFabrica, nome, cnpj, status, email, nomeEmpresa, ramo, endereco, fkPlano);
 
         } else {
           throw new SQLException("Falha ao recuperar o usuário");

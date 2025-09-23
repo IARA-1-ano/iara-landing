@@ -27,7 +27,7 @@ public class CreateReadFabricaServlet extends HttpServlet {
     try (FabricaDAO dao = new FabricaDAO()) {
 
       // Recupera os usuários do banco e registra na request
-      fabricas = dao.listarFabricas();
+      fabricas = dao.listarFabricas("ramo", "Alimentício", null, null);
       req.setAttribute("fabricas", fabricas);
 
       // setta erro como false
@@ -61,6 +61,7 @@ public class CreateReadFabricaServlet extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
     // Dados da request
     String temp = req.getParameter("numero");
+    String temp2 = req.getParameter("fk_plano");
     Endereco endereco = new Endereco(
         null,
         req.getParameter("cep"),
@@ -74,7 +75,8 @@ public class CreateReadFabricaServlet extends HttpServlet {
         req.getParameter("email"),
         req.getParameter("empresa"),
         req.getParameter("ramo"),
-        0
+        0,
+            Integer.parseInt(temp2)
     );
 
     // Dados da resposta
