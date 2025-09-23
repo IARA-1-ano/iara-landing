@@ -141,7 +141,7 @@ public class PlanoServlet extends HttpServlet {
     // Dados da requisição
     String temp = req.getParameter("valor");
     if (temp == null || temp.isBlank()) {
-      throw ExcecaoDePagina.campoNecessarioFaltante("valor", PAGINA_CADASTRO);
+      throw ExcecaoDePagina.campoNecessarioFaltante("valor");
     }
 
     String nome = req.getParameter("nome");
@@ -152,7 +152,7 @@ public class PlanoServlet extends HttpServlet {
     try (PlanoDAO dao = new PlanoDAO()) {
       // Verifica se o novo plano não viola a chave UNIQUE
       if (dao.getPlanoByNome(nome) != null) {
-        throw ExcecaoDePagina.nomeDuplicado(PAGINA_CADASTRO);
+        throw ExcecaoDePagina.nomeDuplicado();
       }
 
       // Cadastra o plano
@@ -187,7 +187,7 @@ public class PlanoServlet extends HttpServlet {
 
       // Verifica se o novo nome viola a chave UNIQUE
       if (dao.getPlanoByNome(nome) != null && !original.getNome().equals(nome)) {
-        throw ExcecaoDePagina.nomeDuplicado(PAGINA_EDICAO);
+        throw ExcecaoDePagina.nomeDuplicado();
       }
 
       // Salva as informações no banco
