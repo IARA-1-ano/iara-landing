@@ -3,6 +3,7 @@ package com.controller;
 import com.dao.SuperAdmDAO;
 import com.dto.CadastroSuperAdmDTO;
 import com.dto.SuperAdmDTO;
+import com.dto.UsuarioDTO;
 import com.exception.ExcecaoDePagina;
 import com.model.SuperAdm;
 import com.utils.PasswordUtils;
@@ -99,7 +100,8 @@ public class SuperAdmServlet extends HttpServlet {
 
     } catch (ExcecaoDePagina e) {
       req.setAttribute("erro", e.getMessage());
-      destino = e.getDestino();
+      doGet(req, resp);
+      return;
 
     } catch (SQLException e) {
       // Se houver alguma exceção grave, registra no terminal
@@ -142,18 +144,26 @@ public class SuperAdmServlet extends HttpServlet {
     // Dados da request
     String senhaOriginal = req.getParameter("senha");
     String senhaHash = PasswordUtils.hashed(senhaOriginal);
+    String email = req.getParameter("email");
     CadastroSuperAdmDTO credenciais = new CadastroSuperAdmDTO(
         req.getParameter("nome"),
         req.getParameter("cargo"),
-        req.getParameter("email"),
+        email,
         senhaHash
     );
 
     if (!senhaOriginal.matches(".{8,}")) {
-      throw ExcecaoDePagina.senhaCurta(8, PAGINA_CADASTRO);
+      throw ExcecaoDePagina.senhaCurta(8);
     }
 
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
+      // Verifica se o usuário não viola a chave UNIQUE de email
+      SuperAdmDTO temp = dao.getSuperAdmByEmail(email);
+
+      if (temp != null) {
+        throw ExcecaoDePagina.emailDuplicado("super administrador");
+      }
+
       // Cadastra o usuário e setta o destino para mostrar os usuários
       dao.cadastrar(credenciais);
     }
@@ -181,26 +191,24 @@ public class SuperAdmServlet extends HttpServlet {
     String novaSenha = req.getParameter("nova_senha");
     SuperAdm alterado = new SuperAdm(id, nome, cargo, email, novaSenha);
 
-    // Variáveis auxiliares
-    String regexSenha = ".{8,}";
-
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
       // Recupera as informações originais do banco
       SuperAdm original = dao.getCamposAlteraveis(id);
 
       // Se a senha foi alterada e a original estiver incorreta ou a nova for inválida, volta ao formulário
       if (!novaSenha.isBlank()) {
-        if (!novaSenha.matches(regexSenha) || !PasswordUtils.comparar(senhaAtual, original.getSenha())) {
-          ExcecaoDePagina e = !novaSenha.matches(regexSenha) ? ExcecaoDePagina.senhaCurta(8, null) : new ExcecaoDePagina("Senha incorreta", null);
+        // Verifica a validade das alterações
+        if (!novaSenha.matches(".{8,}")) {
+          throw ExcecaoDePagina.senhaCurta(8);
+        }
 
-          StringBuilder sb = new StringBuilder(ESSE_ENDPOINT);
-          sb.append("?action=update&id=");
-          sb.append(id);
-          sb.append("&erro=");
-          sb.append(e.getMensagemUrl());
+        if (!PasswordUtils.comparar(senhaAtual, original.getSenha())) {
+          throw ExcecaoDePagina.falhaAutenticacao();
+        }
 
-          e.setDestino(sb.toString());
-          throw e;
+        SuperAdmDTO superAdmVerificacao = dao.getSuperAdmByEmail(email);
+        if (superAdmVerificacao.getEmail().equals(email) && superAdmVerificacao.getId() != id) {
+          throw ExcecaoDePagina.emailDuplicado("super administrador");
         }
 
         // Faz o hash da senha antes de salvar no banco

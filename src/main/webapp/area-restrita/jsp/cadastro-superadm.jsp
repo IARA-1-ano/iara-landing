@@ -15,5 +15,13 @@
   <button type="submit">Cadastrar</button>
 </form>
 <a href="${pageContext.request.contextPath}/area-restrita/superadms?action=read">Cancelar</a>
+<%
+  String erro = (String) request.getAttribute("erro");
+  if (erro != null && !erro.isBlank()) {
+%>
+<p>
+  <%= erro %>
+</p>
+<% } %>
 </body>
 </html>

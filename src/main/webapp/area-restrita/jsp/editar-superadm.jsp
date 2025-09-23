@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
   SuperAdmDTO adm = (SuperAdmDTO) request.getAttribute("infosSuperAdm");
-  String erro = request.getParameter("erro");
+  String erro = (String) request.getAttribute("erro");
 %>
 <html>
 <head>

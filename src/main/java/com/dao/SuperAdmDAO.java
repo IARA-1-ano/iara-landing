@@ -72,6 +72,28 @@ public class SuperAdmDAO extends DAO {
     }
   }
 
+  public SuperAdmDTO getSuperAdmByEmail(String email) throws SQLException {
+    // Prepara o comando
+    String sql = "SELECT * FROM super_adm WHERE email = ?";
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setString(1, email);
+
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (!rs.next()) {
+          return null;
+        }
+
+        return new SuperAdmDTO(
+            rs.getInt("int"),
+            rs.getString("nome"),
+            rs.getString("cargo"),
+            email
+        );
+      }
+    }
+  }
+
   public void remover(int id) throws SQLException {
     // Prepara o comando
     String sql = "DELETE FROM super_adm WHERE id = ?";
