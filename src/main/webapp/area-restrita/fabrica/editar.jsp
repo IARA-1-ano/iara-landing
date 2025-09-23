@@ -27,6 +27,7 @@
   <input type="email" name="email" value="<%= f.getEmail() %>" placeholder="Email para contato">
   <input type="text" name="ramo" value="<%= f.getRamo() %>" placeholder="Ramo">
   <input type="text" name="nome_empresa" value="<%= f.getNomeEmpresa() %>" placeholder="Nome da empresa">
+    <input type="number" name="fk_plano" value="<%= f.getFkPlano()%>" placeholder="Número do plano relacionado">
   <select name="status">
     <% for (Boolean b : List.of(true, false)) { %>
     <option value="<%= b.toString() %>" <%= b ? "selected" : "" %>><%= b ? "Ativa" : "Inativa" %>
