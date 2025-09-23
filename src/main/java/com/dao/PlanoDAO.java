@@ -1,7 +1,6 @@
 package com.dao;
 
-import com.dto.PlanosDTO;
-import com.model.Planos;
+import com.model.Plano;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,17 +9,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlanosDAO extends DAO {
-  public PlanosDAO() throws SQLException, ClassNotFoundException {
+public class PlanoDAO extends DAO {
+  public PlanoDAO() throws SQLException, ClassNotFoundException {
     super();
   }
 
   //Cadastrar novo Plano
-  public void cadastrar(PlanosDTO plano) throws SQLException {
+  public void cadastrar(Plano plano) throws SQLException {
     //Comando SQL
     String sql = "INSERT INTO planos(nome, valor, descricao) VALUES (?,?,?)";
 
-    try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) { //Preparando comando SQL
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) { //Preparando comando SQL
       //Definindo variáveis no código SQL
       pstmt.setString(1, plano.getNome());
       pstmt.setDouble(2, plano.getValor());
@@ -30,16 +29,15 @@ public class PlanosDAO extends DAO {
       //Confirmando transações
       this.conn.commit();
     } catch (SQLException e) {
-      System.err.println(e.getMessage());
       //Cancelando transações
-      this.conn.rollback();
+      conn.rollback();
       //Enviando exceção
       throw e;
     }
 
   }
 
-  public PlanosDTO getPlanoById(int id) throws SQLException {
+  public Plano getPlanoById(int id) throws SQLException {
     // Prepara o comando
     String sql = "SELECT * FROM planos WHERE id = ?";
 
@@ -51,9 +49,30 @@ public class PlanosDAO extends DAO {
           return null;
         }
 
-        return new PlanosDTO(
+        return new Plano(
             id,
             rs.getString("nome"),
+            rs.getDouble("valor"),
+            rs.getString("descricao"));
+      }
+    }
+  }
+
+  public Plano getPlanoByNome(String nome) throws SQLException {
+    // Prepara o comando
+    String sql = "SELECT * FROM planos WHERE nome = ?";
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setString(1, nome);
+
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (!rs.next()) {
+          return null;
+        }
+
+        return new Plano(
+            rs.getInt("id"),
+            nome,
             rs.getDouble("valor"),
             rs.getString("descricao"));
       }
@@ -82,7 +101,7 @@ public class PlanosDAO extends DAO {
     }
   }
 
-  public void atualizar(Planos original, Planos alterado) throws SQLException {
+  public void atualizar(Plano original, Plano alterado) throws SQLException {
     // Desempacotamento do model alterado
     int id = alterado.getId();
     String nome = alterado.getNome();
@@ -98,7 +117,7 @@ public class PlanosDAO extends DAO {
       valores.add(nome);
     }
 
-    if (!original.getValor().equals(valor)) {
+    if (original.getValor() != valor) {
       sql.append("valor = ?, ");
       valores.add(valor);
     }
@@ -140,8 +159,8 @@ public class PlanosDAO extends DAO {
   }
 
   //Listar planos
-  public List<PlanosDTO> listarPlanos() throws SQLException {
-    List<PlanosDTO> planosDTOS = new ArrayList<>();
+  public List<Plano> listarPlanos() throws SQLException {
+    List<Plano> planosDTOS = new ArrayList<>();
 
     // Prepara o comando
     String sql = "SELECT * FROM planos ORDER BY id";
@@ -153,15 +172,15 @@ public class PlanosDAO extends DAO {
         double valor = rs.getDouble("valor");
         String descricao = rs.getString("descricao");
 
-        planosDTOS.add(new PlanosDTO(id, nome, valor, descricao));
+        planosDTOS.add(new Plano(id, nome, valor, descricao));
       }
     }
 
     return planosDTOS;
   }
 
-  //Campos Alteraveis
-  public Planos getCamposAlteraveis(int id) throws SQLException {
+  //Campos Alteráveis
+  public Plano getCamposAlteraveis(int id) throws SQLException {
     // Prepara o comando
     String sql = "SELECT * FROM planos WHERE id = ?";
 
@@ -174,7 +193,7 @@ public class PlanosDAO extends DAO {
           Double valor = rs.getDouble("valor");
           String descricao = rs.getString("descricao");
 
-          return new Planos(id, nome, valor, descricao);
+          return new Plano(id, nome, valor, descricao);
         } else {
           throw new SQLException("Erro ao recuperar as informações do super adm");
         }

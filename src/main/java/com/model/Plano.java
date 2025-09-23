@@ -1,14 +1,13 @@
-package com.dto;
+package com.model;
 
-public class PlanosDTO {
-  // Atributos
+public class Plano {
   private Integer id;
   private String nome;
-  private Double valor;
+  private double valor;
   private String descricao;
 
   // Construtor
-  public PlanosDTO(Integer id, String nome, Double valor, String descricao) {
+  public Plano(Integer id, String nome, double valor, String descricao) {
     this.id = id;
     this.nome = nome;
     this.valor = valor;
@@ -37,7 +36,7 @@ public class PlanosDTO {
     this.nome = nome;
   }
 
-  public Double getValor() {
+  public double getValor() {
     return valor;
   }
 
