@@ -7,7 +7,6 @@ import com.model.SuperAdm;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,13 +177,44 @@ public class SuperAdmDAO extends DAO {
     }
   }
 
-  public List<SuperAdmDTO> listarSuperAdms() throws SQLException {
+  public List<SuperAdmDTO> listarSuperAdms(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
     List<SuperAdmDTO> superAdms = new ArrayList<>();
 
     // Prepara o comando
-    String sql = "SELECT * FROM super_adm ORDER BY id";
+    StringBuilder sql = new StringBuilder("SELECT * FROM super_adm");
 
-    try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+    // Verificando campo do filtro
+    if (campoFiltro != null) {
+      switch (campoFiltro) {
+        case "id" -> sql.append(" WHERE id = ?");
+        case "cargo" -> sql.append(" WHERE nome = ?");
+        default -> sql.append(" WHERE email = ?");
+      }
+    }
+
+    //Verificando campo para ordenar a consulta
+    if (campoSequencia != null) {
+      switch (campoSequencia) {
+        case "id" -> sql.append(" ORDER BY id");
+        case "nome" -> sql.append(" ORDER BY nome");
+        case "email" -> sql.append(" ORDER BY email");
+      }
+
+      //Verificando direção da sequencia
+      switch (direcaoSequencia) {
+        case "crescente" -> sql.append(" ASC");
+        case "decrescente" -> sql.append(" DESC");
+      }
+    }
+
+    try (PreparedStatement pstmt = conn.prepareStatement(String.valueOf(sql))) {
+      //Definindo parâmetro vazio
+      if (campoFiltro != null) {
+        pstmt.setObject(1, valorFiltro);
+      }
+
+      //Instanciando um ResultSet
+      ResultSet rs = pstmt.executeQuery();
       while (rs.next()) {
         int id = rs.getInt("id");
         String nome = rs.getString("nome");

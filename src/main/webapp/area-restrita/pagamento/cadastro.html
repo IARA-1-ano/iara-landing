@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Página de cadastro - Planos</title>
+</head>
+<body>
+<h1>Página de Teste para Cadastro</h1>
+<form action="../create-read-pagamento" method="post">
+    <label>Status:</label>
+    <select name="status">
+        <option value="true">Pagamento Realizado ✅</option>
+        <option value="false">Pagamento Pendente ❌</option>
+    </select>
+    <label>Data de Vencimento:</label>
+    <input type="date" name="dataVencimento">
+    <label>Data de Pagamento:</label>
+    <input type="date" name="dataPagamento">
+    <label>Tipo de Pagamento:</label>
+    <select name="tipoPagamento">
+        <option value="debito">Débito</option>
+        <option value="credito">Crédito</option>
+        <option value="pix">PIX</option>
+    </select>
+    <label>ID da Fábrica que o pagamento refere-se:</label>
+    <input type="number" name="fkFabrica">
+    <input type="submit">
+</form>
+</body>
+</html>

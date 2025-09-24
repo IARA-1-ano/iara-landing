@@ -80,23 +80,62 @@ public class UsuarioDAO extends DAO {
     }
   }
 
-  public List<UsuarioDTO> listarUsuarios() throws SQLException {
+  public List<UsuarioDTO> listarUsuarios(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
     List<UsuarioDTO> usuarios = new ArrayList<>();
 
-    // Prepara o comado e executa
-    String sql = "SELECT * FROM usuario ORDER BY id";
+        // Prepara o comado e executa
+        StringBuilder sql = new StringBuilder("SELECT * FROM usuario");
 
-    try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-      while (rs.next()) {
-        // Armazenamento do resultado em variáveis
-        int id = rs.getInt("id");
-        String nome = rs.getString("nome");
-        String email = rs.getString("email");
-        NivelAcesso nivelAcesso = NivelAcesso.fromInteger(rs.getInt("nivel_acesso"));
+        // Verificando campo do filtro
+        if (campoFiltro != null) {
+            switch (campoFiltro) {
+                case "id" -> sql.append(" WHERE id = ?");
+                case "nome" -> sql.append(" WHERE nome = ?");
+                case "email" -> sql.append(" WHERE email = ?");
+                case "tipo_acesso" -> sql.append(" WHERE nivel_acesso = ?");
+                case "data_criacao" -> sql.append(" WHERE data_criacao = ?");
+                case "status" -> sql.append(" WHERE status = ?");
+                default -> sql.append(" WHERE fk_fabrica = ?");
+            }
+        }
 
-        // Conversão da data
-        Date temp = rs.getDate("data_criacao");
-        LocalDate dtCriacao = (temp == null ? null : temp.toLocalDate());
+        //Verificando campo para ordenar a consulta
+        if (campoSequencia != null) {
+            switch (campoSequencia) {
+                case "id" -> sql.append(" ORDER BY id");
+                case "nome" -> sql.append(" ORDER BY nome");
+                case "email" -> sql.append(" ORDER BY email");
+                case "nivel_acesso" -> sql.append(" ORDER BY nivel_acesso");
+                case "data_criacao" -> sql.append(" ORDER BY data_criacao");
+                case "status" -> sql.append(" ORDER BY status");
+                default -> sql.append(" ORDER BY fk_fabrica");
+            }
+
+            //Verificando direção da sequencia
+            switch (direcaoSequencia) {
+                case "crescente" -> sql.append(" ASC");
+                case "decrescente" -> sql.append(" DESC");
+            }
+        }
+
+        try (PreparedStatement pstmt = conn.prepareStatement(String.valueOf(sql))) {
+            //Definindo parâmetro vazio
+            if (campoFiltro != null) {
+                pstmt.setObject(1, valorFiltro);
+            }
+
+            //Instanciando um ResultSet
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                // Armazenamento do resultado em variáveis
+                int id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                String email = rs.getString("email");
+                NivelAcesso nivelAcesso = NivelAcesso.fromInteger(rs.getInt("nivel_acesso"));
+
+                // Conversão da data
+                Date temp = rs.getDate("data_criacao");
+                LocalDate dtCriacao = (temp == null ? null : temp.toLocalDate());
 
         boolean status = rs.getBoolean("status");
         int fkFabrica = rs.getInt("fk_fabrica");
@@ -107,11 +146,6 @@ public class UsuarioDAO extends DAO {
 
       return usuarios;
 
-    } catch (SQLException e) {
-
-      // Registra o erro no terminal e o propaga
-      System.err.println(e.getMessage());
-      throw e;
     }
   }
 

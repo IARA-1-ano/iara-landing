@@ -35,7 +35,7 @@ public class PlanoDAO extends DAO {
       throw e;
     }
 
-  }
+    }
 
   public Plano getPlanoById(int id) throws SQLException {
     // Prepara o comando
@@ -159,24 +159,59 @@ public class PlanoDAO extends DAO {
   }
 
   //Listar planos
-  public List<Plano> listarPlanos() throws SQLException {
-    List<Plano> planosDTOS = new ArrayList<>();
+  public List<Plano> listarPlanos(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
+    List<Plano> planos = new ArrayList<>();
 
-    // Prepara o comando
-    String sql = "SELECT * FROM planos ORDER BY id";
+        // Prepara o comando
+        StringBuilder sql = new StringBuilder("SELECT * FROM planos");
 
-    try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-      while (rs.next()) {
-        int id = rs.getInt("id");
-        String nome = rs.getString("nome");
-        double valor = rs.getDouble("valor");
-        String descricao = rs.getString("descricao");
+        // Verificando campo do filtro
+        if (campoFiltro != null) {
+            switch (campoFiltro) {
+                case "id" -> sql.append(" WHERE id = ?");
+                case "nome" -> sql.append(" WHERE nome = ?");
+                case "valor" -> sql.append(" WHERE valor = ?");
+                case "descricao" -> sql.append(" WHERE descricao = ?");
+                default -> throw new RuntimeException("valor inválido para chave de filtragem");
+            }
+        }
 
-        planosDTOS.add(new Plano(id, nome, valor, descricao));
+        //Verificando campo para ordenar a consulta
+        if (campoSequencia != null) {
+            switch (campoSequencia) {
+                case "id" -> sql.append(" ORDER BY id");
+                case "nome" -> sql.append(" ORDER BY nome");
+                case "valor" -> sql.append(" ORDER BY valor");
+                case "descricao" -> sql.append(" ORDER BY descricao");
+                default -> throw new RuntimeException("valor inválido para chave de ordenação");
+            }
+
+            //Verificando direção da sequencia
+            switch (direcaoSequencia) {
+                case "crescente" -> sql.append(" ASC");
+                case "decrescente" -> sql.append(" DESC");
+            }
+        }
+
+        try (PreparedStatement pstmt = conn.prepareStatement(String.valueOf(sql))) {
+            //Definindo parâmetro vazio
+            if (campoFiltro != null) {
+                pstmt.setObject(1, valorFiltro);
+            }
+
+            //Instanciando um ResultSet
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                double valor = rs.getDouble("valor");
+                String descricao = rs.getString("descricao");
+
+        planos.add(new Plano(id, nome, valor, descricao));
       }
     }
 
-    return planosDTOS;
+    return planos;
   }
 
   //Campos Alteráveis
