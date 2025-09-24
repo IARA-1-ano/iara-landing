@@ -1,12 +1,8 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: lucasdonini-ieg
-  Date: 22/09/2025
-  Time: 09:27
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html lang="en">
+<%
+  String erro = (String) request.getAttribute("erro");
+%>
+<html lang="pt-BR">
 <head>
   <title>Página de cadastro - Planos</title>
 </head>
@@ -24,7 +20,6 @@
 </form>
 <a href="${pageContext.request.contextPath}/area-restrita/planos?action=read">Cancelar</a>
 <%
-  String erro = (String) request.getAttribute("erro");
   if (erro != null && !erro.isBlank()) {
 %>
 <p>

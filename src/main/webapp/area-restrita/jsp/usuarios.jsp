@@ -9,7 +9,7 @@
   DateTimeFormatter isoDmy = DateTimeFormatter.ofPattern("dd/MM/yyyy");
   String erro = (String) request.getAttribute("erro");
 %>
-<html>
+<html lang="pt-BR">
 <head>
   <title>Landing Teste</title>
 </head>

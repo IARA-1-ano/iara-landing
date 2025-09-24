@@ -1,10 +1,4 @@
-<%@ page import="com.dto.SuperAdmDTO" %><%--
-  Created by IntelliJ IDEA.
-  User: lucasdonini-ieg
-  Date: 08/09/2025
-  Time: 13:06
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="com.dto.SuperAdmDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
   SuperAdmDTO adm = (SuperAdmDTO) request.getAttribute("infosSuperAdm");
@@ -36,7 +30,5 @@
   <%= erro %>
 </p>
 <% } %>
-
-<a href="${pageContext.request.contextPath}/area-restrita/superadms?action=read">Cancelar</a>
 </body>
 </html>

@@ -1,11 +1,5 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.model.Fabrica" %><%--
-  Created by IntelliJ IDEA.
-  User: lucasdonini-ieg
-  Date: 08/09/2025
-  Time: 17:06
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="com.model.Fabrica" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -71,6 +65,6 @@
   </tr>
   <% } %>
 </table>
-<a href="${pageContext.request.contextPath}/area-restrita/html/cadastro-fabrica.html">Cadastrar nova Fábrica</a>
+<a href="${pageContext.request.contextPath}/area-restrita/fabtricas?action=create">Cadastrar nova Fábrica</a>
 </body>
 </html>

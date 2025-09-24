@@ -1,6 +1,9 @@
 <%@page contentType="text/html; charset=UTF-8" language="java" %>
+<%
+  String erro = (String) request.getAttribute("erro");
+%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <title>Landing Teste</title>
 </head>
@@ -16,7 +19,6 @@
 </form>
 <a href="${pageContext.request.contextPath}/area-restrita/superadms?action=read">Cancelar</a>
 <%
-  String erro = (String) request.getAttribute("erro");
   if (erro != null && !erro.isBlank()) {
 %>
 <p>

@@ -1,14 +1,9 @@
-<%@ page import="com.model.Plano" %><%--
-  Created by IntelliJ IDEA.
-  User: ryanmoraes-ieg
-  Date: 09/09/2025
-  Time: 20:06
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="com.model.Plano" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<html lang="pt-BR">
 <%
   Plano plano = (Plano) request.getAttribute("infosPlano");
+  String erro = (String) request.getAttribute("erro");
 %>
 <head>
   <title>Landing Teste</title>
@@ -25,7 +20,6 @@
   <button type="submit">Salvar</button>
 </form>
 <%
-  String erro = (String) request.getAttribute("erro");
   if (erro != null && !erro.isBlank()) {
 %>
 <p>

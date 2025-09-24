@@ -1,9 +1,8 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
-
 <%@ page import="com.dto.AtualizacaoUsuarioDTO" %>
 <%@ page import="com.model.NivelAcesso" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%
   AtualizacaoUsuarioDTO usuario = (AtualizacaoUsuarioDTO) request.getAttribute("infosUsuario");
   Map<Integer, String> fabricas = (Map<Integer, String>) request.getAttribute("fabricasPorFk");

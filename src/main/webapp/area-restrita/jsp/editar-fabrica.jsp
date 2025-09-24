@@ -1,19 +1,13 @@
 <%@ page import="com.model.Fabrica" %>
 <%@ page import="com.model.Endereco" %>
-<%@ page import="java.util.List" %><%--
-  Created by IntelliJ IDEA.
-  User: lucasdonini-ieg
-  Date: 10/09/2025
-  Time: 18:10
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
   Fabrica f = (Fabrica) request.getAttribute("infosFabrica");
   Endereco e = f.getEndereco();
   String complemento = e.getComplemento();
 %>
-<html>
+<html lang="pt-BR">
 <head>
   <title>Title</title>
 </head>

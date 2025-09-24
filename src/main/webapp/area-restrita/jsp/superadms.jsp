@@ -1,17 +1,11 @@
 <%@ page import="com.dto.SuperAdmDTO" %>
-<%@ page import="java.util.List" %><%--
-  Created by IntelliJ IDEA.
-  User: lucasdonini-ieg
-  Date: 08/09/2025
-  Time: 17:06
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
   List<SuperAdmDTO> adms = (List<SuperAdmDTO>) request.getAttribute("superAdms");
 %>
-<html>
+<html lang="pt-BR">
 <head>
   <title>Landing Teste</title>
 </head>
@@ -50,6 +44,6 @@
   </tr>
   <% } %>
 </table>
-<a href="${pageContext.request.contextPath}/area-restrita/jsp/cadastro-superadm.jsp">Cadastrar novo Super Administrador</a>
+<a href="${pageContext.request.contextPath}/area-restrita/superadms?action=create">Cadastrar novo Super Administrador</a>
 </body>
 </html>
