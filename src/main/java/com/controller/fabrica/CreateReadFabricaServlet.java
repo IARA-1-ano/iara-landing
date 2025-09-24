@@ -27,7 +27,7 @@ public class CreateReadFabricaServlet extends HttpServlet {
     try (FabricaDAO dao = new FabricaDAO()) {
 
       // Recupera os usuários do banco e registra na request
-      fabricas = dao.listarFabricas("ramo", "Alimentício", null, null);
+      fabricas = dao.listarFabricas(null, null, null, null);
       req.setAttribute("fabricas", fabricas);
 
       // setta erro como false
