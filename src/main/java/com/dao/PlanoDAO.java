@@ -6,10 +6,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PlanoDAO extends DAO {
+    //Map
+    public static final Map<String, String> camposAlteraveis = Map.of(
+            "ID", "id",
+            "Nome", "nome",
+            "Valor", "valor",
+            "Descrição", "descricao"
+    );
+
+    //Construtor
   public PlanoDAO() throws SQLException, ClassNotFoundException {
     super();
   }
@@ -158,6 +170,15 @@ public class PlanoDAO extends DAO {
     }
   }
 
+  //Converter valor
+    public Object converterValor(String campo, String valor) throws DateTimeParseException {
+        return switch(campo){
+            case "id" -> Integer.parseInt(valor);
+            case "valor" -> Double.parseDouble(valor);
+            default -> valor;
+        };
+    }
+
   //Listar planos
   public List<Plano> listarPlanos(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
     List<Plano> planos = new ArrayList<>();
@@ -167,24 +188,12 @@ public class PlanoDAO extends DAO {
 
         // Verificando campo do filtro
         if (campoFiltro != null) {
-            switch (campoFiltro) {
-                case "id" -> sql.append(" WHERE id = ?");
-                case "nome" -> sql.append(" WHERE nome = ?");
-                case "valor" -> sql.append(" WHERE valor = ?");
-                case "descricao" -> sql.append(" WHERE descricao = ?");
-                default -> throw new RuntimeException("valor inválido para chave de filtragem");
-            }
+            sql.append(String.format(" WHERE %s = ?", campoFiltro));
         }
 
         //Verificando campo para ordenar a consulta
         if (campoSequencia != null) {
-            switch (campoSequencia) {
-                case "id" -> sql.append(" ORDER BY id");
-                case "nome" -> sql.append(" ORDER BY nome");
-                case "valor" -> sql.append(" ORDER BY valor");
-                case "descricao" -> sql.append(" ORDER BY descricao");
-                default -> throw new RuntimeException("valor inválido para chave de ordenação");
-            }
+            sql.append(" ORDER BY "+campoSequencia);
 
             //Verificando direção da sequencia
             switch (direcaoSequencia) {
