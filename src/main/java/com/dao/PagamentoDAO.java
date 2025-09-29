@@ -1,6 +1,5 @@
 package com.dao;
 
-import com.dto.PagamentoDTO;
 import com.model.Pagamento;
 import java.sql.*;
 import java.time.LocalDate;
@@ -25,7 +24,7 @@ public class PagamentoDAO extends DAO {
     }
 
     //Cadastrar novo Plano
-    public void cadastrar(PagamentoDTO pagamento) throws SQLException {
+    public void cadastrar(Pagamento pagamento) throws SQLException {
         //Comando SQL
         String sql = "INSERT INTO pagamento(valor_pago, status, data_vencimento, data_pagamento, tipo_pagamento, fk_fabrica) VALUES (?,?,?,?,?,?)";
 
@@ -65,7 +64,7 @@ public class PagamentoDAO extends DAO {
         }
     }
 
-    public PagamentoDTO getPagamentoById(int id) throws SQLException {
+    public Pagamento getPagamentoById(int id) throws SQLException {
         // Prepara o comando
         String sql = "SELECT * FROM pagamento WHERE id = ?";
 
@@ -77,7 +76,7 @@ public class PagamentoDAO extends DAO {
                     return null;
                 }
 
-                return new PagamentoDTO(
+                return new Pagamento(
                         id,
                         rs.getDouble("valor_pago"),
                         rs.getBoolean("status"),
@@ -117,7 +116,8 @@ public class PagamentoDAO extends DAO {
             case "id", "fk_fabrica" -> Integer.parseInt(valor);
             case "valor" -> Double.parseDouble(valor);
             case "data_vencimento", "data_pagamento" -> LocalDate.parse(valor);
-            default -> valor;
+            case "tipo_pagamento" -> String.valueOf(valor);
+            default -> throw new IllegalArgumentException();
         };
     }
 
@@ -202,17 +202,19 @@ public class PagamentoDAO extends DAO {
         // Prepara o comando
         StringBuilder sql = new StringBuilder("SELECT * FROM pagamentos");
 
-        // Verificando campo do filtro
-        if (campoFiltro != null) {
-            sql.append(String.format(" WHERE %s = ?", campoFiltro));
+        //Verificando o campo do filtro
+        if (!campoFiltro.isBlank()){
+            sql.append(" WHERE ");
+            sql.append(campoFiltro);
+            sql.append(" = ?");
         }
 
-        //Verificando campo para ordenar a consulta
-        if (campoSequencia != null) {
-            sql.append(" ORDER BY "+campoSequencia);
-
-            //Verificando direção da sequencia
-            switch (direcaoSequencia) {
+        //Verificando campo e direcao para ordernar a consulta
+        if (!campoSequencia.isBlank()){
+            sql.append(" ORDER BY ");
+            sql.append(campoSequencia);
+            //Verificando direção da sequência
+            switch(direcaoSequencia){
                 case "crescente" -> sql.append(" ASC");
                 case "decrescente" -> sql.append(" DESC");
             }
@@ -220,7 +222,7 @@ public class PagamentoDAO extends DAO {
 
         try (PreparedStatement pstmt = conn.prepareStatement(String.valueOf(sql))) {
             //Definindo parâmetro vazio
-            if (campoFiltro != null) {
+            if (!campoFiltro.isBlank()) {
                 pstmt.setObject(1, valorFiltro);
             }
 

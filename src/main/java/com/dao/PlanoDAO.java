@@ -173,7 +173,8 @@ public class PlanoDAO extends DAO {
         return switch(campo){
             case "id" -> Integer.parseInt(valor);
             case "valor" -> Double.parseDouble(valor);
-            default -> valor;
+            case "nome", "descricao" -> String.valueOf(valor);
+            default -> throw new IllegalArgumentException();
         };
     }
 
@@ -184,25 +185,27 @@ public class PlanoDAO extends DAO {
         // Prepara o comando
         StringBuilder sql = new StringBuilder("SELECT * FROM planos");
 
-        // Verificando campo do filtro
-        if (campoFiltro != null) {
-            sql.append(String.format(" WHERE %s = ?", campoFiltro));
-        }
+      //Verificando o campo do filtro
+      if (!campoFiltro.isBlank()){
+          sql.append(" WHERE ");
+          sql.append(campoFiltro);
+          sql.append(" = ?");
+      }
 
-        //Verificando campo para ordenar a consulta
-        if (campoSequencia != null) {
-            sql.append(" ORDER BY "+campoSequencia);
-
-            //Verificando direção da sequencia
-            switch (direcaoSequencia) {
-                case "crescente" -> sql.append(" ASC");
-                case "decrescente" -> sql.append(" DESC");
-            }
-        }
+      //Verificando campo e direcao para ordernar a consulta
+      if (!campoSequencia.isBlank()){
+          sql.append(" ORDER BY ");
+          sql.append(campoSequencia);
+          //Verificando direção da sequência
+          switch(direcaoSequencia){
+              case "crescente" -> sql.append(" ASC");
+              case "decrescente" -> sql.append(" DESC");
+          }
+      }
 
         try (PreparedStatement pstmt = conn.prepareStatement(String.valueOf(sql))) {
             //Definindo parâmetro vazio
-            if (campoFiltro != null) {
+            if (!campoFiltro.isBlank()) {
                 pstmt.setObject(1, valorFiltro);
             }
 

@@ -94,10 +94,6 @@ public class FabricaServlet extends HttpServlet {
         case "create" -> registrarFabrica(req);
         case "update" -> atualizarFabrica(req);
         case "delete" -> removerFabrica(req);
-        case "read" -> {
-            List<Fabrica> fabricas = listarFabricas(req);
-            req.setAttribute("fabricas", fabricas);
-        }
         default -> throw new RuntimeException("valor inválido para o parâmetro 'action': " + action);
       }
 

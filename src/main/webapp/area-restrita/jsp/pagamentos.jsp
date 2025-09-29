@@ -1,40 +1,36 @@
-<%@ page import="com.dto.PagamentoDTO" %>
+<%@ page import="com.model.Pagamento" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.dao.PagamentoDAO" %>
-<%@ page import="java.util.Map" %><%--
-  Created by IntelliJ IDEA.
-  User: ryanmoraes-ieg
-  Date: 24/09/2025
-  Time: 14:46
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%
+    List<Pagamento> pagamentos = (List<Pagamento>) request.getAttribute("pagamentos");
+    Map<String, String> camposFiltraveis = PagamentoDAO.camposFiltraveis;
+%>
 <html>
 <head>
-    <title>Title</title>
+    <title>Landing Teste</title>
 </head>
 <body>
-<%
-    List<PagamentoDTO> pagamentos = (List<PagamentoDTO>) request.getAttribute("pagamentos");
-%>
 <h1>Pagamentos</h1>
 <a href="${pageContext.request.contextPath}/area-restrita/index">Voltar à área restrita</a>
 <br>
-<form action="${pageContext.request.contextPath}/area-restrita/pagamentos?action=read" method="post">
+<form action="${pageContext.request.contextPath}/area-restrita/pagamentos?action=read" method="get">
     <label>Campo de Filtragem:</label>
     <select name="campoFiltro">
-        <option value="null" selected>Nenhum selecionado</option>
-    <% for (String chave:PagamentoDAO.camposFiltraveis.keySet()){ %>
-        <option value="<%=PagamentoDAO.camposFiltraveis.get(chave)%>"><%=chave%></option>
+        <option value="" selected>Nenhum selecionado</option>
+    <% for (String chave:camposFiltraveis.keySet()){ %>
+        <option value="<%=camposFiltraveis.get(chave)%>"><%=chave%></option>
     <%}%>
     </select>
     <label>Valor Filtrado:</label>
     <input type="text" name="valorFiltro">
     <label>Ordenar por:</label>
     <select name="campoSequencia">
-        <option value="null" selected>Nenhum selecionado</option>
-        <% for (String chave:PagamentoDAO.camposFiltraveis.keySet()){ %>
-        <option value="<%=PagamentoDAO.camposFiltraveis.get(chave)%>"><%=chave%></option>
+        <option value="" selected>Nenhum selecionado</option>
+        <% for (String chave:camposFiltraveis.keySet()){ %>
+        <option value="<%=camposFiltraveis.get(chave)%>"><%=chave%></option>
         <%}%>
     </select>
     <select name="direcaoSequencia">
@@ -53,7 +49,7 @@
         <th>Tipo de Pagamento</th>
         <th>ID da Fabrica</th>
     </tr>
-    <% for (PagamentoDTO pagamento : pagamentos) { %>
+    <% for (Pagamento pagamento : pagamentos) { %>
     <tr>
         <td><%= pagamento.getId() %>
         </td>

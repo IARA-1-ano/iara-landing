@@ -73,7 +73,8 @@ public class FabricaDAO extends DAO {
       return switch(campo){
           case "id" -> Integer.parseInt(valor);
           case "status" -> Boolean.parseBoolean(valor);
-          default -> valor;
+          case "cnpj_unidade", "nome", "email_corporativo", "nome_industria", "ramo" -> String.valueOf(valor);
+          default -> throw new IllegalArgumentException();
       };
   }
 
@@ -88,13 +89,16 @@ public class FabricaDAO extends DAO {
        """);
 
     //Verificando o campo do filtro
-      if (campoFiltro!=null){
-          sql.append(String.format(" WHERE %s = ?", campoFiltro));
+      if (!campoFiltro.isBlank()){
+          sql.append(" WHERE ");
+          sql.append(campoFiltro);
+          sql.append(" = ?");
       }
 
       //Verificando campo e direcao para ordernar a consulta
-      if (campoSequencia!=null){
-          sql.append(" ORDER BY "+campoSequencia);
+      if (!campoSequencia.isBlank()){
+          sql.append(" ORDER BY ");
+          sql.append(campoSequencia);
           //Verificando direção da sequência
           switch(direcaoSequencia){
               case "crescente" -> sql.append(" ASC");
@@ -104,7 +108,7 @@ public class FabricaDAO extends DAO {
 
     try (PreparedStatement pstmt = conn.prepareStatement(String.valueOf(sql))) {
         //Definindo parâmetro vazio
-        if (campoFiltro!=null){
+        if (!campoFiltro.isBlank()){
             pstmt.setObject(1, valorFiltro);
         }
 
