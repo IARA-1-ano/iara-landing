@@ -2,10 +2,13 @@
 <%@ page import="com.model.Fabrica" %>
 <%@ page import="com.dao.FabricaDAO" %>
 <%@ page import="com.dao.EnderecoDAO" %>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
   List<Fabrica> fabricas = (List<Fabrica>) request.getAttribute("fabricas");
+  Map<String, String> camposFiltraveisFabrica = FabricaDAO.camposFiltraveis;
+  Map<String, String> camposFiltraveisEndereco = EnderecoDAO.camposFiltraveis;
 %>
 <html>
 <head>
@@ -15,27 +18,27 @@
 <h1>Fabricas</h1>
 <a href="${pageContext.request.contextPath}/area-restrita/index">Voltar à área restrita</a>
 <br>
-<form action="${pageContext.request.contextPath}/area-restrita/pagamentos?action=read" method="post">
+<form action="${pageContext.request.contextPath}/area-restrita/pagamentos?action=read" method="get">
     <label>Campo de Filtragem:</label>
     <select name="campoFiltro">
-        <option value="null" selected>Nenhum selecionado</option>
-        <% for (String chave: FabricaDAO.camposFiltraveis.keySet()){ %>
-        <option value="<%=FabricaDAO.camposFiltraveis.get(chave)%>"><%=chave%></option>
+        <option value="" selected>Nenhum selecionado</option>
+        <% for (String chave:camposFiltraveisFabrica.keySet()){ %>
+        <option value="<%=camposFiltraveisFabrica.get(chave)%>"><%=chave%></option>
         <%}%>
-        <% for (String chave: EnderecoDAO.camposFiltraveis.keySet()){ %>
-        <option value="<%=EnderecoDAO.camposFiltraveis.get(chave)%>"><%=chave%></option>
+        <% for (String chave: camposFiltraveisEndereco.keySet()){ %>
+        <option value="<%=camposFiltraveisEndereco.get(chave)%>"><%=chave%></option>
         <%}%>
     </select>
     <label>Valor Filtrado:</label>
     <input type="text" name="valorFiltro">
     <label>Ordenar por:</label>
     <select name="campoSequencia">
-        <option value="null" selected>Nenhum selecionado</option>
-        <% for (String chave: FabricaDAO.camposFiltraveis.keySet()){ %>
-        <option value="<%=FabricaDAO.camposFiltraveis.get(chave)%>"><%=chave%></option>
+        <option value="" selected>Nenhum selecionado</option>
+        <% for (String chave: camposFiltraveisFabrica.keySet()){ %>
+        <option value="<%=camposFiltraveisFabrica.get(chave)%>"><%=chave%></option>
         <%}%>
-        <% for (String chave: EnderecoDAO.camposFiltraveis.keySet()){ %>
-        <option value="<%=EnderecoDAO.camposFiltraveis.get(chave)%>"><%=chave%></option>
+        <% for (String chave: camposFiltraveisEndereco.keySet()){ %>
+        <option value="<%=camposFiltraveisEndereco.get(chave)%>"><%=chave%></option>
         <%}%>
     </select>
     <select name="direcaoSequencia">

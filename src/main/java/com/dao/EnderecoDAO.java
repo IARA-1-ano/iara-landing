@@ -120,7 +120,8 @@ public class EnderecoDAO extends DAO {
     public Object converterValor(String campo, String valor) {
         return switch(campo){
             case "id", "numero" -> Integer.parseInt(valor);
-            default -> Double.parseDouble(valor);
+            case "cep", "rua", "complemento" -> String.valueOf(valor);
+            default -> throw new IllegalArgumentException();
         };
     }
 

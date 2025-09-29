@@ -2,9 +2,11 @@
 <%@ page import="com.model.Plano" %>
 <%@ page import="com.dao.PagamentoDAO" %>
 <%@ page import="com.dao.PlanoDAO" %>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
   List<Plano> planos = (List<Plano>) request.getAttribute("planos");
+  Map<String, String> camposFiltraveis = PlanoDAO.camposFiltraveis;
 %>
 <html lang="pt-BR">
 <head>
@@ -14,21 +16,21 @@
 <h1>Planos</h1>
 <a href="${pageContext.request.contextPath}/area-restrita/index">Voltar à área restrita</a>
 <br>
-<form action="${pageContext.request.contextPath}/area-restrita/pagamentos?action=read" method="post">
+<form action="${pageContext.request.contextPath}/area-restrita/pagamentos?action=read" method="get">
     <label>Campo de Filtragem:</label>
     <select name="campoFiltro">
-        <option value="null" selected>Nenhum selecionado</option>
-        <% for (String chave:PlanoDAO.camposFiltraveis.keySet()){ %>
-        <option value="<%=PlanoDAO.camposFiltraveis.get(chave)%>"><%=chave%></option>
+        <option value="" selected>Nenhum selecionado</option>
+        <% for (String chave:camposFiltraveis.keySet()){ %>
+        <option value="<%=camposFiltraveis.get(chave)%>"><%=chave%></option>
         <%}%>
     </select>
     <label>Valor Filtrado:</label>
     <input type="text" name="valorFiltro">
     <label>Ordenar por:</label>
     <select name="campoSequencia">
-        <option value="null" selected>Nenhum selecionado</option>
-        <% for (String chave:PlanoDAO.camposFiltraveis.keySet()){ %>
-        <option value="<%=PlanoDAO.camposFiltraveis.get(chave)%>"><%=chave%></option>
+        <option value="" selected>Nenhum selecionado</option>
+        <% for (String chave:camposFiltraveis.keySet()){ %>
+        <option value="<%=camposFiltraveis.get(chave)%>"><%=chave%></option>
         <%}%>
     </select>
     <select name="direcaoSequencia">

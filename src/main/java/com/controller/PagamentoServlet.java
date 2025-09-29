@@ -1,11 +1,8 @@
 package com.controller;
 
 import com.dao.PagamentoDAO;
-import com.dao.PlanoDAO;
-import com.dto.PagamentoDTO;
 import com.exception.ExcecaoDePagina;
 import com.model.Pagamento;
-import com.model.Plano;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -44,7 +41,7 @@ public class PagamentoServlet extends HttpServlet {
                 }
 
                 case "update" -> {
-                    PagamentoDTO pagamento = getInformacoesAlteraveis(req);
+                    Pagamento pagamento = getInformacoesAlteraveis(req);
                     req.setAttribute("infosPagamento", pagamento);
                     destino = PAGINA_EDICAO;
                 }
@@ -137,7 +134,7 @@ public class PagamentoServlet extends HttpServlet {
         }
     }
 
-    private PagamentoDTO getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    private Pagamento getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
         // Dados da requisição
         String temp = req.getParameter("id").trim();
         int id = Integer.parseInt(temp);
@@ -175,7 +172,7 @@ public class PagamentoServlet extends HttpServlet {
             throw ExcecaoDePagina.campoNecessarioFaltante("fkFabrica");
         }
         int fkFabrica = Integer.parseInt(temp4);
-        PagamentoDTO pagamento = new PagamentoDTO(null, null, status, dataVencimento, dataPagamento, tipoPagamento, fkFabrica);
+        Pagamento pagamento = new Pagamento(null, null, status, dataVencimento, dataPagamento, tipoPagamento, fkFabrica);
 
         try (PagamentoDAO dao = new PagamentoDAO()) {
             // Cadastra o pagamento
