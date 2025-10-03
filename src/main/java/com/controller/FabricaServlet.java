@@ -2,8 +2,9 @@ package com.controller;
 
 import com.dao.EnderecoDAO;
 import com.dao.FabricaDAO;
-import com.dao.PagamentoDAO;
+import com.dao.PlanoDAO;
 import com.dto.CadastroFabricaDTO;
+import com.dto.FabricaDTO;
 import com.exception.ExcecaoDePagina;
 import com.model.Endereco;
 import com.model.Fabrica;
@@ -13,24 +14,29 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kotlin.Pair;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-// TODO: criar opções de filtragem para o READ
+import java.util.Map;
 
-@WebServlet("/area-restrita/fabricas")
+@WebServlet("/fabricas")
 public class FabricaServlet extends HttpServlet {
-  private static final String PAGINA_PRINCIPAL = "jsp/fabricas.jsp";
-  private static final String PAGINA_CADASTRO = "jsp/cadastro-fabrica.jsp";
-  private static final String PAGINA_EDICAO = "jsp/editar-fabrica.jsp";
+  private static final String PAGINA_PRINCIPAL = "WEB-INF/jsp/fabricas.jsp";
+  private static final String PAGINA_CADASTRO = "WEB-INF/jsp/cadastro-fabrica.jsp";
+  private static final String PAGINA_EDICAO = "WEB-INF/jsp/editar-fabrica.jsp";
   private static final String PAGINA_ERRO = "html/erro.html";
-  private static final String ESSE_ENDPOINT = "area-restrita/fabricas";
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
     // Dados da request
     String action = req.getParameter("action").trim();
+    Object origem = req.getAttribute("origem");
+
+    if ("post".equals(origem)) {
+      action = "read";
+    }
 
     // Dados da resposta
     boolean erro = true;
@@ -39,18 +45,29 @@ public class FabricaServlet extends HttpServlet {
     try {
       switch (action) {
         case "read" -> {
-          List<Fabrica> fabricas = listarFabricas(req);
+          List<FabricaDTO> fabricas = listarFabricas(req);
           req.setAttribute("fabricas", fabricas);
           destino = PAGINA_PRINCIPAL;
         }
 
         case "update" -> {
-          Fabrica fabrica = getInformacoesAlteraveis(req);
-          req.setAttribute("infosFabrica", fabrica);
+          Pair<Fabrica, Endereco> p = getInformacoesAlteraveis(req);
+          Map<Integer, String> planos = getMapPlanos();
+
+          req.setAttribute("fabrica", p.getFirst());
+          req.setAttribute("endereco", p.getSecond());
+          req.setAttribute("planos", planos);
+
+          destino = PAGINA_EDICAO;
+        }
+
+        case "create" -> {
+          Map<Integer, String> planos = getMapPlanos();
+          req.setAttribute("planos", planos);
+
           destino = PAGINA_CADASTRO;
         }
 
-        case "create" -> destino = PAGINA_CADASTRO;
         default -> throw new RuntimeException("valor inválido para o parâmetro 'action': " + action);
       }
 
@@ -86,7 +103,7 @@ public class FabricaServlet extends HttpServlet {
     String action = req.getParameter("action").trim();
 
     // Dados da resposta
-    String destino = PAGINA_ERRO;
+    boolean erro = true;
 
     try {
       // Faz a ação correspondente à escolha
@@ -97,7 +114,7 @@ public class FabricaServlet extends HttpServlet {
         default -> throw new RuntimeException("valor inválido para o parâmetro 'action': " + action);
       }
 
-      destino = ESSE_ENDPOINT + "?action=read";
+      erro = false;
 
     } catch (ExcecaoDePagina e) {
       req.setAttribute("erro", e.getMessage());
@@ -119,7 +136,13 @@ public class FabricaServlet extends HttpServlet {
     }
 
     // Redireciona para a página de destino
-    resp.sendRedirect(req.getContextPath() + '/' + destino);
+    if (erro) {
+      resp.sendRedirect(req.getContextPath() + '/' + PAGINA_ERRO);
+
+    } else {
+      req.setAttribute("origem", "post");
+      doGet(req, resp);
+    }
   }
 
   private void registrarFabrica(HttpServletRequest req) throws SQLException, ClassNotFoundException {
@@ -132,7 +155,7 @@ public class FabricaServlet extends HttpServlet {
     String rua = req.getParameter("logradouro").trim();
     String complemento = req.getParameter("complemento").trim();
 
-    Endereco endereco = new Endereco(null, cep, numero, rua, complemento);
+    Endereco endereco = new Endereco(null, cep, numero, rua, complemento, null);
 
     // --- Fábrica ---
     String nome = req.getParameter("nome").trim();
@@ -141,47 +164,32 @@ public class FabricaServlet extends HttpServlet {
     String empresa = req.getParameter("empresa").trim();
     String ramo = req.getParameter("ramo").trim();
 
-    CadastroFabricaDTO credenciais = new CadastroFabricaDTO(nome, cnpj, email, empresa, ramo, 0);
+    temp = req.getParameter("id_plano").trim();
+    int idPlano = Integer.parseInt(temp);
+
+    CadastroFabricaDTO credenciais = new CadastroFabricaDTO(nome, cnpj, email, empresa, ramo, idPlano);
 
     try (FabricaDAO fDao = new FabricaDAO(); EnderecoDAO eDao = new EnderecoDAO()) {
-      // Cadastra o endereço, se necessário, e recupera o id
-      Integer id = eDao.getIdEndereco(endereco.getCep(), endereco.getNumero());
-      if (id == null) {
-        id = eDao.cadastrar(endereco);
-      }
-
-      // Verifica se o cadastro não viola a chave UNIQUE de cnpj
-      Fabrica teste = fDao.getFabricaByCnpj(cnpj);
-      if (teste != null) {
+      // Verifica se o cadastro não viola a chave UNIQUE de 'cnpj' em 'fabrica'
+      if (fDao.pesquisarPorCnpj(cnpj) != null) {
         throw ExcecaoDePagina.cnpjDuplicado();
       }
 
-      // setta o id do endereco nas credenciais da fabrica
-      credenciais.setFkEndereco(id);
+      // Cadastra a fábrica e recupera o id gerado
+      int id = fDao.cadastrar(credenciais);
 
-      // Cadastra o usuário
-      fDao.cadastrar(credenciais);
+      // Estabelece o relacionamento com endereço
+      endereco.setIdFabrica(id);
+
+      // Cadastra o endereço
+      eDao.cadastrar(endereco);
     }
   }
 
   private void atualizarFabrica(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     // Dados da request
-    // --- Endereço ---
-    String temp = req.getParameter("id_endereco").trim();
-    int idEndereco = Integer.parseInt(temp);
-
-    String cep = req.getParameter("cep").trim();
-
-    temp = req.getParameter("numero").trim();
-    int numero = Integer.parseInt(temp);
-
-    String rua = req.getParameter("logradouro").trim();
-    String complemento = req.getParameter("complemento").trim();
-
-    Endereco endereco = new Endereco(idEndereco, cep, numero, rua, complemento);
-
     // --- Fabrica ---
-    temp = req.getParameter("id_fabrica").trim();
+    String temp = req.getParameter("id_fabrica").trim();
     int idFabrica = Integer.parseInt(temp);
 
     String nome = req.getParameter("nome").trim();
@@ -194,47 +202,75 @@ public class FabricaServlet extends HttpServlet {
     String nomeEmpresa = req.getParameter("nome_empresa").trim();
     String ramo = req.getParameter("ramo").trim();
 
-    Fabrica alterado = new Fabrica(idFabrica, nome, cnpj, status, email, nomeEmpresa, ramo, endereco);
+    temp = req.getParameter("id_plano").trim();
+    int idPlano = Integer.parseInt(temp);
+
+    Fabrica alterado = new Fabrica(idFabrica, nome, cnpj, status, email, nomeEmpresa, ramo, idPlano);
+
+    // --- Endereço ---
+    String cep = req.getParameter("cep").trim();
+
+    temp = req.getParameter("numero").trim();
+    int numero = Integer.parseInt(temp);
+
+    String rua = req.getParameter("logradouro").trim();
+    String complemento = req.getParameter("complemento").trim();
+
+    Endereco endAlterado = new Endereco(null, cep, numero, rua, complemento, idFabrica);
 
     try (FabricaDAO fDao = new FabricaDAO(); EnderecoDAO eDao = new EnderecoDAO()) {
       // Recupera as informações originais do banco
-      Fabrica original = fDao.getFabricaById(idFabrica);
+      Fabrica original = fDao.pesquisarPorId(idFabrica);
+      Endereco endOriginal = eDao.pesquisarPorIdFabrica(original.getId());
 
       // Verifica se as alterações não violam a chave UNIQUE de cnpj
-      Fabrica teste = fDao.getFabricaByCnpj(cnpj);
+      Fabrica teste = fDao.pesquisarPorCnpj(cnpj);
       if (teste != null && teste.getId() != idFabrica) {
         throw ExcecaoDePagina.cnpjDuplicado();
       }
 
       // Salva as informações no banco
       fDao.atualizar(original, alterado);
-      eDao.atualizar(original.getEndereco(), alterado.getEndereco());
+      eDao.atualizar(endOriginal, endAlterado);
     }
   }
 
-  private Fabrica getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+  private Pair<Fabrica, Endereco> getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     // Dados da request
     String temp = req.getParameter("id").trim();
     int idFabrica = Integer.parseInt(temp);
 
-    try (FabricaDAO dao = new FabricaDAO()) {
+    try (FabricaDAO fDao = new FabricaDAO(); EnderecoDAO eDao = new EnderecoDAO()) {
       // Recupera os dados originais da fábrica e retorna
-      return dao.getFabricaById(idFabrica);
+      Fabrica f = fDao.pesquisarPorId(idFabrica);
+      Endereco e = eDao.pesquisarPorIdFabrica(f.getId());
+      return new Pair<>(f, e);
     }
   }
 
-  private List<Fabrica> listarFabricas(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-      try (FabricaDAO dao = new FabricaDAO()) {
-          //Dados da requisição
-          String campoFiltro = req.getParameter("campoFiltro");
-          String temp = req.getParameter("valorFiltro");
-          Object valorFiltro = dao.converterValor(campoFiltro, temp);
-          String campoSequencia = req.getParameter("campoSequencia");
-          String direcaoSequencia = req.getParameter("direcaoSequencia");
+  private Map<Integer, String> getMapPlanos() throws SQLException, ClassNotFoundException {
+    try (PlanoDAO dao = new PlanoDAO()) {
+      return dao.getMapIdNome();
+    }
+  }
 
-          // Recupera os planos do banco
-          return dao.listarFabricas(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
+  private List<FabricaDTO> listarFabricas(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    try (FabricaDAO dao = new FabricaDAO()) {
+      //Dados da requisição
+      String campoFiltro = req.getParameter("campoFiltro");
+      String temp = req.getParameter("valorFiltro");
+      Object valorFiltro = null;
+
+      if (campoFiltro != null && !campoFiltro.isBlank()) {
+        valorFiltro = dao.converterValor(campoFiltro, temp);
       }
+
+      String campoSequencia = req.getParameter("campoSequencia");
+      String direcaoSequencia = req.getParameter("direcaoSequencia");
+
+      // Recupera os planos do banco
+      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
+    }
   }
 
   private void removerFabrica(HttpServletRequest req) throws SQLException, ClassNotFoundException {

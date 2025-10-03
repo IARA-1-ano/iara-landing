@@ -1,6 +1,8 @@
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
   String erro = (String) request.getAttribute("erro");
+  Map<Integer, String> planos = (Map<Integer, String>) request.getAttribute("planos");
 %>
 <html lang="pt-BR">
 <head>
@@ -8,7 +10,7 @@
 </head>
 <body>
 <h1>Cadastro - Fábrica</h1>
-<form action="${pageContext.request.pageContext}/area-restrita/fabricas?action=create" method="post">
+<form action="${pageContext.request.contextPath}/fabricas?action=create" method="post">
   <h2>Dados da fábrica</h2>
   <input type="hidden" name="action" value="create">
   <input type="text" name="nome" placeholder="Nome">
@@ -16,6 +18,15 @@
   <input type="email" name="email" placeholder="Email para contato">
   <input type="text" name="ramo" placeholder="Ramo">
   <input type="text" name="empresa" placeholder="Nome da empresa">
+  <select name="id_plano">
+    <option value=""> --- Selecione --- </option>
+    
+    <% for (int id : planos.keySet()) { %>
+    <option value="<%= id %>">
+      <%= planos.get(id) %>
+    </option>
+    <% } %>
+  </select>
   
   <h2>Endereço da fábrica</h2>
   <input type="text" name="cep" pattern="\d{8}" title="Insira um CEP válido" placeholder="CEP">
@@ -25,7 +36,7 @@
   
   <button type="submit">Cadastrar</button>
 </form>
-<a href="${pageContext.request.contextPath}/area-restrita/fabricas?action=read">Cancelar</a>
+<a href="${pageContext.request.contextPath}/fabricas?action=read">Cancelar</a>
 <% if (erro != null && !erro.isBlank()) { %>
 <p>
   <%= erro %>
