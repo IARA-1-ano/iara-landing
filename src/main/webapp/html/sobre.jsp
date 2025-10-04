@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -26,10 +27,10 @@
             <ul id="nav_list">
                 <li class="nav-item"><a href="../index.html">Home</a></li>
                 <li class="nav-item active"><a href="../html/sobre.html">Sobre Nós</a></li>
-                <li class="nav-item"><a href="../html/instrucoes.html">Instruções</a></li>
+                <li class="nav-item"><a href="instrucoes.jsp">Instruções</a></li>
             </ul>
 
-            <a href="area-restrita">
+            <a href="${pageContext.request.contextPath}/area-restrita">
                 <button class="btn-default">
                     Área-Restrita
                 </button>
@@ -44,10 +45,10 @@
             <ul id="mobile_nav_list">
                 <li class="nav-item"><a href="../index.html">Home</a></li>
                 <li class="nav-item active"><a href="../html/sobre.html">Sobre Nós</a></li>
-                <li class="nav-item"><a href="../html/instrucoes.html">Instruções</a></li>
+                <li class="nav-item"><a href="instrucoes.jsp">Instruções</a></li>
             </ul>
 
-            <a class="btn-default" href="area-restrita">Área-Restrita</a>
+            <a class="btn-default" href="${pageContext.request.contextPath}/area-restrita">Área-Restrita</a>
         </div>
     </header>
 
@@ -145,7 +146,7 @@
                 <ul>
                     <li><a href="../index.html">Home</a></li>
                     <li><a href="../html/sobre.html">Sobre Nós</a></li>
-                    <li><a href="../html/instrucoes.html">Instruções</a></li>
+                    <li><a href="instrucoes.jsp">Instruções</a></li>
                 </ul>
             </div>
 
