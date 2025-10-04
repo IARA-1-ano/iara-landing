@@ -48,4 +48,9 @@ public class ExcecaoDePagina extends RuntimeException {
     String msg = "Formato inválido para valor do campo %s. Formato correto: %s".formatted(campo, formato);
     return new ExcecaoDePagina(msg);
   }
+
+  public static ExcecaoDePagina valorInvalido(String campo) {
+    String msg = "Valor ináválido para o campo %s".formatted(campo);
+    return new ExcecaoDePagina(msg);
+  }
 }
