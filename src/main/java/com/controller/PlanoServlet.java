@@ -1,9 +1,7 @@
 package com.controller;
 
-import com.dao.PagamentoDAO;
 import com.dao.PlanoDAO;
 import com.exception.ExcecaoDePagina;
-import com.model.Pagamento;
 import com.model.Plano;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -16,18 +14,22 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/area-restrita/planos")
+@WebServlet("/planos")
 public class PlanoServlet extends HttpServlet {
-  private static final String PAGINA_PRINCIPAL = "jsp/planos.jsp";
-  private static final String PAGINA_CADASTRO = "jsp/cadastro-plano.jsp";
-  private static final String PAGINA_EDICAO = "jsp/editar-plano.jsp";
+  private static final String PAGINA_PRINCIPAL = "WEB-INF/jsp/planos.jsp";
+  private static final String PAGINA_CADASTRO = "WEB-INF/jsp/cadastro-plano.jsp";
+  private static final String PAGINA_EDICAO = "WEB-INF/jsp/editar-plano.jsp";
   private static final String PAGINA_ERRO = "html/erro.html";
-  private static final String ESSE_ENDPOINT = "area-restrita/planos";
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     // Dados da requisição
     String action = req.getParameter("action").trim();
+    Object origem = req.getAttribute("origem");
+
+    if ("post".equals(origem)) {
+      action = "read";
+    }
 
     // Dados da resposta
     boolean erro = true;
@@ -43,7 +45,7 @@ public class PlanoServlet extends HttpServlet {
 
         case "update" -> {
           Plano plano = getInformacoesAlteraveis(req);
-          req.setAttribute("infosPlano", plano);
+          req.setAttribute("plano", plano);
           destino = PAGINA_EDICAO;
         }
 
@@ -82,21 +84,17 @@ public class PlanoServlet extends HttpServlet {
     String action = req.getParameter("action").trim();
 
     // Dados da resposta
-    String destino = PAGINA_ERRO;
+    boolean erro = true;
 
     try {
       switch (action) {
         case "create" -> registrarPlano(req);
         case "update" -> atualizarPlano(req);
         case "delete" -> removerPlano(req);
-        case "read" -> {
-            List<Plano> planos = listaPlanos(req);
-            req.setAttribute("planos", planos);
-        }
         default -> throw new RuntimeException("valor inválido para o parâmetro 'action': " + action);
       }
 
-      destino = ESSE_ENDPOINT + "?action=read";
+      erro = false;
 
     } catch (ExcecaoDePagina e) {
       req.setAttribute("erro", e.getMessage());
@@ -118,22 +116,28 @@ public class PlanoServlet extends HttpServlet {
     }
 
     // Redireciona para a página de destino
-    resp.sendRedirect(req.getContextPath() + '/' + destino);
+    if (erro) {
+      resp.sendRedirect(req.getContextPath() + '/' + PAGINA_ERRO);
+
+    } else {
+      req.setAttribute("origem", "post");
+      doGet(req, resp);
+    }
   }
 
-    private List<Plano> listaPlanos(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-        try (PlanoDAO dao = new PlanoDAO()) {
-            //Dados da requisição
-            String campoFiltro = req.getParameter("campoFiltro");
-            String temp = req.getParameter("valorFiltro");
-            Object valorFiltro = dao.converterValor(campoFiltro, temp);
-            String campoSequencia = req.getParameter("campoSequencia");
-            String direcaoSequencia = req.getParameter("direcaoSequencia");
+  private List<Plano> listaPlanos(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    try (PlanoDAO dao = new PlanoDAO()) {
+      //Dados da requisição
+      String campoFiltro = req.getParameter("campoFiltro");
+      String temp = req.getParameter("valorFiltro");
+      Object valorFiltro = dao.converterValor(campoFiltro, temp);
+      String campoSequencia = req.getParameter("campoSequencia");
+      String direcaoSequencia = req.getParameter("direcaoSequencia");
 
-            // Recupera os planos do banco
-            return dao.listarPlanos(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
-        }
+      // Recupera os planos do banco
+      return dao.listarPlanos(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
     }
+  }
 
   private Plano getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     // Dados da requisição

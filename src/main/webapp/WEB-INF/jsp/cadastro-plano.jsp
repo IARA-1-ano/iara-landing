@@ -8,17 +8,17 @@
 </head>
 <body>
 <h1>Página de Teste para Cadastro</h1>
-<form action="${pageContext.request.contextPath}/area-restrita/planos?action=create" method="post">
+<form action="${pageContext.request.contextPath}/planos?action=create" method="post">
   <input type="hidden" name="action" value="create">
   <label>Nome:</label>
   <input type="text" name="nome">
   <label>Valor:</label>
-  <input type="number" placeholder="R$" name="valor">
+  <input type="number" step="any" placeholder="R$" name="valor">
   <label>Descrição:</label>
   <input type="text" name="descricao">
   <input type="submit">
 </form>
-<a href="${pageContext.request.contextPath}/area-restrita/planos?action=read">Cancelar</a>
+<a href="${pageContext.request.contextPath}/planos?action=read">Cancelar</a>
 <%
   if (erro != null && !erro.isBlank()) {
 %>

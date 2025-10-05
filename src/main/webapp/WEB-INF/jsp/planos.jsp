@@ -1,12 +1,11 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.model.Plano" %>
-<%@ page import="com.dao.PagamentoDAO" %>
-<%@ page import="com.dao.PlanoDAO" %>
-<%@ page import="java.util.Map" %>
+<%@ page import="static com.dao.PlanoDAO.camposFiltraveis" %>
+<%@ page import="com.model.DirecaoOrdenacao" %>
+<%@ page import="com.utils.NumberUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
   List<Plano> planos = (List<Plano>) request.getAttribute("planos");
-  Map<String, String> camposFiltraveis = PlanoDAO.camposFiltraveis;
 %>
 <html lang="pt-BR">
 <head>
@@ -14,30 +13,49 @@
 </head>
 <body>
 <h1>Planos</h1>
-<a href="${pageContext.request.contextPath}/area-restrita/index">Voltar à área restrita</a>
+<a href="${pageContext.request.contextPath}/area-restrita">Voltar à área restrita</a>
 <br>
-<form action="${pageContext.request.contextPath}/area-restrita/pagamentos?action=read" method="get">
-    <label>Campo de Filtragem:</label>
+<form action="${pageContext.request.contextPath}/planos" method="get">
+  <input type="hidden" name="action" value="read">
+  
+  <label>
+    Campo de Filtragem:
     <select name="campoFiltro">
-        <option value="" selected>Nenhum selecionado</option>
-        <% for (String chave:camposFiltraveis.keySet()){ %>
-        <option value="<%=camposFiltraveis.get(chave)%>"><%=chave%></option>
-        <%}%>
+      <option value="" selected>Nenhum selecionado</option>
+      
+      <% for (String chave : camposFiltraveis.keySet()) { %>
+      <option value="<%= chave %>">
+        <%= camposFiltraveis.get(chave) %>
+      </option>
+      <% } %>
     </select>
-    <label>Valor Filtrado:</label>
+  </label>
+  
+  <label>
+    Valor Filtrado:
     <input type="text" name="valorFiltro">
-    <label>Ordenar por:</label>
+  </label>
+  
+  <label>
+    Ordenar por:
     <select name="campoSequencia">
-        <option value="" selected>Nenhum selecionado</option>
-        <% for (String chave:camposFiltraveis.keySet()){ %>
-        <option value="<%=camposFiltraveis.get(chave)%>"><%=chave%></option>
-        <%}%>
+      <option value="" selected>Nenhum selecionado</option>
+      
+      <% for (String chave : camposFiltraveis.keySet()) { %>
+      <option value="<%= camposFiltraveis.get(chave) %>">
+        <%= chave %>
+      </option>
+      <% } %>
     </select>
-    <select name="direcaoSequencia">
-        <option value="crescente" selected>Crescente</option>
-        <option value="decrescente">Decrescente</option>
-    </select>
-    <input type="submit" value="Filtrar">
+  </label>
+  
+  <label>
+    Direção de ordenação
+    <input type="radio" name="direcaoSequencia" value="<%= DirecaoOrdenacao.CRESCENTE.getSql() %>" checked> Crescente
+    <input type="radio" name="direcaoSequencia" value="<%= DirecaoOrdenacao.DECRESCENTE.getSql() %>"> Decrescente
+  </label>
+  
+  <input type="submit" value="Filtrar">
 </form>
 <table border="1">
   <tr>
@@ -52,17 +70,17 @@
     </td>
     <td><%= plano.getNome() %>
     </td>
-    <td><%= plano.getValor() %>
+    <td><%= NumberUtils.reais.format(plano.getValor()) %>
     </td>
     <td><%= plano.getDescricao() %>
     </td>
     <td>
-      <form action="${pageContext.request.contextPath}/area-restrita/planos?action=update" method="get">
+      <form action="${pageContext.request.contextPath}/planos" method="get">
         <input type="hidden" name="id" value="<%= plano.getId() %>">
         <input type="hidden" name="action" value="update">
         <button type="submit">Editar</button>
       </form>
-      <form action="${pageContext.request.contextPath}/area-restrita/planos?action=delete" method="post">
+      <form action="${pageContext.request.contextPath}/planos" method="post">
         <input type="hidden" name="id" value="<%= plano.getId() %>">
         <input type="hidden" name="action" value="delete">
         <button type="submit">Deletar</button>
@@ -71,6 +89,6 @@
   </tr>
   <% } %>
 </table>
-<a href="${pageContext.request.contextPath}/area-restrita/planos?action=create">Cadastrar novo Plano</a>
+<a href="${pageContext.request.contextPath}/planos?action=create">Cadastrar novo Plano</a>
 </body>
 </html>
