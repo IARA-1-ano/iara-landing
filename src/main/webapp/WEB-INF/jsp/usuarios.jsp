@@ -38,16 +38,16 @@
       <%= u.getEmail() %>
     </td>
     <td>
-      <%= u.getPermissao().descricao() %>
+      <%= u.getTipoAcesso().descricao() %>
     </td>
     <td>
-      <%= u.getDtCriacao().format(DataUtils.DMY) %>
+      <%= u.getDataCriacao().format(DataUtils.DMY) %>
     </td>
     <td>
       <%= u.getStatus() ? "Ativo" : "Inativo" %>
     </td>
     <td>
-      <%= fabricas.get(u.getFkFabrica()) %>
+      <%= fabricas.get(u.getIdFabrica()) %>
     </td>
     <td>
       <form action="${pageContext.request.contextPath}/usuarios" method="get">

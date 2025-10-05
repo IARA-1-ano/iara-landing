@@ -1,12 +1,14 @@
 package com.dto;
 
 public class SuperAdmDTO {
-  private int id;
+  // Atributos
+  private Integer id;
   private String nome;
   private String cargo;
   private String email;
 
-  public SuperAdmDTO(int id, String nome, String cargo, String email) {
+  // Construtor
+  public SuperAdmDTO(Integer id, String nome, String cargo, String email) {
     this.id = id;
     this.nome = nome;
     this.cargo = cargo;
@@ -14,11 +16,11 @@ public class SuperAdmDTO {
   }
 
   // Getters e Setters
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
@@ -44,5 +46,11 @@ public class SuperAdmDTO {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  // toString
+  @Override
+  public String toString() {
+    return "SuperAdmDTO{id=%d, nome='%s', cargo='%s', email='%s'}".formatted(id, nome, cargo, email);
   }
 }

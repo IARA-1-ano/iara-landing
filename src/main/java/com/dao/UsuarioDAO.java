@@ -50,7 +50,7 @@ public class UsuarioDAO extends DAO {
     String email = credenciais.getEmail();
     String senha = credenciais.getSenha();
     String nome = credenciais.getNome();
-    int fkFabrica = credenciais.getFkFabrica();
+    int fkFabrica = credenciais.getIdFabrica();
     int nivelAcesso = TipoAcesso.GERENCIAMENTO.nivel();
     boolean status = true;
 
@@ -160,9 +160,9 @@ public class UsuarioDAO extends DAO {
     int id = alterado.getId();
     String nome = alterado.getNome();
     String email = alterado.getEmail();
-    TipoAcesso tipoAcesso = alterado.getPermissao();
+    TipoAcesso tipoAcesso = alterado.getTipoAcesso();
     boolean status = alterado.getStatus();
-    int fkFabrica = alterado.getFkFabrica();
+    int fkFabrica = alterado.getIdFabrica();
 
     // Preparação dinâmica do comando
     StringBuilder sql = new StringBuilder("UPDATE usuario SET ");
@@ -178,7 +178,7 @@ public class UsuarioDAO extends DAO {
       valores.add(email);
     }
 
-    if (!tipoAcesso.equals(original.getPermissao())) {
+    if (!tipoAcesso.equals(original.getTipoAcesso())) {
       sql.append("tipo_acesso = ?, ");
       valores.add(tipoAcesso.nivel());
     }
@@ -188,7 +188,7 @@ public class UsuarioDAO extends DAO {
       valores.add(status);
     }
 
-    if (fkFabrica != original.getFkFabrica()) {
+    if (fkFabrica != original.getIdFabrica()) {
       sql.append("id_fabrica = ?, ");
       valores.add(fkFabrica);
     }

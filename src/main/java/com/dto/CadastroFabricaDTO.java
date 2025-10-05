@@ -1,69 +1,77 @@
 package com.dto;
 
 public class CadastroFabricaDTO {
-    private String nome;
-    private String cnpj;
-    private String email;
-    private String nomeEmpresa;
-    private String ramo;
-    private int idPlano;
+  // Atributos
+  private String nomeUnidade;
+  private String cnpj;
+  private String emailCorporativo;
+  private String nomeIndustria;
+  private String ramo;
+  private Integer idPlano;
 
-    public CadastroFabricaDTO(String nome, String cnpj, String email, String nomeEmpresa, String ramo, int idPlano) {
-        this.nome = nome;
-        this.cnpj = cnpj;
-        this.email = email;
-        this.nomeEmpresa = nomeEmpresa;
-        this.ramo = ramo;
-        this.idPlano = idPlano;
-    }
+  // Construtor
+  public CadastroFabricaDTO(String nomeUnidade, String cnpj, String emailCorporativo, String nomeIndustria, String ramo, Integer idPlano) {
+    this.nomeUnidade = nomeUnidade;
+    this.cnpj = cnpj;
+    this.emailCorporativo = emailCorporativo;
+    this.nomeIndustria = nomeIndustria;
+    this.ramo = ramo;
+    this.idPlano = idPlano;
+  }
 
-    // Getters e Setters
-    public String getNome() {
-        return nome;
-    }
+  // Getters e Setters
+  public String getNomeUnidade() {
+    return nomeUnidade;
+  }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+  public void setNomeUnidade(String nomeUnidade) {
+    this.nomeUnidade = nomeUnidade;
+  }
 
-    public String getCnpj() {
-        return cnpj;
-    }
+  public String getCnpj() {
+    return cnpj;
+  }
 
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
+  public void setCnpj(String cnpj) {
+    this.cnpj = cnpj;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getEmailCorporativo() {
+    return emailCorporativo;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmailCorporativo(String emailCorporativo) {
+    this.emailCorporativo = emailCorporativo;
+  }
 
-    public String getNomeEmpresa() {
-        return nomeEmpresa;
-    }
+  public String getNomeIndustria() {
+    return nomeIndustria;
+  }
 
-    public void setNomeEmpresa(String factory_name) {
-        this.nomeEmpresa = factory_name;
-    }
+  public void setNomeIndustria(String nomeIndustria) {
+    this.nomeIndustria = nomeIndustria;
+  }
 
-    public String getRamo() {
-        return ramo;
-    }
+  public String getRamo() {
+    return ramo;
+  }
 
-    public void setRamo(String sector) {
-        this.ramo = sector;
-    }
+  public void setRamo(String ramo) {
+    this.ramo = ramo;
+  }
 
-    public int getIdPlano() {
-        return idPlano;
-    }
+  public Integer getIdPlano() {
+    return idPlano;
+  }
 
-    public void setIdPlano(int idPlano) {
-        this.idPlano = idPlano;
-    }
+  public void setIdPlano(Integer idPlano) {
+    this.idPlano = idPlano;
+  }
 
+  // toString
+  @Override
+  public String toString() {
+    return "CadastroFabricaDTO{nomeUnidade='%s', cnpj='%s', emailCorporativo='%s', nomeIndustria='%s', ramo='%s', idPlano=%d}"
+        .formatted(nomeUnidade, cnpj, emailCorporativo, nomeIndustria, ramo, idPlano);
+  }
 }

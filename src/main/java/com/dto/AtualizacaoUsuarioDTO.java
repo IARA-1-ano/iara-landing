@@ -3,28 +3,30 @@ package com.dto;
 import com.model.TipoAcesso;
 
 public class AtualizacaoUsuarioDTO {
-  private int id;
+  // Atributos
+  private Integer id;
   private String nome;
   private String email;
   private TipoAcesso tipoAcesso;
-  private boolean status;
-  private int fkFabrica;
+  private Boolean status;
+  private Integer idFabrica;
 
-  public AtualizacaoUsuarioDTO(int id, String nome, String email, TipoAcesso tipoAcesso, boolean status, int fkFabrica) {
+  // Construtor
+  public AtualizacaoUsuarioDTO(Integer id, String nome, String email, TipoAcesso tipoAcesso, Boolean status, Integer idFabrica) {
     this.id = id;
     this.nome = nome;
     this.email = email;
     this.tipoAcesso = tipoAcesso;
     this.status = status;
-    this.fkFabrica = fkFabrica;
+    this.idFabrica = idFabrica;
   }
 
   // Getters e Setters
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
@@ -44,27 +46,34 @@ public class AtualizacaoUsuarioDTO {
     this.email = email;
   }
 
-  public TipoAcesso getPermissao() {
+  public TipoAcesso getTipoAcesso() {
     return tipoAcesso;
   }
 
-  public void setPermissao(TipoAcesso accessLevel) {
+  public void setTipoAcesso(TipoAcesso accessLevel) {
     this.tipoAcesso = accessLevel;
   }
 
-  public boolean getStatus() {
+  public Boolean getStatus() {
     return status;
   }
 
-  public void setStatus(boolean status) {
+  public void setStatus(Boolean status) {
     this.status = status;
   }
 
-  public int getFkFabrica() {
-    return fkFabrica;
+  public Integer getIdFabrica() {
+    return idFabrica;
   }
 
-  public void setFkFabrica(int fkFabrica) {
-    this.fkFabrica = fkFabrica;
+  public void setIdFabrica(Integer idFabrica) {
+    this.idFabrica = idFabrica;
+  }
+
+  // toString
+  @Override
+  public String toString() {
+    return "AtualizacaoUsuarioDTO{id=%d, nome='%s', email='%s', tipoAcesso=%s, status=%b, idFabrica=%d}"
+        .formatted(id, nome, email, tipoAcesso, status, idFabrica);
   }
 }

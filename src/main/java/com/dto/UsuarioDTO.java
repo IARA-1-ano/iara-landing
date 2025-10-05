@@ -5,32 +5,32 @@ import com.model.TipoAcesso;
 import java.time.LocalDate;
 
 public class UsuarioDTO {
-  private int id;
+  // Atributos
+  private Integer id;
   private String nome;
   private String email;
   private TipoAcesso tipoAcesso;
-  private LocalDate dtCriacao;
-  private boolean status;
-  private int fkFabrica;
+  private LocalDate dataCriacao;
+  private Boolean status;
+  private Integer idFabrica;
 
-  public UsuarioDTO(int id, String nome, String email, TipoAcesso tipoAcesso, LocalDate dtCriacao,
-                    boolean status, int fkFabrica) {
-
+  // Construtor
+  public UsuarioDTO(Integer id, String nome, String email, TipoAcesso tipoAcesso, LocalDate dataCriacao, Boolean status, Integer idFabrica) {
     this.id = id;
     this.nome = nome;
     this.email = email;
     this.tipoAcesso = tipoAcesso;
-    this.dtCriacao = dtCriacao;
+    this.dataCriacao = dataCriacao;
     this.status = status;
-    this.fkFabrica = fkFabrica;
+    this.idFabrica = idFabrica;
   }
 
   // Getters e Setters
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
@@ -50,35 +50,42 @@ public class UsuarioDTO {
     this.email = email;
   }
 
-  public TipoAcesso getPermissao() {
+  public TipoAcesso getTipoAcesso() {
     return tipoAcesso;
   }
 
-  public void setPermissao(TipoAcesso accessLevel) {
-    this.tipoAcesso = accessLevel;
+  public void setTipoAcesso(TipoAcesso tipoAcesso) {
+    this.tipoAcesso = tipoAcesso;
   }
 
-  public LocalDate getDtCriacao() {
-    return dtCriacao;
+  public LocalDate getDataCriacao() {
+    return dataCriacao;
   }
 
-  public void setDtCriacao(LocalDate creationDate) {
-    this.dtCriacao = creationDate;
+  public void setDataCriacao(LocalDate dataCriacao) {
+    this.dataCriacao = dataCriacao;
   }
 
-  public boolean getStatus() {
+  public Boolean getStatus() {
     return status;
   }
 
-  public void setStatus(boolean status) {
+  public void setStatus(Boolean status) {
     this.status = status;
   }
 
-  public int getFkFabrica() {
-    return fkFabrica;
+  public Integer getIdFabrica() {
+    return idFabrica;
   }
 
-  public void setFkFabrica(int fkFabrica) {
-    this.fkFabrica = fkFabrica;
+  public void setIdFabrica(Integer idFabrica) {
+    this.idFabrica = idFabrica;
+  }
+
+  // toString
+  @Override
+  public String toString() {
+    return "UsuarioDTO{id=%d, nome='%s', email='%s', tipoAcesso=%s, dataCriacao=%s, status=%b, idFabrica=%d}"
+        .formatted(id, nome, email, tipoAcesso, dataCriacao, status, idFabrica);
   }
 }

@@ -1,44 +1,45 @@
 package com.dto;
 
 public class FabricaDTO {
-  private int id;
-  private String nome;
+  // Atributos
+  private Integer id;
+  private String nomeUnidade;
   private String cnpj;
-  private boolean status;
-  private String email;
-  private String nomeEmpresa;
+  private Boolean status;
+  private String emailCorporativo;
+  private String nomeIndustria;
   private String ramo;
   private String endereco;
   private String plano;
 
   // Construtor
-  public FabricaDTO(int id, String nome, String cnpj, boolean status, String email, String nomeEmpresa, String ramo, String endereco, String plano) {
+  public FabricaDTO(Integer id, String nomeUnidade, String cnpj, Boolean status, String emailCorporativo, String nomeIndustria, String ramo, String endereco, String plano) {
     this.id = id;
-    this.nome = nome;
+    this.nomeUnidade = nomeUnidade;
     this.cnpj = cnpj;
     this.status = status;
-    this.email = email;
-    this.nomeEmpresa = nomeEmpresa;
+    this.emailCorporativo = emailCorporativo;
+    this.nomeIndustria = nomeIndustria;
     this.ramo = ramo;
     this.endereco = endereco;
     this.plano = plano;
   }
 
   // Getters e Setters
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
-  public String getNome() {
-    return nome;
+  public String getNomeUnidade() {
+    return nomeUnidade;
   }
 
-  public void setNome(String nome) {
-    this.nome = nome;
+  public void setNomeUnidade(String nomeUnidade) {
+    this.nomeUnidade = nomeUnidade;
   }
 
   public String getCnpj() {
@@ -49,28 +50,28 @@ public class FabricaDTO {
     this.cnpj = cnpj;
   }
 
-  public boolean getStatus() {
+  public Boolean getStatus() {
     return status;
   }
 
-  public void setStatus(boolean status) {
+  public void setStatus(Boolean status) {
     this.status = status;
   }
 
-  public String getEmail() {
-    return email;
+  public String getEmailCorporativo() {
+    return emailCorporativo;
   }
 
-  public void setEmail(String email) {
-    this.email = email;
+  public void setEmailCorporativo(String emailCorporativo) {
+    this.emailCorporativo = emailCorporativo;
   }
 
-  public String getNomeEmpresa() {
-    return nomeEmpresa;
+  public String getNomeIndustria() {
+    return nomeIndustria;
   }
 
-  public void setNomeEmpresa(String nomeEmpresa) {
-    this.nomeEmpresa = nomeEmpresa;
+  public void setNomeIndustria(String nomeIndustria) {
+    this.nomeIndustria = nomeIndustria;
   }
 
   public String getRamo() {
@@ -97,19 +98,20 @@ public class FabricaDTO {
     this.plano = plano;
   }
 
-  // toString()
-  @Override
-  public String toString() {
-    return "%s - %s".formatted(nome, nomeEmpresa);
-  }
-
   // Outros métodos
-  public String getCnpjFormatado() {
+  public String cnpjFormatado() {
     StringBuilder sb = new StringBuilder(cnpj);
     sb.insert(12, "-");
     sb.insert(8, "/");
     sb.insert(5, ".");
     sb.insert(2, ".");
     return sb.toString();
+  }
+
+  // toString
+  @Override
+  public String toString() {
+    return "FabricaDTO{id=%d, nomeUnidade='%s', cnpj='%s', status=%b, emailCorporativo='%s', nomeIndustria='%s', ramo='%s', endereco='%s', plano='%s'}"
+        .formatted(id, nomeUnidade, cnpj, status, emailCorporativo, nomeIndustria, ramo, endereco, plano);
   }
 }

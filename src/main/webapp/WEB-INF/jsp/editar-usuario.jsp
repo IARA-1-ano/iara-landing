@@ -24,7 +24,7 @@
   
   <select name="nivel_acesso">
     <% for (TipoAcesso t : TipoAcesso.values()) { %>
-    <option value="<%= t.nivel() %>" <%= t == usuario.getPermissao() ? "selected" : "" %>>
+    <option value="<%= t.nivel() %>" <%= t == usuario.getTipoAcesso() ? "selected" : "" %>>
       <%= t.descricao() %>
     </option>
     <% } %>
@@ -40,7 +40,7 @@
   
   <select name="fk_fabrica">
     <% for (int id : fabricas.keySet()) { %>
-    <option value="<%= id %>" <%= id == usuario.getFkFabrica() ? "selected" : "" %>>
+    <option value="<%= id %>" <%= id == usuario.getIdFabrica() ? "selected" : "" %>>
       <%= fabricas.get(id) %>
     </option>
     <% } %>

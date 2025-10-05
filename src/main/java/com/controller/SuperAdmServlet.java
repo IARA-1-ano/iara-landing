@@ -1,7 +1,6 @@
 package com.controller;
 
 import com.dao.SuperAdmDAO;
-import com.dto.CadastroSuperAdmDTO;
 import com.dto.SuperAdmDTO;
 import com.exception.ExcecaoDeJSP;
 import com.model.SuperAdm;
@@ -163,7 +162,7 @@ public class SuperAdmServlet extends HttpServlet {
     String cargo = req.getParameter("cargo").trim();
     String email = req.getParameter("email").trim();
 
-    CadastroSuperAdmDTO credenciais = new CadastroSuperAdmDTO(nome, cargo, email, senhaHash);
+    SuperAdm credenciais = new SuperAdm(null, nome, cargo, email, senhaHash);
 
     if (!senhaOriginal.matches(".{8,}")) {
       throw ExcecaoDeJSP.senhaCurta(8);

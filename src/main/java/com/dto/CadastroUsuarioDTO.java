@@ -1,16 +1,18 @@
 package com.dto;
 
 public class CadastroUsuarioDTO {
+  // Atributos
   private String nome;
   private String email;
   private String senha;
-  private int fkFabrica;
+  private Integer idFabrica;
 
-  public CadastroUsuarioDTO(String nome, String email, String senha, int fkFabrica) {
+  // Construtor
+  public CadastroUsuarioDTO(String nome, String email, String senha, Integer idFabrica) {
     this.nome = nome;
     this.email = email;
     this.senha = senha;
-    this.fkFabrica = fkFabrica;
+    this.idFabrica = idFabrica;
   }
 
   // Getters e Setters
@@ -34,15 +36,21 @@ public class CadastroUsuarioDTO {
     return senha;
   }
 
-  public void setSenha(String password) {
-    this.senha = password;
+  public void setSenha(String senha) {
+    this.senha = senha;
   }
 
-  public int getFkFabrica() {
-    return fkFabrica;
+  public Integer getIdFabrica() {
+    return idFabrica;
   }
 
-  public void setFkFabrica(int fkFabrica) {
-    this.fkFabrica = fkFabrica;
+  public void setIdFabrica(Integer idFabrica) {
+    this.idFabrica = idFabrica;
+  }
+
+  // toString
+  @Override
+  public String toString() {
+    return "CadastroUsuarioDTO{nome='%s', email='%s', senha='%s', idFabrica=%d}".formatted(nome, email, senha, idFabrica);
   }
 }

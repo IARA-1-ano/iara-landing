@@ -86,19 +86,19 @@
       <%= f.getId() %>
     </td>
     <td>
-      <%= f.getNome() %>
+      <%= f.getNomeUnidade() %>
     </td>
     <td>
-      <%= f.getCnpjFormatado() %>
+      <%= f.cnpjFormatado() %>
     </td>
     <td>
       <%= f.getStatus() ? "Ativa" : "Inativa" %>
     </td>
     <td>
-      <%= f.getEmail() %>
+      <%= f.getEmailCorporativo() %>
     </td>
     <td>
-      <%= f.getNomeEmpresa() %>
+      <%= f.getNomeIndustria() %>
     </td>
     <td>
       <%= f.getRamo() %>

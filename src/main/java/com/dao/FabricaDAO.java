@@ -33,10 +33,10 @@ public class FabricaDAO extends DAO {
 
   public int cadastrar(CadastroFabricaDTO credenciais) throws SQLException {
     // Variáveis
-    String nome = credenciais.getNome();
+    String nome = credenciais.getNomeUnidade();
     String cnpj = credenciais.getCnpj();
-    String email = credenciais.getEmail();
-    String nomeEmpresa = credenciais.getNomeEmpresa();
+    String email = credenciais.getEmailCorporativo();
+    String nomeEmpresa = credenciais.getNomeIndustria();
     String ramo = credenciais.getRamo();
     int idPlano = credenciais.getIdPlano();
     boolean status = true;

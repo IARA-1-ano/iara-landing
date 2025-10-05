@@ -1,6 +1,5 @@
 package com.dao;
 
-import com.dto.CadastroSuperAdmDTO;
 import com.dto.SuperAdmDTO;
 import com.model.SuperAdm;
 
@@ -23,7 +22,7 @@ public class SuperAdmDAO extends DAO {
     super();
   }
 
-  public void cadastrar(CadastroSuperAdmDTO credenciais) throws SQLException {
+  public void cadastrar(SuperAdm credenciais) throws SQLException {
     // Armazena as informações do cadastro em variáveis
     String nome = credenciais.getNome();
     String email = credenciais.getEmail();
