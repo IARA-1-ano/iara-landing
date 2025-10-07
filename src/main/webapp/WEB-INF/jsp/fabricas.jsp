@@ -1,13 +1,11 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.dao.FabricaDAO" %>
-<%@ page import="java.util.Map" %>
 <%@ page import="com.model.DirecaoOrdenacao" %>
 <%@ page import="com.dto.FabricaDTO" %>
+<%@ page import="static com.dao.FabricaDAO.camposFiltraveis" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
   List<FabricaDTO> fabricas = (List<FabricaDTO>) request.getAttribute("fabricas");
-  Map<String, String> camposFiltraveis = FabricaDAO.camposFiltraveis;
 %>
 
 <html>
@@ -29,8 +27,8 @@
       <option value="" selected>Nenhum selecionado</option>
       
       <% for (String chave : camposFiltraveis.keySet()) { %>
-      <option value="<%= camposFiltraveis.get(chave) %>">
-        <%= chave %>
+      <option value="<%= chave %>">
+        <%= camposFiltraveis.get(chave) %>
       </option>
       <% } %>
     </select>
@@ -47,8 +45,8 @@
       <option value="" selected>Nenhum selecionado</option>
       
       <% for (String chave : camposFiltraveis.keySet()) { %>
-      <option value="<%= camposFiltraveis.get(chave) %>">
-        <%= chave %>
+      <option value="<%= chave %>">
+        <%= camposFiltraveis.get(chave) %>
       </option>
       <% } %>
     </select>

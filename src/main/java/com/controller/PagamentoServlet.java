@@ -147,12 +147,12 @@ public class PagamentoServlet extends HttpServlet {
       //Dados da requisição
       String campoFiltro = req.getParameter("campoFiltro");
       String temp = req.getParameter("valorFiltro");
-      Object valorFiltro = dao.converterValor(campoFiltro, temp);
+      Object valorFiltro = PagamentoDAO.converterValor(campoFiltro, temp);
       String campoSequencia = req.getParameter("campoSequencia");
       String direcaoSequencia = req.getParameter("direcaoSequencia");
 
       // Recupera os planos do banco
-      return dao.listarPagamentos(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
+      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
     }
   }
 
@@ -163,7 +163,7 @@ public class PagamentoServlet extends HttpServlet {
 
     try (PagamentoDAO dao = new PagamentoDAO()) {
       // Recupera os dados originais para display
-      return dao.getPagamentoById(id);
+      return dao.pesquisarPorId(id);
     }
   }
 
@@ -176,6 +176,7 @@ public class PagamentoServlet extends HttpServlet {
     LocalDate dataVencimento = LocalDate.parse(temp);
 
     LocalDate dataPagamento = null;
+    double valor = 0;
     if (status) {
       temp = req.getParameter("dataPagamento").trim();
       if (temp.isBlank()) {
@@ -183,6 +184,9 @@ public class PagamentoServlet extends HttpServlet {
       }
 
       dataPagamento = LocalDate.parse(temp);
+
+      temp = req.getParameter("valor").trim();
+      valor = Double.parseDouble(temp);
     }
 
     String tipoPagamento = req.getParameter("tipoPagamento").trim();
@@ -190,7 +194,7 @@ public class PagamentoServlet extends HttpServlet {
     temp = req.getParameter("fkFabrica").trim();
     int fkFabrica = Integer.parseInt(temp);
 
-    Pagamento pagamento = new Pagamento(null, null, status, dataVencimento, dataPagamento, tipoPagamento, fkFabrica);
+    Pagamento pagamento = new Pagamento(null, valor, status, dataVencimento, dataPagamento, tipoPagamento, fkFabrica);
 
     try (PagamentoDAO dao = new PagamentoDAO()) {
       // Cadastra o pagamento

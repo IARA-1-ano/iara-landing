@@ -27,7 +27,7 @@
   
   <select name="status">
     <% for (Boolean b : List.of(true, false)) { %>
-    <option value="<%= b.toString() %>" <%= b ? "selected" : "" %>><%= b ? "Ativa" : "Inativa" %>
+    <option value="<%= b.toString() %>" <%= b == f.getStatus() ? "selected" : "" %>><%= b ? "Ativa" : "Inativa" %>
     </option>
     <% } %>
   </select>

@@ -1,12 +1,11 @@
-<%@ page import="com.model.Pagamento" %>
+<%@ page import="static com.model.Pagamento.tiposPagamento" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="com.dao.FabricaDAO" %>
+<%@ page import="com.model.Pagamento" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
   Map<Integer, String> fabricas = (Map<Integer, String>) request.getAttribute("fabricas");
   Pagamento pagamento = (Pagamento) request.getAttribute("pagamento");
-  Map<String, String> tiposPagamento = Pagamento.tiposPagamento;
   String erro = (String) request.getAttribute("erro");
 %>
 
@@ -40,9 +39,9 @@
   <input type="date" name="dataPagamento" value="<%= pagamento.getDataPagamento() %>">
   
   <select name="tipoPagamento">
-    <% for (String key : Pagamento.tiposPagamento.keySet()) { %>
+    <% for (String key : tiposPagamento.keySet()) { %>
     <option value="<%= key %>" <%= pagamento.getTipoPagamento().equals(key) ? "selected" : "" %>>
-      <%= Pagamento.tiposPagamento.get(key) %>
+      <%= tiposPagamento.get(key) %>
     </option>
     <% } %>
   </select>
@@ -56,5 +55,10 @@
   </select>
   <button type="submit">Salvar</button>
 </form>
+<% if (erro != null && !erro.isBlank()) { %>
+<p>
+  <%= erro %>
+</p>
+<% } %>
 </body>
 </html>

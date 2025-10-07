@@ -135,10 +135,10 @@ public class SuperAdmServlet extends HttpServlet {
     String direcaoSequencia = req.getParameter("direcao_sequencia");
 
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
-      Object valorFiltro = dao.converterValor(campoFiltro, valorFiltroStr);
+      Object valorFiltro = SuperAdmDAO.converterValor(campoFiltro, valorFiltroStr);
 
       // Recupera os usuários do banco
-      return dao.listarSuperAdms(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
+      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
     }
   }
 
@@ -149,7 +149,7 @@ public class SuperAdmServlet extends HttpServlet {
 
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
       // Recupera os dados originais para display
-      return dao.getSuperAdmById(id);
+      return dao.pesquisarPorId(id);
     }
   }
 
@@ -170,7 +170,7 @@ public class SuperAdmServlet extends HttpServlet {
 
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
       // Verifica se o usuário não viola a chave UNIQUE de email
-      SuperAdmDTO teste = dao.getSuperAdmByEmail(email);
+      SuperAdmDTO teste = dao.pesquisarPorEmail(email);
       if (teste != null) {
         throw ExcecaoDeJSP.emailDuplicado();
       }
@@ -209,7 +209,7 @@ public class SuperAdmServlet extends HttpServlet {
       SuperAdm original = dao.getCamposAlteraveis(id);
 
       // Verifica se o email alterado não viola a chave UNIQUE
-      SuperAdmDTO teste = dao.getSuperAdmByEmail(email);
+      SuperAdmDTO teste = dao.pesquisarPorEmail(email);
       if (teste != null && teste.getId() != id) {
         throw ExcecaoDeJSP.emailDuplicado();
       }

@@ -135,7 +135,7 @@ public class PlanoServlet extends HttpServlet {
       String direcaoSequencia = req.getParameter("direcaoSequencia");
 
       // Recupera os planos do banco
-      return dao.listarPlanos(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
+      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
     }
   }
 
@@ -146,7 +146,7 @@ public class PlanoServlet extends HttpServlet {
 
     try (PlanoDAO dao = new PlanoDAO()) {
       // Recupera os dados originais para display
-      return dao.getPlanoById(id);
+      return dao.pesquisarPorId(id);
     }
   }
 
@@ -164,7 +164,7 @@ public class PlanoServlet extends HttpServlet {
 
     try (PlanoDAO dao = new PlanoDAO()) {
       // Verifica se o novo plano não viola a chave UNIQUE
-      if (dao.getPlanoByNome(nome) != null) {
+      if (dao.pesquisarPorNome(nome) != null) {
         throw ExcecaoDeJSP.nomeDuplicado();
       }
 
@@ -205,7 +205,7 @@ public class PlanoServlet extends HttpServlet {
       Plano original = dao.getCamposAlteraveis(id);
 
       // Verifica se o novo nome viola a chave UNIQUE
-      Plano teste = dao.getPlanoByNome(nome);
+      Plano teste = dao.pesquisarPorNome(nome);
       if (teste != null && id != teste.getId()) {
         throw ExcecaoDeJSP.nomeDuplicado();
       }

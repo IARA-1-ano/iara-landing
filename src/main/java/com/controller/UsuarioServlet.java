@@ -20,6 +20,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+// FIXME: todos os parâmetros de filtragem estão sendo passados como `null` para o DAO
+
 @WebServlet("/usuarios")
 public class UsuarioServlet extends HttpServlet {
   private static final String PAGINA_PRINCIPAL = "WEB-INF/jsp/usuarios.jsp";
@@ -152,9 +154,9 @@ public class UsuarioServlet extends HttpServlet {
     String direcaoSequencia = req.getParameter("direcao_sequencia");
 
     try (UsuarioDAO dao = new UsuarioDAO()) {
-      Object valorFiltro = dao.converterValor(campoFiltro, valorFiltroStr);
+      Object valorFiltro = UsuarioDAO.converterValor(campoFiltro, valorFiltroStr);
       // Recupera os usuários do banco e armazena na lista
-      return dao.listarUsuarios(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
+      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
 
     } catch (IllegalArgumentException e) {
       throw ExcecaoDeJSP.valorInvalido(UsuarioDAO.camposFiltraveis.get(campoFiltro));
@@ -191,7 +193,7 @@ public class UsuarioServlet extends HttpServlet {
 
     try (UsuarioDAO dao = new UsuarioDAO()) {
       // Verifica se o cadastro viola a constraint UNIQUE de
-      if (dao.getUsuarioByEmail(email) != null) {
+      if (dao.pesquisarPorEmail(email) != null) {
         throw ExcecaoDeJSP.emailDuplicado();
       }
 
@@ -236,7 +238,7 @@ public class UsuarioServlet extends HttpServlet {
       AtualizacaoUsuarioDTO original = dao.getCamposAlteraveis(id);
 
       // Verifica se a atualização não viola a constraint UNIQUE de email
-      UsuarioDTO teste = dao.getUsuarioByEmail(email);
+      UsuarioDTO teste = dao.pesquisarPorEmail(email);
       if (teste != null && teste.getId() != id) {
         throw ExcecaoDeJSP.emailDuplicado();
       }

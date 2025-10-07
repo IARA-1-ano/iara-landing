@@ -7,35 +7,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 
 public class EnderecoDAO extends DAO {
-  //Map
-  public static final Map<String, String> camposFiltraveis = Map.of(
-      "ID", "id",
-      "CEP", "cep",
-      "Número", "numero",
-      "Rua", "rua",
-      "Complemento", "complemento"
-  );
-
-  //Construtor
+  // Construtor
   public EnderecoDAO() throws SQLException, ClassNotFoundException {
     super();
   }
 
-  //Cadastrar novo endereço e retornar o id gerado
+  // Outros Métodos
+  // === CREATE ===
   public void cadastrar(Endereco credenciais) throws SQLException {
     // Desempacotamento do objeto Endereco
-    String cep = credenciais.getCep();
-    int numero = credenciais.getNumero();
-    String rua = credenciais.getRua();
     String complemento = credenciais.getComplemento();
+    String cep = credenciais.getCep();
+    String rua = credenciais.getRua();
     int idFabrica = credenciais.getIdFabrica();
+    int numero = credenciais.getNumero();
 
     // Insere null se o complemento estiver vazio
-    complemento = complemento.isBlank() ? null : complemento;
+    complemento = (complemento == null || complemento.isBlank() ? null : complemento);
 
     //Comando SQL
     String sql = """
@@ -59,51 +49,47 @@ public class EnderecoDAO extends DAO {
     } catch (SQLException e) {
       //Cancelando transação
       conn.rollback();
-
-      //Lançando exceção
       throw e;
     }
   }
 
-  //Remover endereço
-  public void remover(int id) throws SQLException {
-    // Comando SQL
-    String sql = "DELETE FROM endereco WHERE id = ?";
+  // === READ ===
+  public Endereco pesquisarPorIdFabrica(int idFabrica) throws SQLException {
+    // Prepara o comando
+    String sql = "SELECT * FROM endereco WHERE id_fabrica = ?";
 
-    try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
-      //Definindo variáveis no código SQL
-      pstmt.setInt(1, id);
-      //Salvando alterações no banco
-      if (pstmt.executeUpdate() != 1) {
-        throw new SQLException();
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setInt(1, idFabrica);
+
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (rs.next()) {
+          // Informações do endereço
+          String complemento = rs.getString("complemento");
+          String cep = rs.getString("cep");
+          String rua = rs.getString("rua");
+          int numero = rs.getInt("numero");
+          int id = rs.getInt("id");
+
+          // Cria e retorna o objeto
+          return new Endereco(id, cep, numero, rua, complemento, idFabrica);
+
+        } else {
+          throw new SQLException("Falha ao recuperar endereço");
+        }
       }
-      //Confirmando transações
-      conn.commit();
-    } catch (SQLException e) {
-      //Cancelando transações
-      conn.rollback();
-      //Lançando excessões
-      throw e;
     }
   }
 
-  public Object converterValor(String campo, String valor) {
-    return switch (campo) {
-      case "id", "numero" -> Integer.parseInt(valor);
-      case "cep", "rua", "complemento" -> String.valueOf(valor);
-      default -> throw new IllegalArgumentException();
-    };
-  }
-
+  // === UPDATE ===
   public void atualizar(Endereco original, Endereco alterado) throws SQLException {
     // Desempacotamento do objeto atualizado
-    int id = original.getId();
+    String complemento = alterado.getComplemento();
     String rua = alterado.getRua();
     String cep = alterado.getCep();
-    String complemento = alterado.getComplemento();
     int numero = alterado.getNumero();
+    int id = original.getId();
 
-    // Contrução do script dinâmico
+    // Construção do comando dinâmico
     StringBuilder sql = new StringBuilder("UPDATE endereco SET ");
     List<Object> valores = new ArrayList<>();
 
@@ -117,7 +103,7 @@ public class EnderecoDAO extends DAO {
       valores.add(cep);
     }
 
-    if (!complemento.equals(original.getComplemento()) && !complemento.isBlank()) {
+    if (complemento != null && !complemento.equals(original.getComplemento()) && !complemento.isBlank()) {
       sql.append("complemento = ?, ");
       valores.add(complemento);
     }
@@ -149,37 +135,33 @@ public class EnderecoDAO extends DAO {
       conn.commit();
 
     } catch (SQLException e) {
-
       // Faz o rollback das modificações e propaga a exceção
       conn.rollback();
       throw e;
     }
   }
 
-  public Endereco pesquisarPorIdFabrica(int idFabrica) throws SQLException {
-    // Prepara o comando
-    String sql = "SELECT * FROM endereco WHERE id_fabrica = ?";
+  // === DELETE ===
+  public void remover(int id) throws SQLException {
+    // Comando SQL
+    String sql = "DELETE FROM endereco WHERE id = ?";
 
-    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-      pstmt.setInt(1, idFabrica);
+    try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
+      //Definindo variáveis no código SQL
+      pstmt.setInt(1, id);
 
-      try (ResultSet rs = pstmt.executeQuery()) {
-        if (rs.next()) {
-          // Informações do endereço
-          int id = rs.getInt("id");
-          String cep = rs.getString("cep");
-          int numero = rs.getInt("numero");
-          String rua = rs.getString("rua");
-          String complemento = rs.getString("complemento");
+      //Salvando alterações no banco
+      pstmt.executeUpdate();
 
+      //Confirmando transações
+      conn.commit();
 
-          // Cria e retorna o objeto
-          return new Endereco(id, cep, numero, rua, complemento, idFabrica);
+    } catch (SQLException e) {
+      //Cancelando transações
+      conn.rollback();
 
-        } else {
-          throw new SQLException("Falha ao recuperar endereço");
-        }
-      }
+      //Lançando excessões
+      throw e;
     }
   }
 }

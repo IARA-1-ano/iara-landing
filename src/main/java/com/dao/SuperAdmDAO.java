@@ -9,8 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class SuperAdmDAO extends DAO {
+  // Constantes
   public static final Map<String, String> camposFiltraveis = Map.of(
       "id", "Id",
       "nome", "Nome",
@@ -18,10 +20,26 @@ public class SuperAdmDAO extends DAO {
       "email", "Email"
   );
 
+  // Construtor
   public SuperAdmDAO() throws SQLException, ClassNotFoundException {
     super();
   }
 
+  // Métodos Estáticos
+  public static Object converterValor(String campo, String valor) {
+    if (campo == null || campo.isBlank()) {
+      return null;
+    }
+
+    return switch (campo) {
+      case "id" -> Integer.parseInt(valor);
+      case "nome", "email", "cargo" -> valor;
+      default -> throw new IllegalArgumentException("Campo inválido: " + campo);
+    };
+  }
+
+  // Outros Métodos
+  // === CREATE ===
   public void cadastrar(SuperAdm credenciais) throws SQLException {
     // Armazena as informações do cadastro em variáveis
     String nome = credenciais.getNome();
@@ -30,13 +48,9 @@ public class SuperAdmDAO extends DAO {
     String senha = credenciais.getSenha();
 
     // Prepara o comando
-    String sql = """
-        INSERT INTO super_adm (nome, email, cargo, senha)
-        VALUES (?, ?, ?, ?)
-        """;
+    String sql = "INSERT INTO super_adm (nome, email, cargo, senha) VALUES (?, ?, ?, ?)";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
       // Completa os parâmetros faltantes
       pstmt.setString(1, nome);
       pstmt.setString(2, email);
@@ -50,16 +64,58 @@ public class SuperAdmDAO extends DAO {
       conn.commit();
 
     } catch (SQLException e) {
-
       // Faz o rollback das alterações e propaga a exceção
       conn.rollback();
       throw e;
     }
   }
 
-  public SuperAdmDTO getSuperAdmById(int id) throws SQLException {
+  // === READ ===
+  public List<SuperAdmDTO> listar(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
+    List<SuperAdmDTO> superAdms = new ArrayList<>();
+
     // Prepara o comando
-    String sql = "SELECT * FROM super_adm WHERE id = ?";
+    String sql = "SELECT id, nome, cargo, email FROM super_adm";
+
+    // Verificando campo do filtro
+    if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
+      sql += " WHERE %s = ?".formatted(campoFiltro);
+    }
+
+    //Verificando campo para ordenar a consulta
+    if (campoSequencia != null && camposFiltraveis.containsKey(campoSequencia)) {
+      sql += " ORDER BY %s %s".formatted(campoSequencia, direcaoSequencia);
+
+    } else {
+      sql += " ORDER BY id ASC";
+    }
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      //Definindo parâmetro vazio
+      if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
+        pstmt.setObject(1, valorFiltro);
+      }
+
+      //Instanciando um ResultSet
+      try (ResultSet rs = pstmt.executeQuery()) {
+        while (rs.next()) {
+          int id = rs.getInt("id");
+          String nome = rs.getString("nome");
+          String cargo = rs.getString("cargo");
+          String email = rs.getString("email");
+
+          superAdms.add(new SuperAdmDTO(id, nome, cargo, email));
+        }
+      }
+    }
+
+    return superAdms;
+  }
+
+  public SuperAdmDTO pesquisarPorId(int id) throws SQLException {
+    // Prepara o comando
+    String sql = "SELECT nome, cargo, email FROM super_adm WHERE id = ?";
+    SuperAdmDTO superAdm;
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       pstmt.setInt(1, id);
@@ -69,18 +125,21 @@ public class SuperAdmDAO extends DAO {
           return null;
         }
 
-        return new SuperAdmDTO(
-            id,
-            rs.getString("nome"),
-            rs.getString("cargo"),
-            rs.getString("email"));
+        String nome = rs.getString("nome");
+        String cargo = rs.getString("cargo");
+        String email = rs.getString("email");
+
+        superAdm = new SuperAdmDTO(id, nome, cargo, email);
       }
     }
+
+    return superAdm;
   }
 
-  public SuperAdmDTO getSuperAdmByEmail(String email) throws SQLException {
+  public SuperAdmDTO pesquisarPorEmail(String email) throws SQLException {
     // Prepara o comando
-    String sql = "SELECT * FROM super_adm WHERE email = ?";
+    String sql = "SELECT id, nome, cargo FROM super_adm WHERE email = ?";
+    SuperAdmDTO superAdm;
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       pstmt.setString(1, email);
@@ -90,37 +149,43 @@ public class SuperAdmDAO extends DAO {
           return null;
         }
 
-        return new SuperAdmDTO(
-            rs.getInt("id"),
-            rs.getString("nome"),
-            rs.getString("cargo"),
-            email
-        );
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String cargo = rs.getString("cargo");
+
+        superAdm = new SuperAdmDTO(id, nome, cargo, email);
       }
     }
+
+    return superAdm;
   }
 
-  public void remover(int id) throws SQLException {
+  public SuperAdm getCamposAlteraveis(int id) throws SQLException {
     // Prepara o comando
-    String sql = "DELETE FROM super_adm WHERE id = ?";
+    String sql = "SELECT * FROM super_adm WHERE id = ?";
+    SuperAdm superAdm;
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-      // Completa os parâmetros faltantes
       pstmt.setInt(1, id);
 
-      // Executa o comando e commita as mudanças
-      pstmt.executeUpdate();
-      conn.commit();
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (!rs.next()) {
+          throw new SQLException("Erro ao recuperar as informações do super adm");
+        }
 
-    } catch (SQLException e) {
+        String nome = rs.getString("nome");
+        String cargo = rs.getString("cargo");
+        String email = rs.getString("email");
+        String senha = rs.getString("senha");
 
-      // Faz o rollback das modificações e propaga a exceção
-      conn.rollback();
-      throw e;
+        superAdm = new SuperAdm(id, nome, cargo, email, senha);
+      }
     }
+
+    return superAdm;
   }
 
+  // === UPDATE ===
   public void atualizar(SuperAdm original, SuperAdm alterado) throws SQLException {
     // Desempacotamento do model alterado
     int id = alterado.getId();
@@ -133,22 +198,22 @@ public class SuperAdmDAO extends DAO {
     StringBuilder sql = new StringBuilder("UPDATE super_adm SET ");
     List<Object> valores = new ArrayList<>();
 
-    if (!original.getNome().equals(nome)) {
+    if (!Objects.equals(nome, original.getNome())) {
       sql.append("nome = ?, ");
       valores.add(nome);
     }
 
-    if (!original.getCargo().equals(cargo)) {
+    if (!Objects.equals(cargo, original.getCargo())) {
       sql.append("cargo = ?, ");
       valores.add(cargo);
     }
 
-    if (!original.getEmail().equals(email)) {
+    if (!Objects.equals(email, original.getEmail())) {
       sql.append("email = ?, ");
       valores.add(email);
     }
 
-    if (!original.getSenha().equals(senha) && !senha.isBlank()) {
+    if (senha != null && !senha.equals(original.getSenha()) && !senha.isBlank()) {
       sql.append("senha = ?, ");
       valores.add(senha);
     }
@@ -177,81 +242,29 @@ public class SuperAdmDAO extends DAO {
       conn.commit();
 
     } catch (SQLException e) {
-
       // Faz o rollback das alterações e propaga a exceção
       conn.rollback();
       throw e;
     }
   }
 
-  public Object converterValor(String campo, String valor) {
-    if (campo == null) {
-      return null;
-    }
-
-    return switch (campo) {
-      case "id" -> Integer.parseInt(valor);
-      case "nome", "email", "cargo" -> valor;
-      default -> throw new IllegalArgumentException("Campo inválido: " + campo);
-    };
-  }
-
-  public List<SuperAdmDTO> listarSuperAdms(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
-    List<SuperAdmDTO> superAdms = new ArrayList<>();
-
+  // === DELETE ===
+  public void remover(int id) throws SQLException {
     // Prepara o comando
-    String sql = "SELECT * FROM super_adm";
-
-    // Verificando campo do filtro
-    if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
-      sql += " WHERE %s = ?".formatted(campoFiltro);
-    }
-
-    //Verificando campo para ordenar a consulta
-    if (campoSequencia != null && camposFiltraveis.containsKey((campoSequencia))) {
-      sql += " ORDER BY %s %s".formatted(campoSequencia, direcaoSequencia);
-    }
+    String sql = "DELETE FROM super_adm WHERE id = ?";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-      //Definindo parâmetro vazio
-      if (campoFiltro != null) {
-        pstmt.setObject(1, valorFiltro);
-      }
-
-      //Instanciando um ResultSet
-      ResultSet rs = pstmt.executeQuery();
-      while (rs.next()) {
-        int id = rs.getInt("id");
-        String nome = rs.getString("nome");
-        String cargo = rs.getString("cargo");
-        String email = rs.getString("email");
-
-        superAdms.add(new SuperAdmDTO(id, nome, cargo, email));
-      }
-    }
-
-    return superAdms;
-  }
-
-  public SuperAdm getCamposAlteraveis(int id) throws SQLException {
-    // Prepara o comando
-    String sql = "SELECT * FROM super_adm WHERE id = ?";
-
-    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      // Completa os parâmetros faltantes
       pstmt.setInt(1, id);
 
-      try (ResultSet rs = pstmt.executeQuery()) {
-        if (rs.next()) {
-          String nome = rs.getString("nome");
-          String cargo = rs.getString("cargo");
-          String email = rs.getString("email");
-          String senha = rs.getString("senha");
+      // Executa o comando e commita as mudanças
+      pstmt.executeUpdate();
+      conn.commit();
 
-          return new SuperAdm(id, nome, cargo, email, senha);
-        } else {
-          throw new SQLException("Erro ao recuperar as informações do super adm");
-        }
-      }
+    } catch (SQLException e) {
+      // Faz o rollback das modificações e propaga a exceção
+      conn.rollback();
+      throw e;
     }
   }
 }

@@ -2,6 +2,8 @@
 <%@ page import="com.utils.DataUtils" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.model.DirecaoOrdenacao" %>
+<%@ page import="static com.dao.UsuarioDAO.camposFiltraveis" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
   List<UsuarioDTO> usuarios = (List<UsuarioDTO>) request.getAttribute("usuarios");
@@ -15,6 +17,50 @@
 <body>
 <h1>Usuários</h1>
 <a href="${pageContext.request.contextPath}/area-restrita"> Voltar à área restrita</a>
+
+<form action="${pageContext.request.contextPath}/usuarios" method="get">
+  <input type="hidden" name="action" value="read">
+  
+  <label>
+    Campo de Filtragem:
+    <select name="campoFiltro">
+      <option value="" selected>Nenhum selecionado</option>
+      
+      <% for (String chave : camposFiltraveis.keySet()) { %>
+      <option value="<%= chave %>">
+        <%= camposFiltraveis.get(chave) %>
+      </option>
+      <% } %>
+    </select>
+  </label>
+  
+  <label>
+    Valor Filtrado:
+    <input type="text" name="valorFiltro">
+  </label>
+  
+  <label>
+    Ordenar por:
+    <select name="campoSequencia">
+      <option value="" selected>Nenhum selecionado</option>
+      
+      <% for (String chave : camposFiltraveis.keySet()) { %>
+      <option value="<%= chave %>">
+        <%= camposFiltraveis.get(chave) %>
+      </option>
+      <% } %>
+    </select>
+  </label>
+  
+  <label>
+    Direção de ordenação
+    <input type="radio" name="direcaoSequencia" value="<%= DirecaoOrdenacao.CRESCENTE.getSql() %>" checked> Crescente
+    <input type="radio" name="direcaoSequencia" value="<%= DirecaoOrdenacao.DECRESCENTE.getSql() %>"> Decrescente
+  </label>
+  
+  <input type="submit" value="Filtrar">
+</form>
+
 <table border="1">
   <tr>
     <th>ID</th>

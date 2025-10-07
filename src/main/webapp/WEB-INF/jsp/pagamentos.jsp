@@ -1,6 +1,6 @@
 <%@ page import="com.model.Pagamento" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.dao.PagamentoDAO" %>
+<%@ page import="static com.dao.PagamentoDAO.camposFiltraveis" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="com.model.DirecaoOrdenacao" %>
 <%@ page import="java.time.LocalDate" %>
@@ -10,7 +10,6 @@
   List<Pagamento> pagamentos = (List<Pagamento>) request.getAttribute("pagamentos");
   Map<Integer, String> fabricas = (Map<Integer, String>) request.getAttribute("fabricas");
   Map<String, String> tiposPagamentos = Pagamento.tiposPagamento;
-  Map<String, String> camposFiltraveis = PagamentoDAO.camposFiltraveis;
 %>
 
 <html>
@@ -31,8 +30,8 @@
     <option value="" selected>Nenhum selecionado</option>
     
     <% for (String chave : camposFiltraveis.keySet()) { %>
-    <option value="<%= camposFiltraveis.get(chave) %>">
-      <%= chave %>
+    <option value="<%= chave %>">
+      <%= camposFiltraveis.get(chave) %>
     </option>
     <% } %>
   </select>
@@ -44,8 +43,8 @@
   <select name="campoSequencia">
     <option value="" selected>Nenhum selecionado</option>
     <% for (String chave : camposFiltraveis.keySet()) { %>
-    <option value="<%= camposFiltraveis.get(chave) %>">
-      <%= chave %>
+    <option value="<%= chave %>">
+      <%= camposFiltraveis.get(chave) %>
     </option>
     <% } %>
   </select>

@@ -24,8 +24,8 @@
       <option value="" selected>Nenhum selecionado</option>
       
       <% for (String chave : camposFiltraveis.keySet()) { %>
-      <option value="<%= camposFiltraveis.get(chave) %>">
-        <%= chave %>
+      <option value="<%= chave %>">
+        <%= camposFiltraveis.get(chave) %>
       </option>
       <% } %>
     </select>
@@ -42,8 +42,8 @@
       <option value="" selected>Nenhum selecionado</option>
       
       <% for (String chave : camposFiltraveis.keySet()) { %>
-      <option value="<%= camposFiltraveis.get(chave) %>">
-        <%= chave %>
+      <option value="<%= chave %>">
+        <%= camposFiltraveis.get(chave) %>
       </option>
       <% } %>
     </select>

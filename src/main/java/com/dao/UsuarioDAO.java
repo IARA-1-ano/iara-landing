@@ -13,8 +13,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class UsuarioDAO extends DAO {
+  // Constantes
   public static final Map<String, String> camposFiltraveis = Map.of(
       "id", "Id",
       "nome", "Nome",
@@ -25,13 +27,14 @@ public class UsuarioDAO extends DAO {
       "data_criacao", "Data de Registro"
   );
 
-
+  // Construtor
   public UsuarioDAO() throws SQLException, ClassNotFoundException {
     super();
   }
 
-  public Object converterValor(String campo, String valor) {
-    if (campo == null) {
+  // Métodos Estáticos
+  public static Object converterValor(String campo, String valor) {
+    if (campo == null || campo.isBlank()) {
       return null;
     }
 
@@ -44,14 +47,16 @@ public class UsuarioDAO extends DAO {
     };
   }
 
+  // Outros Métodos
+  // === CREATE ===
   public void cadastrar(CadastroUsuarioDTO credenciais) throws SQLException {
     // Armazena as informações do DTO em variáveis e declara as outras informações
     // fixas do cadastro
     String email = credenciais.getEmail();
     String senha = credenciais.getSenha();
     String nome = credenciais.getNome();
-    int fkFabrica = credenciais.getIdFabrica();
-    int nivelAcesso = TipoAcesso.GERENCIAMENTO.nivel();
+    int idFabrica = credenciais.getIdFabrica();
+    int tipoAcesso = TipoAcesso.GERENCIAMENTO.nivel();
     boolean status = true;
 
     // Prepara o comando
@@ -61,14 +66,13 @@ public class UsuarioDAO extends DAO {
         """;
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
       // Completa os parâmetros faltantes
       pstmt.setString(1, nome);
       pstmt.setString(2, email);
       pstmt.setString(3, senha);
-      pstmt.setInt(4, nivelAcesso);
+      pstmt.setInt(4, tipoAcesso);
       pstmt.setBoolean(5, status);
-      pstmt.setInt(6, fkFabrica);
+      pstmt.setInt(6, idFabrica);
 
       // Executa o update
       pstmt.executeUpdate();
@@ -77,39 +81,14 @@ public class UsuarioDAO extends DAO {
       conn.commit();
 
     } catch (SQLException e) {
-
       // Faz o rollback da operação
       conn.rollback();
-
-      // Registra o erro no terminal e o propaga
-      System.err.println(e.getMessage());
       throw e;
     }
   }
 
-  public void remover(int id) throws SQLException {
-    // Prepara o comando
-    String sql = "DELETE FROM usuario WHERE id = ?";
-
-    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-      // Completa o parâmetro faltante, executa o comando e commita
-      pstmt.setInt(1, id);
-      pstmt.executeUpdate();
-      conn.commit();
-
-    } catch (SQLException e) {
-
-      // Faz o rollback da operação
-      conn.rollback();
-
-      // Registra o erro no terminal e o propaga
-      System.err.println(e.getMessage());
-      throw e;
-    }
-  }
-
-  public List<UsuarioDTO> listarUsuarios(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
+  // === READ ===
+  public List<UsuarioDTO> listar(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
     List<UsuarioDTO> usuarios = new ArrayList<>();
 
     // Prepara o comado e executa
@@ -120,41 +99,101 @@ public class UsuarioDAO extends DAO {
     }
 
     //Verificando campo para ordenar a consulta
-    if (campoSequencia != null && camposFiltraveis.containsValue(campoSequencia)) {
+    if (campoSequencia != null && camposFiltraveis.containsKey(campoSequencia)) {
       sql += " ORDER BY %s %s".formatted(campoSequencia, direcaoSequencia);
+
+    } else {
+      sql += " ORDER BY id ASC";
     }
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       //Definindo parâmetro vazio
-      if (campoFiltro != null) {
+      if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
         pstmt.setObject(1, valorFiltro);
       }
 
       //Instanciando um ResultSet
-      ResultSet rs = pstmt.executeQuery();
-      while (rs.next()) {
-        // Armazenamento do resultado em variáveis
-        int id = rs.getInt("id");
+      try (ResultSet rs = pstmt.executeQuery()) {
+        while (rs.next()) {
+          // Armazenamento do resultado em variáveis
+          int id = rs.getInt("id");
+          String nome = rs.getString("nome");
+          String email = rs.getString("email");
+          TipoAcesso tipoAcesso = TipoAcesso.deNivel(rs.getInt("tipo_acesso"));
+
+          // Conversão da data
+          Date temp = rs.getDate("data_criacao");
+          LocalDate dtCriacao = (temp == null ? null : temp.toLocalDate());
+
+          boolean status = rs.getBoolean("status");
+          int idFabrica = rs.getInt("id_fabrica");
+
+          // Adição na lista
+          usuarios.add(new UsuarioDTO(id, nome, email, tipoAcesso, dtCriacao, status, idFabrica));
+        }
+      }
+    }
+
+    return usuarios;
+  }
+
+  public AtualizacaoUsuarioDTO getCamposAlteraveis(int id) throws SQLException {
+    String sql = "SELECT nome, email, tipo_acesso, status, id_fabrica FROM usuario WHERE id = ?";
+    AtualizacaoUsuarioDTO usuario;
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setInt(1, id);
+
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (!rs.next()) {
+          throw new SQLException("Falha ao recuperar informações do usuário");
+        }
+
         String nome = rs.getString("nome");
         String email = rs.getString("email");
-        TipoAcesso nivelAcesso = TipoAcesso.deNivel(rs.getInt("tipo_acesso"));
+        int temp = rs.getInt("tipo_acesso");
+        TipoAcesso tipoAcesso = TipoAcesso.deNivel(temp);
+        boolean status = rs.getBoolean("status");
+        int idFabrica = rs.getInt("id_fabrica");
 
-        // Conversão da data
-        Date temp = rs.getDate("data_criacao");
-        LocalDate dtCriacao = (temp == null ? null : temp.toLocalDate());
+        usuario = new AtualizacaoUsuarioDTO(id, nome, email, tipoAcesso, status, idFabrica);
+      }
+    }
+
+    return usuario;
+  }
+
+  public UsuarioDTO pesquisarPorEmail(String email) throws SQLException {
+    // Prepara o comando
+    String sql = "SELECT id, nome, tipo_acesso, data_criacao, status, id_fabrica FROM usuario WHERE email = ?";
+    UsuarioDTO usuario;
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setString(1, email);
+
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (!rs.next()) {
+          return null;
+        }
+
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        TipoAcesso tipoAcesso = TipoAcesso.deNivel(rs.getInt("tipo_acesso"));
+
+        Date dtCriacaoDate = rs.getDate("data_criacao");
+        LocalDate dtCriacao = (dtCriacaoDate == null ? null : dtCriacaoDate.toLocalDate());
 
         boolean status = rs.getBoolean("status");
         int fkFabrica = rs.getInt("id_fabrica");
 
-        // Adição na lista
-        usuarios.add(new UsuarioDTO(id, nome, email, nivelAcesso, dtCriacao, status, fkFabrica));
+        usuario = new UsuarioDTO(id, nome, email, tipoAcesso, dtCriacao, status, fkFabrica);
       }
-
-      return usuarios;
-
     }
+
+    return usuario;
   }
 
+  // === UPDATE ===
   public void atualizar(AtualizacaoUsuarioDTO original, AtualizacaoUsuarioDTO alterado) throws SQLException {
     // Desempacotamento do DTO de alteração
     int id = alterado.getId();
@@ -168,17 +207,17 @@ public class UsuarioDAO extends DAO {
     StringBuilder sql = new StringBuilder("UPDATE usuario SET ");
     List<Object> valores = new ArrayList<>();
 
-    if (!nome.equals(original.getNome())) {
+    if (!Objects.equals(nome, original.getNome())) {
       sql.append("nome = ?,  ");
       valores.add(nome);
     }
 
-    if (!email.equals(original.getEmail())) {
+    if (!Objects.equals(email, original.getEmail())) {
       sql.append("email = ?, ");
       valores.add(email);
     }
 
-    if (!tipoAcesso.equals(original.getTipoAcesso())) {
+    if (!Objects.equals(tipoAcesso, original.getTipoAcesso())) {
       sql.append("tipo_acesso = ?, ");
       valores.add(tipoAcesso.nivel());
     }
@@ -218,55 +257,21 @@ public class UsuarioDAO extends DAO {
     }
   }
 
-  public AtualizacaoUsuarioDTO getCamposAlteraveis(int id) throws SQLException {
-    String sql = "SELECT * FROM usuario WHERE id = ?";
-
-    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-      pstmt.setInt(1, id);
-
-      try (ResultSet rs = pstmt.executeQuery()) {
-        if (rs.next()) {
-          String nome = rs.getString("nome");
-          String email = rs.getString("email");
-          int temp = rs.getInt("tipo_acesso");
-          TipoAcesso nivelAcesso = TipoAcesso.deNivel(temp);
-          boolean status = rs.getBoolean("status");
-          int fkFabrica = rs.getInt("id_fabrica");
-
-          return new AtualizacaoUsuarioDTO(id, nome, email, nivelAcesso, status, fkFabrica);
-        } else {
-          throw new SQLException("Falha ao recuperar informações do usuário");
-        }
-      }
-    }
-  }
-
-  public UsuarioDTO getUsuarioByEmail(String email) throws SQLException {
+  // === DELETE ===
+  public void remover(int id) throws SQLException {
     // Prepara o comando
-    String sql = "SELECT * FROM usuario WHERE email = ?";
+    String sql = "DELETE FROM usuario WHERE id = ?";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-      pstmt.setString(1, email);
+      // Completa o parâmetro faltante, executa o comando e commita
+      pstmt.setInt(1, id);
+      pstmt.executeUpdate();
+      conn.commit();
 
-      try (ResultSet rs = pstmt.executeQuery()) {
-        if (!rs.next()) {
-          return null;
-        }
-
-        int id = rs.getInt("id");
-        String nome = rs.getString("nome");
-
-        int nivelAcessoInt = rs.getInt("tipo_acesso");
-        TipoAcesso nivelAcesso = TipoAcesso.deNivel(nivelAcessoInt);
-
-        Date dtCriacaoDate = rs.getDate("data_criacao");
-        LocalDate dtCriacao = dtCriacaoDate == null ? null : dtCriacaoDate.toLocalDate();
-
-        boolean status = rs.getBoolean("status");
-        int fkFabrica = rs.getInt("id_fabrica");
-
-        return new UsuarioDTO(id, nome, email, nivelAcesso, dtCriacao, status, fkFabrica);
-      }
+    } catch (SQLException e) {
+      // Faz o rollback da operação
+      conn.rollback();
+      throw e;
     }
   }
 }

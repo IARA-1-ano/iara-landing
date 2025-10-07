@@ -18,6 +18,8 @@
     <option value="true">Pagamento Realizado ✅</option>
     <option value="false">Pagamento Pendente ❌</option>
   </select>
+  <label>Valor Pago:</label>
+  <input type="number" step="any" placeholder="R$" name="valor">
   <label>Data de Vencimento:</label>
   <input type="date" name="dataVencimento">
   <label>Data de Pagamento:</label>
@@ -28,7 +30,7 @@
     <option value="credito">Crédito</option>
     <option value="pix">PIX</option>
   </select>
-  <label>ID da Fábrica que o pagamento refere-se:</label>
+  <label>Fábrica referente:</label>
   <select name="fkFabrica">
     <option value="" selected> --- Selecione --- </option>
     

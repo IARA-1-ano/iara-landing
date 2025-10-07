@@ -262,7 +262,7 @@ public class FabricaServlet extends HttpServlet {
       Object valorFiltro = null;
 
       if (campoFiltro != null && !campoFiltro.isBlank()) {
-        valorFiltro = dao.converterValor(campoFiltro, temp);
+        valorFiltro = FabricaDAO.converterValor(campoFiltro, temp);
       }
 
       String campoSequencia = req.getParameter("campoSequencia");
