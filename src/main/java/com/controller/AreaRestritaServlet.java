@@ -24,10 +24,16 @@ public class AreaRestritaServlet extends HttpServlet {
     HttpSession session = req.getSession(false);
 
     // Dados da resposta
-    String destino = PAGINA_PRINCIPAL;
+    String destino = PAGINA_LOGIN;
 
-    if (session == null || !(session.getAttribute("usuario") instanceof SuperAdmDTO)) {
-      destino = PAGINA_LOGIN;
+    if (session != null) {
+      Object usuarioObj = session.getAttribute("usuario");
+
+      if (usuarioObj instanceof SuperAdmDTO usuario) {
+        destino = PAGINA_PRINCIPAL;
+        req.setAttribute("nomeUsuario", usuario.getNome());
+        req.setAttribute("emailUsuario", usuario.getEmail());
+      }
     }
 
     RequestDispatcher rd = req.getRequestDispatcher(destino);

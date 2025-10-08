@@ -43,7 +43,11 @@ public class LoginServlet extends HttpServlet {
       switch (action) {
         case "login" -> {
           SuperAdmDTO usuario = login(req);
+
           session.setAttribute("usuario", usuario);
+          req.setAttribute("nomeUsuario", usuario.getNome());
+          req.setAttribute("emailUsuario", usuario.getEmail());
+
           destino = AREA_RESTRITA;
           redirect = false;
         }
