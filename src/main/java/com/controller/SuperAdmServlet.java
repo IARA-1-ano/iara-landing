@@ -18,11 +18,13 @@ import java.util.List;
 
 @WebServlet("/superadms")
 public class SuperAdmServlet extends HttpServlet {
+  // Constantes
   private static final String PAGINA_PRINCIPAL = "WEB-INF/jsp/superadms.jsp";
   private static final String PAGINA_CADASTRO = "WEB-INF/jsp/cadastro-superadm.jsp";
   private static final String PAGINA_EDICAO = "WEB-INF/jsp/editar-superadm.jsp";
   private static final String PAGINA_ERRO = "html/erro.html";
 
+  // GET e POST
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
     // Dados da request
@@ -127,32 +129,8 @@ public class SuperAdmServlet extends HttpServlet {
     }
   }
 
-  private List<SuperAdmDTO> getListaSuperAdms(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-    // Dados da requisição
-    String campoFiltro = req.getParameter("campo_filtro");
-    String valorFiltroStr = req.getParameter("valor_filtro");
-    String campoSequencia = req.getParameter("campo_sequencia");
-    String direcaoSequencia = req.getParameter("direcao_sequencia");
-
-    try (SuperAdmDAO dao = new SuperAdmDAO()) {
-      Object valorFiltro = SuperAdmDAO.converterValor(campoFiltro, valorFiltroStr);
-
-      // Recupera os usuários do banco
-      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
-    }
-  }
-
-  private SuperAdmDTO getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-    // Dados da request
-    String temp = req.getParameter("id").trim();
-    int id = Integer.parseInt(temp);
-
-    try (SuperAdmDAO dao = new SuperAdmDAO()) {
-      // Recupera os dados originais para display
-      return dao.pesquisarPorId(id);
-    }
-  }
-
+  // Outros Métodos
+  // === CREATE ===
   private void registrarSuperAdm(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da request
     String senhaOriginal = req.getParameter("senha");
@@ -180,17 +158,34 @@ public class SuperAdmServlet extends HttpServlet {
     }
   }
 
-  private void removerSuperAdm(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+  // === READ ===
+  private List<SuperAdmDTO> getListaSuperAdms(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    // Dados da requisição
+    String campoFiltro = req.getParameter("campo_filtro");
+    String valorFiltroStr = req.getParameter("valor_filtro");
+    String campoSequencia = req.getParameter("campo_sequencia");
+    String direcaoSequencia = req.getParameter("direcao_sequencia");
+
+    try (SuperAdmDAO dao = new SuperAdmDAO()) {
+      Object valorFiltro = SuperAdmDAO.converterValor(campoFiltro, valorFiltroStr);
+
+      // Recupera os usuários do banco
+      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
+    }
+  }
+
+  private SuperAdmDTO getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     // Dados da request
     String temp = req.getParameter("id").trim();
     int id = Integer.parseInt(temp);
 
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
-      // Deleta o superadm
-      dao.remover(id);
+      // Recupera os dados originais para display
+      return dao.pesquisarPorId(id);
     }
   }
 
+  // === UPDATE ===
   private void atualizarSuperAdm(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da request
     String temp = req.getParameter("id").trim();
@@ -232,6 +227,18 @@ public class SuperAdmServlet extends HttpServlet {
 
       // Salva as informações no banco
       dao.atualizar(original, alterado);
+    }
+  }
+
+  // === DELETE ===
+  private void removerSuperAdm(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    // Dados da request
+    String temp = req.getParameter("id").trim();
+    int id = Integer.parseInt(temp);
+
+    try (SuperAdmDAO dao = new SuperAdmDAO()) {
+      // Deleta o superadm
+      dao.remover(id);
     }
   }
 }

@@ -23,11 +23,13 @@ import java.util.Map;
 
 @WebServlet("/fabricas")
 public class FabricaServlet extends HttpServlet {
+  // Constantes
   private static final String PAGINA_PRINCIPAL = "WEB-INF/jsp/fabricas.jsp";
   private static final String PAGINA_CADASTRO = "WEB-INF/jsp/cadastro-fabrica.jsp";
   private static final String PAGINA_EDICAO = "WEB-INF/jsp/editar-fabrica.jsp";
   private static final String PAGINA_ERRO = "html/erro.html";
 
+  // GET e POST
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
     // Dados da request
@@ -145,6 +147,8 @@ public class FabricaServlet extends HttpServlet {
     }
   }
 
+  // Outros Métodos
+  // === CREATE ===
   private void registrarFabrica(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da request
     // --- Endereço ---
@@ -186,6 +190,46 @@ public class FabricaServlet extends HttpServlet {
     }
   }
 
+  // === READ ===
+  private List<FabricaDTO> listarFabricas(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    try (FabricaDAO dao = new FabricaDAO()) {
+      //Dados da requisição
+      String campoFiltro = req.getParameter("campoFiltro");
+      String temp = req.getParameter("valorFiltro");
+      Object valorFiltro = null;
+
+      if (campoFiltro != null && !campoFiltro.isBlank()) {
+        valorFiltro = FabricaDAO.converterValor(campoFiltro, temp);
+      }
+
+      String campoSequencia = req.getParameter("campoSequencia");
+      String direcaoSequencia = req.getParameter("direcaoSequencia");
+
+      // Recupera os planos do banco
+      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
+    }
+  }
+
+  private Pair<Fabrica, Endereco> getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    // Dados da request
+    String temp = req.getParameter("id").trim();
+    int idFabrica = Integer.parseInt(temp);
+
+    try (FabricaDAO fDao = new FabricaDAO(); EnderecoDAO eDao = new EnderecoDAO()) {
+      // Recupera os dados originais da fábrica e retorna
+      Fabrica f = fDao.pesquisarPorId(idFabrica);
+      Endereco e = eDao.pesquisarPorIdFabrica(f.getId());
+      return new Pair<>(f, e);
+    }
+  }
+
+  private Map<Integer, String> getMapPlanos() throws SQLException, ClassNotFoundException {
+    try (PlanoDAO dao = new PlanoDAO()) {
+      return dao.getMapIdNome();
+    }
+  }
+
+  // === UPDATE ===
   private void atualizarFabrica(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da request
     // --- Fabrica ---
@@ -235,44 +279,7 @@ public class FabricaServlet extends HttpServlet {
     }
   }
 
-  private Pair<Fabrica, Endereco> getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-    // Dados da request
-    String temp = req.getParameter("id").trim();
-    int idFabrica = Integer.parseInt(temp);
-
-    try (FabricaDAO fDao = new FabricaDAO(); EnderecoDAO eDao = new EnderecoDAO()) {
-      // Recupera os dados originais da fábrica e retorna
-      Fabrica f = fDao.pesquisarPorId(idFabrica);
-      Endereco e = eDao.pesquisarPorIdFabrica(f.getId());
-      return new Pair<>(f, e);
-    }
-  }
-
-  private Map<Integer, String> getMapPlanos() throws SQLException, ClassNotFoundException {
-    try (PlanoDAO dao = new PlanoDAO()) {
-      return dao.getMapIdNome();
-    }
-  }
-
-  private List<FabricaDTO> listarFabricas(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-    try (FabricaDAO dao = new FabricaDAO()) {
-      //Dados da requisição
-      String campoFiltro = req.getParameter("campoFiltro");
-      String temp = req.getParameter("valorFiltro");
-      Object valorFiltro = null;
-
-      if (campoFiltro != null && !campoFiltro.isBlank()) {
-        valorFiltro = FabricaDAO.converterValor(campoFiltro, temp);
-      }
-
-      String campoSequencia = req.getParameter("campoSequencia");
-      String direcaoSequencia = req.getParameter("direcaoSequencia");
-
-      // Recupera os planos do banco
-      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
-    }
-  }
-
+  // === DELETE ===
   private void removerFabrica(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     // Dados da request
     String temp = req.getParameter("id_fabrica").trim();

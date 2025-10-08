@@ -17,10 +17,12 @@ import java.sql.SQLException;
 
 @WebServlet("/login-handler")
 public class LoginServlet extends HttpServlet {
+  // Constantes
   private static final String PAGINA_ERRO = "html/erro.html";
   private static final String AREA_RESTRITA = "WEB-INF/jsp/area-restrita.jsp";
   private static final String PAGINA_LOGIN = "WEB-INF/jsp/login.jsp";
 
+  // GET e POST
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     RequestDispatcher rd = req.getRequestDispatcher(PAGINA_LOGIN);
@@ -83,6 +85,7 @@ public class LoginServlet extends HttpServlet {
     }
   }
 
+  // Outros Métodos
   private SuperAdmDTO login(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da requisição
     String email = req.getParameter("email").trim();

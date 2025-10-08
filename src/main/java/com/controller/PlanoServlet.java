@@ -16,11 +16,13 @@ import java.util.List;
 
 @WebServlet("/planos")
 public class PlanoServlet extends HttpServlet {
+  // Constantes
   private static final String PAGINA_PRINCIPAL = "WEB-INF/jsp/planos.jsp";
   private static final String PAGINA_CADASTRO = "WEB-INF/jsp/cadastro-plano.jsp";
   private static final String PAGINA_EDICAO = "WEB-INF/jsp/editar-plano.jsp";
   private static final String PAGINA_ERRO = "html/erro.html";
 
+  // GET e POST
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     // Dados da requisição
@@ -125,6 +127,32 @@ public class PlanoServlet extends HttpServlet {
     }
   }
 
+  // Outros Métodos
+  // === CREATE ===
+  private void registrarPlano(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
+    // Dados da requisição
+    String temp = req.getParameter("valor").trim();
+    if (temp.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("valor");
+    }
+    double valor = Double.parseDouble(temp);
+
+    String nome = req.getParameter("nome").trim();
+    String descricao = req.getParameter("descricao").trim();
+    Plano plano = new Plano(null, nome, valor, descricao);
+
+    try (PlanoDAO dao = new PlanoDAO()) {
+      // Verifica se o novo plano não viola a chave UNIQUE
+      if (dao.pesquisarPorNome(nome) != null) {
+        throw ExcecaoDeJSP.nomeDuplicado();
+      }
+
+      // Cadastra o plano
+      dao.cadastrar(plano);
+    }
+  }
+
+  // === READ ===
   private List<Plano> listaPlanos(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     try (PlanoDAO dao = new PlanoDAO()) {
       //Dados da requisição
@@ -150,40 +178,7 @@ public class PlanoServlet extends HttpServlet {
     }
   }
 
-  private void registrarPlano(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
-    // Dados da requisição
-    String temp = req.getParameter("valor").trim();
-    if (temp.isBlank()) {
-      throw ExcecaoDeJSP.campoNecessarioFaltante("valor");
-    }
-    double valor = Double.parseDouble(temp);
-
-    String nome = req.getParameter("nome").trim();
-    String descricao = req.getParameter("descricao").trim();
-    Plano plano = new Plano(null, nome, valor, descricao);
-
-    try (PlanoDAO dao = new PlanoDAO()) {
-      // Verifica se o novo plano não viola a chave UNIQUE
-      if (dao.pesquisarPorNome(nome) != null) {
-        throw ExcecaoDeJSP.nomeDuplicado();
-      }
-
-      // Cadastra o plano
-      dao.cadastrar(plano);
-    }
-  }
-
-  private void removerPlano(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-    // Dados da requisição
-    String temp = req.getParameter("id").trim();
-    int id = Integer.parseInt(temp);
-
-    try (PlanoDAO dao = new PlanoDAO()) {
-      // Deleta o plano
-      dao.remover(id);
-    }
-  }
-
+  // === UPDATE ===
   private void atualizarPlano(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da request
     String temp = req.getParameter("id").trim();
@@ -212,6 +207,18 @@ public class PlanoServlet extends HttpServlet {
 
       // Salva as informações no banco
       dao.atualizar(original, alterado);
+    }
+  }
+
+  // === DELETE ===
+  private void removerPlano(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    // Dados da requisição
+    String temp = req.getParameter("id").trim();
+    int id = Integer.parseInt(temp);
+
+    try (PlanoDAO dao = new PlanoDAO()) {
+      // Deleta o plano
+      dao.remover(id);
     }
   }
 }

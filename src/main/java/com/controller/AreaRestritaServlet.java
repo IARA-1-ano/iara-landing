@@ -13,9 +13,11 @@ import java.io.IOException;
 
 @WebServlet("/area-restrita")
 public class AreaRestritaServlet extends HttpServlet {
+  // Constantes
   private static final String PAGINA_PRINCIPAL = "WEB-INF/jsp/area-restrita.jsp";
   private static final String PAGINA_LOGIN = "WEB-INF/jsp/login.jsp";
 
+  // GET e POST
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
     // Dados da requisição

@@ -20,15 +20,15 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-// FIXME: todos os parâmetros de filtragem estão sendo passados como `null` para o DAO
-
 @WebServlet("/usuarios")
 public class UsuarioServlet extends HttpServlet {
+  // Constantes
   private static final String PAGINA_PRINCIPAL = "WEB-INF/jsp/usuarios.jsp";
   private static final String PAGINA_CADASTRO = "WEB-INF/jsp/cadastro-usuario.jsp";
   private static final String PAGINA_EDICAO = "WEB-INF/jsp/editar-usuario.jsp";
   private static final String PAGINA_ERRO = "html/erro.html";
 
+  // GET e POST
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     // Dados da requisição
@@ -146,29 +146,8 @@ public class UsuarioServlet extends HttpServlet {
     }
   }
 
-  private List<UsuarioDTO> getListaUsuarios(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
-    // Dados da requisição
-    String campoFiltro = req.getParameter("campo_filtro");
-    String valorFiltroStr = req.getParameter("valor_filtro");
-    String campoSequencia = req.getParameter("campo_sequencia");
-    String direcaoSequencia = req.getParameter("direcao_sequencia");
-
-    try (UsuarioDAO dao = new UsuarioDAO()) {
-      Object valorFiltro = UsuarioDAO.converterValor(campoFiltro, valorFiltroStr);
-      // Recupera os usuários do banco e armazena na lista
-      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
-
-    } catch (IllegalArgumentException e) {
-      throw ExcecaoDeJSP.valorInvalido(UsuarioDAO.camposFiltraveis.get(campoFiltro));
-    }
-  }
-
-  private Map<Integer, String> getMapFabricas() throws SQLException, ClassNotFoundException {
-    try (FabricaDAO dao = new FabricaDAO()) {
-      return dao.getMapIdNome();
-    }
-  }
-
+  // Outros Métodos
+  // === CREATE ===
   private void registrarUsuario(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da requisição
     String temp = req.getParameter("fk_fabrica").trim();
@@ -202,6 +181,30 @@ public class UsuarioServlet extends HttpServlet {
     }
   }
 
+  // === READ ===
+  private List<UsuarioDTO> getListaUsuarios(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
+    // Dados da requisição
+    String campoFiltro = req.getParameter("campo_filtro");
+    String valorFiltroStr = req.getParameter("valor_filtro");
+    String campoSequencia = req.getParameter("campo_sequencia");
+    String direcaoSequencia = req.getParameter("direcao_sequencia");
+
+    try (UsuarioDAO dao = new UsuarioDAO()) {
+      Object valorFiltro = UsuarioDAO.converterValor(campoFiltro, valorFiltroStr);
+      // Recupera os usuários do banco e armazena na lista
+      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
+
+    } catch (IllegalArgumentException e) {
+      throw ExcecaoDeJSP.valorInvalido(UsuarioDAO.camposFiltraveis.get(campoFiltro));
+    }
+  }
+
+  private Map<Integer, String> getMapFabricas() throws SQLException, ClassNotFoundException {
+    try (FabricaDAO dao = new FabricaDAO()) {
+      return dao.getMapIdNome();
+    }
+  }
+
   private AtualizacaoUsuarioDTO getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     // Dados da request
     String temp = req.getParameter("id").trim();
@@ -213,6 +216,7 @@ public class UsuarioServlet extends HttpServlet {
     }
   }
 
+  // === UPDATE ===
   private void atualizarUsuario(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da request
     String temp = req.getParameter("id").trim();
@@ -248,6 +252,7 @@ public class UsuarioServlet extends HttpServlet {
     }
   }
 
+  // === DELETE ===
   private void removerUsuario(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     // Dados da request
     String temp = req.getParameter("id").trim();

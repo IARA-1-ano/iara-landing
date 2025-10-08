@@ -19,11 +19,13 @@ import java.util.Map;
 
 @WebServlet("/pagamentos")
 public class PagamentoServlet extends HttpServlet {
+  // Constantes
   private static final String PAGINA_PRINCIPAL = "WEB-INF/jsp/pagamentos.jsp";
   private static final String PAGINA_CADASTRO = "WEB-INF/jsp/cadastro-pagamento.jsp";
   private static final String PAGINA_EDICAO = "WEB-INF/jsp/editar-pagamento.jsp";
   private static final String PAGINA_ERRO = "html/erro.html";
 
+  // GET e POST
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     // Dados da requisição
@@ -142,31 +144,8 @@ public class PagamentoServlet extends HttpServlet {
     }
   }
 
-  private List<Pagamento> listarPagamentos(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-    try (PagamentoDAO dao = new PagamentoDAO()) {
-      //Dados da requisição
-      String campoFiltro = req.getParameter("campoFiltro");
-      String temp = req.getParameter("valorFiltro");
-      Object valorFiltro = PagamentoDAO.converterValor(campoFiltro, temp);
-      String campoSequencia = req.getParameter("campoSequencia");
-      String direcaoSequencia = req.getParameter("direcaoSequencia");
-
-      // Recupera os planos do banco
-      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
-    }
-  }
-
-  private Pagamento getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-    // Dados da requisição
-    String temp = req.getParameter("id").trim();
-    int id = Integer.parseInt(temp);
-
-    try (PagamentoDAO dao = new PagamentoDAO()) {
-      // Recupera os dados originais para display
-      return dao.pesquisarPorId(id);
-    }
-  }
-
+  // Outros Métodos
+  // === CREATE ===
   private void registrarPagamento(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da requisição
     String temp = req.getParameter("status").trim();
@@ -202,17 +181,39 @@ public class PagamentoServlet extends HttpServlet {
     }
   }
 
-  private void removerPagamento(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+  // === READ ===
+  private List<Pagamento> listarPagamentos(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    try (PagamentoDAO dao = new PagamentoDAO()) {
+      //Dados da requisição
+      String campoFiltro = req.getParameter("campoFiltro");
+      String temp = req.getParameter("valorFiltro");
+      Object valorFiltro = PagamentoDAO.converterValor(campoFiltro, temp);
+      String campoSequencia = req.getParameter("campoSequencia");
+      String direcaoSequencia = req.getParameter("direcaoSequencia");
+
+      // Recupera os planos do banco
+      return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
+    }
+  }
+
+  private Pagamento getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     // Dados da requisição
     String temp = req.getParameter("id").trim();
     int id = Integer.parseInt(temp);
 
     try (PagamentoDAO dao = new PagamentoDAO()) {
-      // Deleta o plano
-      dao.remover(id);
+      // Recupera os dados originais para display
+      return dao.pesquisarPorId(id);
     }
   }
 
+  private Map<Integer, String> getMapFabricas() throws SQLException, ClassNotFoundException {
+    try (FabricaDAO dao = new FabricaDAO()) {
+      return dao.getMapIdNome();
+    }
+  }
+
+  // === UPDATE ===
   private void atualizarPagamento(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     // Dados da request
     String temp = req.getParameter("id").trim();
@@ -246,9 +247,15 @@ public class PagamentoServlet extends HttpServlet {
     }
   }
 
-  private Map<Integer, String> getMapFabricas() throws SQLException, ClassNotFoundException {
-    try (FabricaDAO dao = new FabricaDAO()) {
-      return dao.getMapIdNome();
+  // === DELETE ===
+  private void removerPagamento(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    // Dados da requisição
+    String temp = req.getParameter("id").trim();
+    int id = Integer.parseInt(temp);
+
+    try (PagamentoDAO dao = new PagamentoDAO()) {
+      // Deleta o plano
+      dao.remover(id);
     }
   }
 }
