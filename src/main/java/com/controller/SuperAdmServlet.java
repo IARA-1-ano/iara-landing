@@ -25,7 +25,7 @@ public class SuperAdmServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-    // Dados da request
+    // Dados da requisição
     String action = req.getParameter("action").trim();
     Object origem = req.getAttribute("origem");
 
@@ -38,6 +38,7 @@ public class SuperAdmServlet extends HttpServlet {
     String destino = null;
 
     try {
+      // Faz a ação correspondente à escolha
       switch (action) {
         case "read" -> {
           List<SuperAdmDTO> superAdms = getListaSuperAdms(req);
@@ -57,8 +58,9 @@ public class SuperAdmServlet extends HttpServlet {
 
       erro = false;
 
-    } catch (SQLException e) {
-      // Se houver alguma exceção, registra no terminal
+    }
+    // Se houver alguma exceção, registra no terminal
+    catch (SQLException e) {
       System.err.println("Erro ao executar operação no banco:");
       e.printStackTrace(System.err);
 
@@ -71,7 +73,7 @@ public class SuperAdmServlet extends HttpServlet {
       e.printStackTrace(System.err);
     }
 
-    // Redireciona a request par a página jsp
+    // Redireciona para a página de erro, ou encaminha a requisição e a resposta
     if (erro) {
       resp.sendRedirect(req.getContextPath() + '/' + PAGINA_ERRO);
     } else {
@@ -82,13 +84,14 @@ public class SuperAdmServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-    // Dados da request
+    // Dados da requisição
     String action = req.getParameter("action").trim();
 
     // Dados da resposta
     boolean erro = true;
 
     try {
+      // Faz a ação correspondente à escolha
       switch (action) {
         case "create" -> registrarSuperAdm(req);
         case "update" -> atualizarSuperAdm(req);
@@ -98,13 +101,16 @@ public class SuperAdmServlet extends HttpServlet {
 
       erro = false;
 
-    } catch (ExcecaoDeJSP e) {
+    }
+    // Se houver alguma exceção de JSP, aciona o método doGet
+    catch (ExcecaoDeJSP e) {
       req.setAttribute("erro", e.getMessage());
       doGet(req, resp);
       return;
 
-    } catch (SQLException e) {
-      // Se houver alguma exceção grave, registra no terminal
+    }
+    // Se houver alguma exceção, registra no terminal
+    catch (SQLException e) {
       System.err.println("Erro ao executar operação no banco:");
       e.printStackTrace(System.err);
 
@@ -117,7 +123,7 @@ public class SuperAdmServlet extends HttpServlet {
       e.printStackTrace(System.err);
     }
 
-    // Redireciona para a página de destino
+    // Redireciona para a página de erro, ou aciona o método doGet
     if (erro) {
       resp.sendRedirect(req.getContextPath() + '/' + PAGINA_ERRO);
 
@@ -137,24 +143,24 @@ public class SuperAdmServlet extends HttpServlet {
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
       Object valorFiltro = SuperAdmDAO.converterValor(campoFiltro, valorFiltroStr);
 
-      // Recupera os usuários do banco
+      // Recupera os super adms cadastrados no banco de dados
       return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
     }
   }
 
   private SuperAdmDTO getInformacoesAlteraveis(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-    // Dados da request
+    // Dados da requisição
     String temp = req.getParameter("id").trim();
     int id = Integer.parseInt(temp);
 
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
-      // Recupera os dados originais para display
+      // Recupera e retorna os dados originais do banco de dados
       return dao.pesquisarPorId(id);
     }
   }
 
   private void registrarSuperAdm(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
-    // Dados da request
+    // Dados da requisição
     String senhaOriginal = req.getParameter("senha");
     String senhaHash = SenhaUtils.hashear(senhaOriginal);
 
@@ -169,30 +175,30 @@ public class SuperAdmServlet extends HttpServlet {
     }
 
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
-      // Verifica se o usuário não viola a chave UNIQUE de email
+      // Verifica se o super adm não viola a chave UNIQUE de 'email' em 'super_adm'
       SuperAdmDTO teste = dao.pesquisarPorEmail(email);
       if (teste != null) {
         throw ExcecaoDeJSP.emailDuplicado();
       }
 
-      // Cadastra o usuário e setta o destino para mostrar os usuários
+      // Cadastra o super adm
       dao.cadastrar(credenciais);
     }
   }
 
   private void removerSuperAdm(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-    // Dados da request
+    // Dados da requisição
     String temp = req.getParameter("id").trim();
     int id = Integer.parseInt(temp);
 
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
-      // Deleta o superadm
+      // Deleta o super adm
       dao.remover(id);
     }
   }
 
   private void atualizarSuperAdm(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
-    // Dados da request
+    // Dados da requisição
     String temp = req.getParameter("id").trim();
     int id = Integer.parseInt(temp);
 
@@ -205,32 +211,32 @@ public class SuperAdmServlet extends HttpServlet {
     SuperAdm alterado = new SuperAdm(id, nome, cargo, email, novaSenha);
 
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
-      // Recupera as informações originais do banco
+      // Recupera os dados originais do banco de dados
       SuperAdm original = dao.getCamposAlteraveis(id);
 
-      // Verifica se o email alterado não viola a chave UNIQUE
+      // Verifica se as alterações não violam a chave UNIQUE de 'email' em 'super_adm'
       SuperAdmDTO teste = dao.pesquisarPorEmail(email);
       if (teste != null && teste.getId() != id) {
         throw ExcecaoDeJSP.emailDuplicado();
       }
 
-      // Se a senha foi alterada e a original estiver incorreta ou a nova for inválida, volta ao formulário
       if (!novaSenha.isBlank()) {
-        // Verifica a validade das alterações
+        // Verifica se a nova senha tem no mínimo 8 caracteres
         if (!novaSenha.matches(".{8,}")) {
           throw ExcecaoDeJSP.senhaCurta(8);
         }
 
+        // Verifica se a senha inserida pelo usuário corresponde com a senha cadastrada no banco de dados
         if (!SenhaUtils.comparar(senhaAtual, original.getSenha())) {
           throw ExcecaoDeJSP.senhaIncorreta();
         }
 
-        // Faz o hash da senha antes de salvar no banco
+        // Faz o hash da senha antes de atualizar no banco de dados
         String novaSenhaHash = SenhaUtils.hashear(alterado.getSenha());
         alterado.setSenha(novaSenhaHash);
       }
 
-      // Salva as informações no banco
+      // Atualiza o super adm
       dao.atualizar(original, alterado);
     }
   }

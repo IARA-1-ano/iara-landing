@@ -23,6 +23,7 @@ public class LoginServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    // Encaminha a requisição e a resposta
     RequestDispatcher rd = req.getRequestDispatcher(PAGINA_LOGIN);
     rd.forward(req, resp);
   }
@@ -38,6 +39,7 @@ public class LoginServlet extends HttpServlet {
     String destino = PAGINA_ERRO;
 
     try {
+      // Faz a ação correspondente à escolha
       switch (action) {
         case "login" -> {
           SuperAdmDTO usuario = login(req);
@@ -55,13 +57,16 @@ public class LoginServlet extends HttpServlet {
         default -> throw new RuntimeException("valor inválido para o parâmetro 'action': " + action);
       }
 
-    } catch (ExcecaoDeJSP e) {
+    }
+    // Se houver alguma exceção de JSP, aciona o método doGet
+    catch (ExcecaoDeJSP e) {
       req.setAttribute("erro", e.getMessage());
       doGet(req, resp);
       return;
 
-    } catch (SQLException e) {
-      // Se houver alguma exceção, registra no terminal
+    }
+    // Se houver alguma exceção, registra no terminal
+    catch (SQLException e) {
       System.err.println("Erro ao executar operação no banco:");
       e.printStackTrace(System.err);
 
@@ -74,6 +79,7 @@ public class LoginServlet extends HttpServlet {
       e.printStackTrace(System.err);
     }
 
+    //Encaminha a requisição e a resposta, ou redireciona a resposta
     if (redirect) {
       resp.sendRedirect(req.getContextPath() + '/' + destino);
 
@@ -90,22 +96,24 @@ public class LoginServlet extends HttpServlet {
     LoginDTO credenciais = new LoginDTO(email, senha);
 
     try (LoginDAO dao = new LoginDAO()) {
-      // Tenta fazer login e recuperar o usuário
+      // Tenta realizar login e recuperar o usuário
       SuperAdmDTO usuario = dao.login(credenciais);
 
-      // Verifica se o login deu certo
+      // Validação de login
       if (usuario == null) {
         throw ExcecaoDeJSP.falhaLogin();
       }
 
+      // Retorna o usuário
       return usuario;
     }
   }
 
   private void logout(HttpServletRequest req) {
-    // Dados da request
+    // Dados da requisição
     HttpSession session = req.getSession(false);
 
+    // Finaliza a sessão do usuário
     if (session != null) {
       session.removeAttribute("usuario");
     }

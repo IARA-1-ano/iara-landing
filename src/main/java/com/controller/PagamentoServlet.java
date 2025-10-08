@@ -39,6 +39,7 @@ public class PagamentoServlet extends HttpServlet {
     String destino = null;
 
     try {
+      // Faz a ação correspondente à escolha
       switch (action) {
         case "read" -> {
           List<Pagamento> pagamentos = listarPagamentos(req);
@@ -71,8 +72,9 @@ public class PagamentoServlet extends HttpServlet {
 
       erro = false;
 
-    } catch (SQLException e) {
-      // Se houver alguma exceção, registra no terminal
+    }
+    // Se houver alguma exceção, registra no terminal
+    catch (SQLException e) {
       System.err.println("Erro ao executar operação no banco:");
       e.printStackTrace(System.err);
 
@@ -85,7 +87,7 @@ public class PagamentoServlet extends HttpServlet {
       e.printStackTrace(System.err);
     }
 
-    // Redireciona a request par a página jsp
+    // Redireciona para a página de erro, ou encaminha a requisição e a resposta
     if (erro) {
       resp.sendRedirect(req.getContextPath() + '/' + PAGINA_ERRO);
 
@@ -97,13 +99,14 @@ public class PagamentoServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-    // Dados da request
+    // Dados da requisição
     String action = req.getParameter("action").trim();
 
     // Dados da resposta
     boolean erro = true;
 
     try {
+      // Fazer a ação correspondente à escolha
       switch (action) {
         case "create" -> registrarPagamento(req);
         case "update" -> atualizarPagamento(req);
@@ -113,13 +116,16 @@ public class PagamentoServlet extends HttpServlet {
 
       erro = false;
 
-    } catch (ExcecaoDeJSP e) {
+    }
+    // Se houver alguma exceção de JSP, aciona o método doGet
+    catch (ExcecaoDeJSP e) {
       req.setAttribute("erro", e.getMessage());
       doGet(req, resp);
       return;
 
-    } catch (SQLException e) {
-      // Se houver alguma exceção grave, registra no terminal
+    }
+    // Se houver alguma exceção, registra no terminal
+    catch (SQLException e) {
       System.err.println("Erro ao executar operação no banco:");
       e.printStackTrace(System.err);
 
@@ -132,7 +138,7 @@ public class PagamentoServlet extends HttpServlet {
       e.printStackTrace(System.err);
     }
 
-    // Redireciona para a página de destino
+    // Redireciona para a página de erro, ou aciona o método doGet
     if (erro) {
       resp.sendRedirect(req.getContextPath() + '/' + PAGINA_ERRO);
 
@@ -151,7 +157,7 @@ public class PagamentoServlet extends HttpServlet {
       String campoSequencia = req.getParameter("campoSequencia");
       String direcaoSequencia = req.getParameter("direcaoSequencia");
 
-      // Recupera os planos do banco
+      // Recupera os pagamentos cadastrados no banco de dados
       return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
     }
   }
@@ -162,7 +168,7 @@ public class PagamentoServlet extends HttpServlet {
     int id = Integer.parseInt(temp);
 
     try (PagamentoDAO dao = new PagamentoDAO()) {
-      // Recupera os dados originais para display
+      // Recupera e retorna os dados originais do banco de dados
       return dao.pesquisarPorId(id);
     }
   }
@@ -194,6 +200,7 @@ public class PagamentoServlet extends HttpServlet {
     temp = req.getParameter("fkFabrica").trim();
     int fkFabrica = Integer.parseInt(temp);
 
+    //Instância do Model
     Pagamento pagamento = new Pagamento(null, valor, status, dataVencimento, dataPagamento, tipoPagamento, fkFabrica);
 
     try (PagamentoDAO dao = new PagamentoDAO()) {
@@ -208,13 +215,13 @@ public class PagamentoServlet extends HttpServlet {
     int id = Integer.parseInt(temp);
 
     try (PagamentoDAO dao = new PagamentoDAO()) {
-      // Deleta o plano
+      // Deleta o pagamento
       dao.remover(id);
     }
   }
 
   private void atualizarPagamento(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-    // Dados da request
+    // Dados da requisição
     String temp = req.getParameter("id").trim();
     int id = Integer.parseInt(temp);
 
@@ -235,13 +242,14 @@ public class PagamentoServlet extends HttpServlet {
     temp = req.getParameter("fkFabrica").trim();
     int fkFabrica = Integer.parseInt(temp);
 
+    // Instância do Model
     Pagamento alterado = new Pagamento(id, valorPago, status, dataVencimento, dataPagamento, tipoPagamento, fkFabrica);
 
     try (PagamentoDAO dao = new PagamentoDAO()) {
-      // Recupera as informações originais do banco
+      // Recupera os dados originais do banco de dados
       Pagamento original = dao.getCamposAlteraveis(id);
 
-      // Salva as informações no banco
+      // Atualiza o pagamento
       dao.atualizar(original, alterado);
     }
   }

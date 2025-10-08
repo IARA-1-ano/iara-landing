@@ -28,6 +28,7 @@ public class AreaRestritaServlet extends HttpServlet {
       destino = PAGINA_LOGIN;
     }
 
+    // Redireciona a requisição
     RequestDispatcher rd = req.getRequestDispatcher(destino);
     rd.forward(req, resp);
   }
