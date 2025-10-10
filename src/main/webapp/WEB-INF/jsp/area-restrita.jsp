@@ -15,6 +15,10 @@
 
 <body>
 <h1>Área Restrita</h1>
+<div>
+  <p>Usuário Logado: ${nomeUsuario}</p>
+  <p>Email: ${emailUsuario}</p>
+</div>
 <nav>
   <ul>
     <li><a href="${pageContext.request.contextPath}/index.html">Página inicial</a></li>
