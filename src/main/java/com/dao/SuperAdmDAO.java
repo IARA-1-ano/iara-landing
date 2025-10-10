@@ -25,19 +25,6 @@ public class SuperAdmDAO extends DAO {
     super();
   }
 
-  // Métodos Estáticos
-  public static Object converterValor(String campo, String valor) {
-    if (campo == null || campo.isBlank()) {
-      return null;
-    }
-
-    return switch (campo) {
-      case "id" -> Integer.parseInt(valor);
-      case "nome", "email", "cargo" -> valor;
-      default -> throw new IllegalArgumentException("Campo inválido: " + campo);
-    };
-  }
-
   // Outros Métodos
   // === CREATE ===
   public void cadastrar(SuperAdm credenciais) throws SQLException {
@@ -71,7 +58,7 @@ public class SuperAdmDAO extends DAO {
   }
 
   // === READ ===
-  public List<SuperAdmDTO> listar(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
+  public List<SuperAdmDTO> listar(String campoFiltro, String valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
     List<SuperAdmDTO> superAdms = new ArrayList<>();
 
     // Prepara o comando
@@ -79,7 +66,7 @@ public class SuperAdmDAO extends DAO {
 
     // Verificando campo do filtro
     if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
-      sql += " WHERE %s = ?".formatted(campoFiltro);
+      sql += " WHERE %s::varchar = ?".formatted(campoFiltro);
     }
 
     //Verificando campo para ordenar a consulta
@@ -93,7 +80,7 @@ public class SuperAdmDAO extends DAO {
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       //Definindo parâmetro vazio
       if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
-        pstmt.setObject(1, valorFiltro);
+        pstmt.setString(1, valorFiltro);
       }
 
       //Instanciando um ResultSet

@@ -29,20 +29,6 @@ public class FabricaDAO extends DAO {
     super();
   }
 
-  // Métodos Estáticos
-  public static Object converterValor(String campo, String valor) {
-    if (campo == null || campo.isBlank()) {
-      return null;
-    }
-
-    return switch (campo) {
-      case "id" -> Integer.parseInt(valor);
-      case "status" -> Boolean.parseBoolean(valor);
-      case "cnpj", "nome_unidade", "email_corporativo", "nome_industria", "ramo" -> valor;
-      default -> throw new IllegalArgumentException();
-    };
-  }
-
   // Outros Métodos
   // === CREATE ===
   public int cadastrar(CadastroFabricaDTO credenciais) throws SQLException {
@@ -95,7 +81,7 @@ public class FabricaDAO extends DAO {
   }
 
   // === READ ===
-  public List<FabricaDTO> listar(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
+  public List<FabricaDTO> listar(String campoFiltro, String valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
     List<FabricaDTO> fabricas = new ArrayList<>();
 
     //Prepara o comando
@@ -103,7 +89,7 @@ public class FabricaDAO extends DAO {
 
     //Verificando o campo do filtro
     if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
-      sql += " WHERE %s = ?".formatted(campoFiltro);
+      sql += " WHERE %s::varchar = ?".formatted(campoFiltro);
     }
 
     //Verificando campo e direcao para ordernar a consulta
@@ -117,7 +103,7 @@ public class FabricaDAO extends DAO {
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       //Definindo parâmetro vazio
       if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
-        pstmt.setObject(1, valorFiltro);
+        pstmt.setString(1, valorFiltro);
       }
 
       //Instanciando um ResultSet

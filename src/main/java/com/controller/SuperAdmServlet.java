@@ -160,13 +160,11 @@ public class SuperAdmServlet extends HttpServlet {
 
   // === READ ===
   private List<SuperAdmDTO> getListaSuperAdms(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-    // Dados da requisição
+    //Dados da requisição
     String campoFiltro = req.getParameter("campo_filtro");
     String campoSequencia = req.getParameter("campo_sequencia");
     String direcaoSequencia = req.getParameter("direcao_sequencia");
-
-    String valorFiltroStr = req.getParameter("valor_filtro");
-    Object valorFiltro = SuperAdmDAO.converterValor(campoFiltro, valorFiltroStr);
+    String valorFiltro = req.getParameter("valor_filtro");
 
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
       // Recupera os usuários do banco

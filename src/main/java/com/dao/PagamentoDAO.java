@@ -29,21 +29,6 @@ public class PagamentoDAO extends DAO {
     super();
   }
 
-  // Métodos Estáticos
-  public static Object converterValor(String campo, String valor) {
-    if (campo == null || campo.isBlank()) {
-      return null;
-    }
-
-    return switch (campo) {
-      case "id", "id_fabrica" -> Integer.parseInt(valor);
-      case "valor" -> Double.parseDouble(valor);
-      case "data_vencimento", "data_pagamento" -> LocalDate.parse(valor);
-      case "tipo_pagamento" -> String.valueOf(valor);
-      default -> throw new IllegalArgumentException();
-    };
-  }
-
   // Outros Métodos
   // === CREATE ===
   public void cadastrar(Pagamento pagamento) throws SQLException {
@@ -77,7 +62,7 @@ public class PagamentoDAO extends DAO {
   }
 
   // === READ ===
-  public List<Pagamento> listar(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
+  public List<Pagamento> listar(String campoFiltro, String valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
     List<Pagamento> pagamentos = new ArrayList<>();
 
     // Prepara o comando
@@ -85,7 +70,7 @@ public class PagamentoDAO extends DAO {
 
     //Verificando o campo do filtro
     if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
-      sql += " WHERE %s = ?".formatted(campoFiltro);
+      sql += " WHERE %s::varchar = ?".formatted(campoFiltro);
     }
 
     //Verificando campo e direcao para ordernar a consulta
@@ -99,7 +84,7 @@ public class PagamentoDAO extends DAO {
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       //Definindo parâmetro vazio
       if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
-        pstmt.setObject(1, valorFiltro);
+        pstmt.setString(1, valorFiltro);
       }
 
       //Instanciando um ResultSet

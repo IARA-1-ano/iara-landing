@@ -184,15 +184,13 @@ public class PagamentoServlet extends HttpServlet {
 
   // === READ ===
   private List<Pagamento> listarPagamentos(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    //Dados da requisição
+    String campoFiltro = req.getParameter("campo_filtro");
+    String campoSequencia = req.getParameter("campo_sequencia");
+    String direcaoSequencia = req.getParameter("direcao_sequencia");
+    String valorFiltro = req.getParameter("valor_filtro");
+
     try (PagamentoDAO dao = new PagamentoDAO()) {
-      //Dados da requisição
-      String campoFiltro = req.getParameter("campo_filtro");
-      String campoSequencia = req.getParameter("campo_sequencia");
-      String direcaoSequencia = req.getParameter("direcao_sequencia");
-
-      String temp = req.getParameter("valor_filtro");
-      Object valorFiltro = PagamentoDAO.converterValor(campoFiltro, temp);
-
       // Recupera os planos do banco
       return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
     }

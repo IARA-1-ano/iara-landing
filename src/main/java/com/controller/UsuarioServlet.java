@@ -181,13 +181,11 @@ public class UsuarioServlet extends HttpServlet {
 
   // === READ ===
   private List<UsuarioDTO> getListaUsuarios(HttpServletRequest req) throws SQLException, ClassNotFoundException {
-    // Dados da requisição
+    //Dados da requisição
     String campoFiltro = req.getParameter("campo_filtro");
     String campoSequencia = req.getParameter("campo_sequencia");
     String direcaoSequencia = req.getParameter("direcao_sequencia");
-
-    String valorFiltroStr = req.getParameter("valor_filtro");
-    Object valorFiltro = UsuarioDAO.converterValor(campoFiltro, valorFiltroStr);
+    String valorFiltro = req.getParameter("valor_filtro");
 
     try (UsuarioDAO dao = new UsuarioDAO()) {
       // Recupera os usuários do banco e armazena na lista

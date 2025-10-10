@@ -23,20 +23,6 @@ public class PlanoDAO extends DAO {
     super();
   }
 
-  // Métodos Estáticos
-  public static Object converterValor(String campo, String valor) throws DateTimeParseException {
-    if (campo == null || campo.isBlank()) {
-      return null;
-    }
-
-    return switch (campo) {
-      case "id" -> Integer.parseInt(valor);
-      case "valor" -> Double.parseDouble(valor);
-      case "nome", "descricao" -> String.valueOf(valor);
-      default -> throw new IllegalArgumentException();
-    };
-  }
-
   // Outros Métodos
   // === CREATE ===
   public void cadastrar(Plano plano) throws SQLException {
@@ -63,7 +49,7 @@ public class PlanoDAO extends DAO {
   }
 
   // === READ ===
-  public List<Plano> listar(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
+  public List<Plano> listar(String campoFiltro, String valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
     List<Plano> planos = new ArrayList<>();
 
     // Prepara o comando
@@ -71,7 +57,7 @@ public class PlanoDAO extends DAO {
 
     // Verificando campo do filtro
     if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
-      sql += " WHERE %s = ?".formatted(campoFiltro);
+      sql += " WHERE %s::varchar = ?".formatted(campoFiltro);
     }
 
     //Verificando campo para ordenar a consulta
@@ -85,7 +71,7 @@ public class PlanoDAO extends DAO {
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       //Definindo parâmetro vazio
       if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
-        pstmt.setObject(1, valorFiltro);
+        pstmt.setString(1, valorFiltro);
       }
 
       //Instanciando um ResultSet

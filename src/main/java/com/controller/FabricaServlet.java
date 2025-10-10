@@ -194,12 +194,9 @@ public class FabricaServlet extends HttpServlet {
     String campoFiltro = req.getParameter("campo_filtro");
     String campoSequencia = req.getParameter("campo_sequencia");
     String direcaoSequencia = req.getParameter("direcao_sequencia");
-    String valorFiltroStr = req.getParameter("valor_filtro");
-
+    String valorFiltro = req.getParameter("valor_filtro");
 
     try (FabricaDAO dao = new FabricaDAO()) {
-      Object valorFiltro = FabricaDAO.converterValor(campoFiltro, valorFiltroStr);
-
       // Recupera os planos do banco
       return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
     }

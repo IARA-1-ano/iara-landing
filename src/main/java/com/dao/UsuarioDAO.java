@@ -32,21 +32,6 @@ public class UsuarioDAO extends DAO {
     super();
   }
 
-  // Métodos Estáticos
-  public static Object converterValor(String campo, String valor) {
-    if (campo == null || campo.isBlank()) {
-      return null;
-    }
-
-    return switch (campo) {
-      case "id", "id_fabrica", "tipo_acesso" -> Integer.parseInt(valor);
-      case "status" -> Boolean.parseBoolean(valor);
-      case "data_criacao" -> LocalDate.parse(valor);
-      case "nome", "email" -> valor;
-      default -> throw new IllegalArgumentException("Campo inválido: " + campo);
-    };
-  }
-
   // Outros Métodos
   // === CREATE ===
   public void cadastrar(CadastroUsuarioDTO credenciais) throws SQLException {
@@ -88,14 +73,14 @@ public class UsuarioDAO extends DAO {
   }
 
   // === READ ===
-  public List<UsuarioDTO> listar(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
+  public List<UsuarioDTO> listar(String campoFiltro, String valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
     List<UsuarioDTO> usuarios = new ArrayList<>();
 
     // Prepara o comado e executa
     String sql = "SELECT id, id_fabrica, email, nome, tipo_acesso, status, data_criacao FROM usuario";
 
     if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
-      sql += " WHERE %s = ?".formatted(campoFiltro);
+      sql += " WHERE %s::varchar = ?".formatted(campoFiltro);
     }
 
     //Verificando campo para ordenar a consulta
@@ -109,7 +94,7 @@ public class UsuarioDAO extends DAO {
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       //Definindo parâmetro vazio
       if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
-        pstmt.setObject(1, valorFiltro);
+        pstmt.setString(1, valorFiltro);
       }
 
       //Instanciando um ResultSet
