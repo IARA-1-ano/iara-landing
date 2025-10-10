@@ -5,7 +5,6 @@ import com.dto.SuperAdmDTO;
 import com.exception.ExcecaoDeJSP;
 import com.model.SuperAdm;
 import com.utils.SenhaUtils;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -76,9 +75,9 @@ public class SuperAdmServlet extends HttpServlet {
     // Redireciona a request par a página jsp
     if (erro) {
       resp.sendRedirect(req.getContextPath() + '/' + PAGINA_ERRO);
+
     } else {
-      RequestDispatcher rd = req.getRequestDispatcher(destino);
-      rd.forward(req, resp);
+      req.getRequestDispatcher(destino).forward(req, resp);
     }
   }
 
@@ -149,6 +148,7 @@ public class SuperAdmServlet extends HttpServlet {
     try (SuperAdmDAO dao = new SuperAdmDAO()) {
       // Verifica se o usuário não viola a chave UNIQUE de email
       SuperAdmDTO teste = dao.pesquisarPorEmail(email);
+
       if (teste != null) {
         throw ExcecaoDeJSP.emailDuplicado();
       }
@@ -162,13 +162,13 @@ public class SuperAdmServlet extends HttpServlet {
   private List<SuperAdmDTO> getListaSuperAdms(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     // Dados da requisição
     String campoFiltro = req.getParameter("campo_filtro");
-    String valorFiltroStr = req.getParameter("valor_filtro");
     String campoSequencia = req.getParameter("campo_sequencia");
     String direcaoSequencia = req.getParameter("direcao_sequencia");
 
-    try (SuperAdmDAO dao = new SuperAdmDAO()) {
-      Object valorFiltro = SuperAdmDAO.converterValor(campoFiltro, valorFiltroStr);
+    String valorFiltroStr = req.getParameter("valor_filtro");
+    Object valorFiltro = SuperAdmDAO.converterValor(campoFiltro, valorFiltroStr);
 
+    try (SuperAdmDAO dao = new SuperAdmDAO()) {
       // Recupera os usuários do banco
       return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
     }
@@ -188,14 +188,14 @@ public class SuperAdmServlet extends HttpServlet {
   // === UPDATE ===
   private void atualizarSuperAdm(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da request
-    String temp = req.getParameter("id").trim();
-    int id = Integer.parseInt(temp);
-
     String nome = req.getParameter("nome").trim();
     String cargo = req.getParameter("cargo").trim();
     String email = req.getParameter("email").trim();
     String senhaAtual = req.getParameter("senha_atual").trim();
     String novaSenha = req.getParameter("nova_senha").trim();
+
+    String temp = req.getParameter("id").trim();
+    int id = Integer.parseInt(temp);
 
     SuperAdm alterado = new SuperAdm(id, nome, cargo, email, novaSenha);
 

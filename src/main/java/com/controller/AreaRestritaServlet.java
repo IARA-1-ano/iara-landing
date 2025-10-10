@@ -1,7 +1,6 @@
 package com.controller;
 
 import com.dto.SuperAdmDTO;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,17 +25,10 @@ public class AreaRestritaServlet extends HttpServlet {
     // Dados da resposta
     String destino = PAGINA_LOGIN;
 
-    if (session != null) {
-      Object usuarioObj = session.getAttribute("usuario");
-
-      if (usuarioObj instanceof SuperAdmDTO usuario) {
+    if (session != null && session.getAttribute("usuario") instanceof SuperAdmDTO) {
         destino = PAGINA_PRINCIPAL;
-        req.setAttribute("nomeUsuario", usuario.getNome());
-        req.setAttribute("emailUsuario", usuario.getEmail());
-      }
     }
 
-    RequestDispatcher rd = req.getRequestDispatcher(destino);
-    rd.forward(req, resp);
+    req.getRequestDispatcher(destino).forward(req, resp);
   }
 }

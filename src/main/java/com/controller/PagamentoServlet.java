@@ -4,7 +4,6 @@ import com.dao.FabricaDAO;
 import com.dao.PagamentoDAO;
 import com.exception.ExcecaoDeJSP;
 import com.model.Pagamento;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -68,6 +67,7 @@ public class PagamentoServlet extends HttpServlet {
 
           destino = PAGINA_CADASTRO;
         }
+
         default -> throw new RuntimeException("valor inválido para o parâmetro 'action': " + action);
       }
 
@@ -92,8 +92,7 @@ public class PagamentoServlet extends HttpServlet {
       resp.sendRedirect(req.getContextPath() + '/' + PAGINA_ERRO);
 
     } else {
-      RequestDispatcher rd = req.getRequestDispatcher(destino);
-      rd.forward(req, resp);
+      req.getRequestDispatcher(destino).forward(req, resp);
     }
   }
 
@@ -151,13 +150,15 @@ public class PagamentoServlet extends HttpServlet {
     String temp = req.getParameter("status").trim();
     boolean status = Boolean.parseBoolean(temp);
 
-    temp = req.getParameter("dataVencimento").trim();
+    temp = req.getParameter("data_vencimento").trim();
     LocalDate dataVencimento = LocalDate.parse(temp);
 
     LocalDate dataPagamento = null;
     double valor = 0;
+
     if (status) {
-      temp = req.getParameter("dataPagamento").trim();
+      temp = req.getParameter("data_pagamento").trim();
+
       if (temp.isBlank()) {
         throw ExcecaoDeJSP.campoNecessarioFaltante("Data do Pagamento");
       }
@@ -168,9 +169,9 @@ public class PagamentoServlet extends HttpServlet {
       valor = Double.parseDouble(temp);
     }
 
-    String tipoPagamento = req.getParameter("tipoPagamento").trim();
+    String tipoPagamento = req.getParameter("tipo_pagamento").trim();
 
-    temp = req.getParameter("fkFabrica").trim();
+    temp = req.getParameter("id_fabrica").trim();
     int fkFabrica = Integer.parseInt(temp);
 
     Pagamento pagamento = new Pagamento(null, valor, status, dataVencimento, dataPagamento, tipoPagamento, fkFabrica);
@@ -185,11 +186,12 @@ public class PagamentoServlet extends HttpServlet {
   private List<Pagamento> listarPagamentos(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     try (PagamentoDAO dao = new PagamentoDAO()) {
       //Dados da requisição
-      String campoFiltro = req.getParameter("campoFiltro");
-      String temp = req.getParameter("valorFiltro");
+      String campoFiltro = req.getParameter("campo_filtro");
+      String campoSequencia = req.getParameter("campo_sequencia");
+      String direcaoSequencia = req.getParameter("direcao_sequencia");
+
+      String temp = req.getParameter("valor_filtro");
       Object valorFiltro = PagamentoDAO.converterValor(campoFiltro, temp);
-      String campoSequencia = req.getParameter("campoSequencia");
-      String direcaoSequencia = req.getParameter("direcaoSequencia");
 
       // Recupera os planos do banco
       return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
@@ -216,24 +218,24 @@ public class PagamentoServlet extends HttpServlet {
   // === UPDATE ===
   private void atualizarPagamento(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     // Dados da request
+    String tipoPagamento = req.getParameter("tipo_pagamento").trim();
+
     String temp = req.getParameter("id").trim();
     int id = Integer.parseInt(temp);
 
-    temp = req.getParameter("valorPago").trim();
+    temp = req.getParameter("valor_pago").trim();
     double valorPago = Double.parseDouble(temp);
 
     temp = req.getParameter("status").trim();
     boolean status = Boolean.parseBoolean(temp);
 
-    temp = req.getParameter("dataVencimento").trim();
+    temp = req.getParameter("data_vencimento").trim();
     LocalDate dataVencimento = LocalDate.parse(temp);
 
-    temp = req.getParameter("dataPagamento").trim();
+    temp = req.getParameter("data_pagamento").trim();
     LocalDate dataPagamento = LocalDate.parse(temp);
 
-    String tipoPagamento = req.getParameter("tipoPagamento").trim();
-
-    temp = req.getParameter("fkFabrica").trim();
+    temp = req.getParameter("id_fabrica").trim();
     int fkFabrica = Integer.parseInt(temp);
 
     Pagamento alterado = new Pagamento(id, valorPago, status, dataVencimento, dataPagamento, tipoPagamento, fkFabrica);

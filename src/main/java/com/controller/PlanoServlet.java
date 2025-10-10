@@ -3,7 +3,6 @@ package com.controller;
 import com.dao.PlanoDAO;
 import com.exception.ExcecaoDeJSP;
 import com.model.Plano;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -74,9 +73,9 @@ public class PlanoServlet extends HttpServlet {
     // Redireciona a request par a página jsp
     if (erro) {
       resp.sendRedirect(req.getContextPath() + '/' + PAGINA_ERRO);
+
     } else {
-      RequestDispatcher rd = req.getRequestDispatcher(destino);
-      rd.forward(req, resp);
+      req.getRequestDispatcher(destino).forward(req, resp);
     }
   }
 
@@ -131,14 +130,17 @@ public class PlanoServlet extends HttpServlet {
   // === CREATE ===
   private void registrarPlano(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da requisição
+    String nome = req.getParameter("nome").trim();
+    String descricao = req.getParameter("descricao").trim();
+
     String temp = req.getParameter("valor").trim();
+
     if (temp.isBlank()) {
       throw ExcecaoDeJSP.campoNecessarioFaltante("valor");
     }
+
     double valor = Double.parseDouble(temp);
 
-    String nome = req.getParameter("nome").trim();
-    String descricao = req.getParameter("descricao").trim();
     Plano plano = new Plano(null, nome, valor, descricao);
 
     try (PlanoDAO dao = new PlanoDAO()) {
@@ -156,11 +158,12 @@ public class PlanoServlet extends HttpServlet {
   private List<Plano> listaPlanos(HttpServletRequest req) throws SQLException, ClassNotFoundException {
     try (PlanoDAO dao = new PlanoDAO()) {
       //Dados da requisição
-      String campoFiltro = req.getParameter("campoFiltro");
-      String temp = req.getParameter("valorFiltro");
-      Object valorFiltro = dao.converterValor(campoFiltro, temp);
-      String campoSequencia = req.getParameter("campoSequencia");
-      String direcaoSequencia = req.getParameter("direcaoSequencia");
+      String campoFiltro = req.getParameter("campo_filtro");
+      String campoSequencia = req.getParameter("campo_sequencia");
+      String direcaoSequencia = req.getParameter("direcao_sequencia");
+
+      String temp = req.getParameter("valor_filtro");
+      Object valorFiltro = PlanoDAO.converterValor(campoFiltro, temp);
 
       // Recupera os planos do banco
       return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);
@@ -181,10 +184,11 @@ public class PlanoServlet extends HttpServlet {
   // === UPDATE ===
   private void atualizarPlano(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da request
+    String nome = req.getParameter("nome").trim();
+    String descricao = req.getParameter("descricao").trim();
+
     String temp = req.getParameter("id").trim();
     int id = Integer.parseInt(temp);
-
-    String nome = req.getParameter("nome").trim();
 
     temp = req.getParameter("valor").trim();
     if (temp.isBlank()) {
@@ -192,7 +196,6 @@ public class PlanoServlet extends HttpServlet {
     }
     double valor = Double.parseDouble(temp);
 
-    String descricao = req.getParameter("descricao").trim();
     Plano alterado = new Plano(id, nome, valor, descricao);
 
     try (PlanoDAO dao = new PlanoDAO()) {

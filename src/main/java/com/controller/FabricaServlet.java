@@ -8,7 +8,6 @@ import com.dto.FabricaDTO;
 import com.exception.ExcecaoDeJSP;
 import com.model.Endereco;
 import com.model.Fabrica;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -70,7 +69,7 @@ public class FabricaServlet extends HttpServlet {
           destino = PAGINA_CADASTRO;
         }
 
-        default -> throw new RuntimeException("valor inválido para o parâmetro 'action': " + action);
+        default -> throw new IllegalArgumentException("valor inválido para o parâmetro 'action': " + action);
       }
 
       erro = false;
@@ -94,8 +93,7 @@ public class FabricaServlet extends HttpServlet {
       resp.sendRedirect(req.getContextPath() + '/' + PAGINA_ERRO);
 
     } else {
-      RequestDispatcher rd = req.getRequestDispatcher(destino);
-      rd.forward(req, resp);
+      req.getRequestDispatcher(destino).forward(req, resp);
     }
   }
 
@@ -113,7 +111,7 @@ public class FabricaServlet extends HttpServlet {
         case "create" -> registrarFabrica(req);
         case "update" -> atualizarFabrica(req);
         case "delete" -> removerFabrica(req);
-        default -> throw new RuntimeException("valor inválido para o parâmetro 'action': " + action);
+        default -> throw new IllegalArgumentException("valor inválido para o parâmetro 'action': " + action);
       }
 
       erro = false;
@@ -192,18 +190,15 @@ public class FabricaServlet extends HttpServlet {
 
   // === READ ===
   private List<FabricaDTO> listarFabricas(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+    //Dados da requisição
+    String campoFiltro = req.getParameter("campo_filtro");
+    String campoSequencia = req.getParameter("campo_sequencia");
+    String direcaoSequencia = req.getParameter("direcao_sequencia");
+    String valorFiltroStr = req.getParameter("valor_filtro");
+
+
     try (FabricaDAO dao = new FabricaDAO()) {
-      //Dados da requisição
-      String campoFiltro = req.getParameter("campoFiltro");
-      String temp = req.getParameter("valorFiltro");
-      Object valorFiltro = null;
-
-      if (campoFiltro != null && !campoFiltro.isBlank()) {
-        valorFiltro = FabricaDAO.converterValor(campoFiltro, temp);
-      }
-
-      String campoSequencia = req.getParameter("campoSequencia");
-      String direcaoSequencia = req.getParameter("direcaoSequencia");
+      Object valorFiltro = FabricaDAO.converterValor(campoFiltro, valorFiltroStr);
 
       // Recupera os planos do banco
       return dao.listar(campoFiltro, valorFiltro, campoSequencia, direcaoSequencia);

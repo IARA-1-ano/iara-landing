@@ -25,8 +25,7 @@ public class LoginServlet extends HttpServlet {
   // GET e POST
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    RequestDispatcher rd = req.getRequestDispatcher(PAGINA_LOGIN);
-    rd.forward(req, resp);
+    req.getRequestDispatcher(PAGINA_LOGIN).forward(req, resp);
   }
 
   @Override
@@ -36,20 +35,13 @@ public class LoginServlet extends HttpServlet {
     HttpSession session = req.getSession();
 
     // Dados da resposta
-    boolean redirect = true;
-    String destino = PAGINA_ERRO;
+    boolean erro = true;
 
     try {
       switch (action) {
         case "login" -> {
           SuperAdmDTO usuario = login(req);
-
           session.setAttribute("usuario", usuario);
-          req.setAttribute("nomeUsuario", usuario.getNome());
-          req.setAttribute("emailUsuario", usuario.getEmail());
-
-          destino = AREA_RESTRITA;
-          redirect = false;
         }
 
         case "logout" -> {
@@ -60,6 +52,8 @@ public class LoginServlet extends HttpServlet {
 
         default -> throw new RuntimeException("valor inválido para o parâmetro 'action': " + action);
       }
+
+      erro = false;
 
     } catch (ExcecaoDeJSP e) {
       req.setAttribute("erro", e.getMessage());
@@ -80,12 +74,11 @@ public class LoginServlet extends HttpServlet {
       e.printStackTrace(System.err);
     }
 
-    if (redirect) {
-      resp.sendRedirect(req.getContextPath() + '/' + destino);
+    if (erro) {
+      resp.sendRedirect(req.getContextPath() + '/' + PAGINA_ERRO);
 
     } else {
-      RequestDispatcher rd = req.getRequestDispatcher(destino);
-      rd.forward(req, resp);
+      req.getRequestDispatcher(AREA_RESTRITA).forward(req, resp);
     }
   }
 
