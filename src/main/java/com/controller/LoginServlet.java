@@ -38,6 +38,7 @@ public class LoginServlet extends HttpServlet {
     String destino = PAGINA_ERRO;
 
     try {
+      // Faz a ação correspondente à escolha
       switch (action) {
         case "login" -> {
           SuperAdmDTO usuario = login(req);
@@ -55,13 +56,16 @@ public class LoginServlet extends HttpServlet {
 
       destino = AREA_RESTRITA;
 
-    } catch (ExcecaoDeJSP e) {
+    }
+    // Se houver alguma exceção de JSP, aciona o método doGet
+    catch (ExcecaoDeJSP e) {
       req.setAttribute("erro", e.getMessage());
       doGet(req, resp);
       return;
 
-    } catch (SQLException e) {
-      // Se houver alguma exceção, registra no terminal
+    }
+    // Se houver alguma exceção, registra no terminal
+    catch (SQLException e) {
       System.err.println("Erro ao executar operação no banco:");
       e.printStackTrace(System.err);
 
@@ -74,10 +78,13 @@ public class LoginServlet extends HttpServlet {
       e.printStackTrace(System.err);
     }
 
+    // Redireciona para a página de destino
     resp.sendRedirect(req.getContextPath() + destino);
   }
 
   // Outros Métodos
+
+  // === LOGIN ===
   private SuperAdmDTO login(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da requisição
     String email = req.getParameter("email").trim();
@@ -88,19 +95,22 @@ public class LoginServlet extends HttpServlet {
       // Tenta fazer login e recuperar o usuário
       SuperAdmDTO usuario = dao.login(credenciais);
 
-      // Verifica se o login deu certo
+      // Validação de login
       if (usuario == null) {
         throw ExcecaoDeJSP.falhaLogin();
       }
 
+      // Retorna o usuário
       return usuario;
     }
   }
 
+  // === LOGOUT ===
   private void logout(HttpServletRequest req) {
-    // Dados da request
+    // Dados da requisição
     HttpSession session = req.getSession(false);
 
+    // Finaliza a sessão do usuário
     if (session != null) {
       session.removeAttribute("usuario");
     }
