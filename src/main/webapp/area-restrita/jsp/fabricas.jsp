@@ -25,12 +25,11 @@
   <select id="campoFiltro" name="campo_filtro">
       <option value="" selected>Nenhum selecionado</option>
       <option value="id" data-type="number">ID</option>
-      <option value="nome" data-type="text">Nome</option>
+      <option value="nome_unidade" data-type="text">Nome</option>
       <option value="cnpj" data-type="number">CNPJ</option>
       <option value="statusF" data-type="select">Status</option>
       <option value="nome_industria" data-type="text">Empresa</option>
       <option value="ramo" data-type="text">Ramo</option>
-      <!-- POR O FILTRO POR PLANO -->
   </select>
 
 <div id="containerValorFiltro">

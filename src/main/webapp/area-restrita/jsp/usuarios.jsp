@@ -26,7 +26,6 @@
     <select id="campoFiltro" name="campo_filtro">
       <option value="" selected>Nenhum selecionado</option>
       <option value="id" data-type="number">ID</option>
-      <option value="id_fabrica" data-type="number">ID da Fábrica</option>
       <option value="email" data-type="email">Email</option>
       <option value="nome" data-type="text">Nome</option>
       <option value="tipo_acesso" data-type="select">Tipo de Acesso</option>
