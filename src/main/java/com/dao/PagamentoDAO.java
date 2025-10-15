@@ -32,7 +32,7 @@ public class PagamentoDAO extends DAO {
   // Converter Valor
   public Object converterValor(String campo, String valor){
       return switch(campo){
-          case "id", "id_fabrica" -> Integer.parseInt(valor);
+          case "id" -> Integer.parseInt(valor);
           case "valor" -> Double.parseDouble(valor);
           case "status" -> Boolean.parseBoolean(valor);
           case "data_pagamento", "data_vencimento" -> LocalDate.parse(valor);
