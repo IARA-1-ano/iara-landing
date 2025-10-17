@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +29,14 @@ public class SuperAdmDAO extends DAO {
 
   // Converter Valor
   public Object converterValor(String campo, String valor){
-      if (valor == null || valor.isBlank()){
-          return null;
-      } else{
+      try{
           return switch(campo){
               case "id" -> Integer.parseInt(valor);
               case "nome", "cargo", "email" -> valor;
               default -> throw new IllegalArgumentException();
           };
+      } catch (DateTimeParseException | IllegalArgumentException | NullPointerException e){
+          return null;
       }
   }
 

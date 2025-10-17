@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class FabricaDAO extends DAO {
@@ -32,15 +33,15 @@ public class FabricaDAO extends DAO {
 
   // Converter Valor
   public Object converterValor(String campo, String valor){
-      if (valor == null || valor.isBlank()){
-          return null;
-      } else{
+      try{
           return switch(campo){
               case "id" -> Integer.parseInt(valor);
               case "status" -> Boolean.parseBoolean(valor);
               case "email_corporativo", "nome_unidade", "nome_industria", "cnpj", "ramo" -> valor;
               default -> throw new IllegalArgumentException();
           };
+      } catch (DateTimeParseException | IllegalArgumentException | NullPointerException e){
+          return null;
       }
   }
 

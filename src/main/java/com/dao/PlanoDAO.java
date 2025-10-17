@@ -26,15 +26,15 @@ public class PlanoDAO extends DAO {
 
   // Converter Valor
   public Object converterValor(String campo, String valor){
-      if (valor == null || valor.isBlank()){
-          return null;
-      } else{
+      try{
           return switch(campo){
               case "id" -> Integer.parseInt(valor);
               case "valor" -> Double.parseDouble(valor);
               case "descricao", "nome" -> valor;
               default -> throw new IllegalArgumentException();
           };
+      } catch(DateTimeParseException | IllegalArgumentException | NullPointerException e){
+          return null;
       }
   }
 
