@@ -18,7 +18,7 @@ public class LoginDAO extends DAO {
   // Outros Métodos
   public SuperAdmDTO login(LoginDTO credenciais) throws SQLException {
     // Comando SQL
-    String sql = "SELECT * FROM super_adm WHERE email = ?";
+    String sql = "SELECT id, nome, cargo, senha FROM super_adm WHERE email = ?";
 
     // Variáveis
     String senhaHash, nome, cargo;
