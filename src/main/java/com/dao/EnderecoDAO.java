@@ -57,7 +57,7 @@ public class EnderecoDAO extends DAO {
   // === READ ===
   public Endereco pesquisarPorIdFabrica(int idFabrica) throws SQLException {
     // Comando SQL
-    String sql = "SELECT * FROM endereco WHERE id_fabrica = ?";
+    String sql = "SELECT complemento, cep, rua, numero, id FROM endereco WHERE id_fabrica = ?";
     Endereco e;
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
