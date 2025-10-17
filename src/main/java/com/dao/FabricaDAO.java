@@ -87,7 +87,7 @@ public class FabricaDAO extends DAO {
     List<FabricaDTO> fabricas = new ArrayList<>();
 
     // Comando SQL
-    String sql = "SELECT * FROM exibicao_fabrica";
+    String sql = "SELECT id, nome_unidade, cnpj, status, email_corporativo, nome_industria, ramo, endereco, plano FROM exibicao_fabrica";
 
     // Verificando o campo do filtro
     if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
@@ -135,7 +135,7 @@ public class FabricaDAO extends DAO {
 
   public Fabrica pesquisarPorCnpj(String cnpj) throws SQLException {
     // Comando SQL
-    String sql = "SELECT * FROM fabrica WHERE cnpj = ?";
+    String sql = "SELECT id, id_plano, email_corporativo, nome_unidade, status, nome_industria, ramo FROM fabrica WHERE cnpj = ?";
     Fabrica f;
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -193,7 +193,7 @@ public class FabricaDAO extends DAO {
 
   public Fabrica pesquisarPorId(int id) throws SQLException {
     // Comando SQL
-    String sql = "SELECT * FROM fabrica WHERE id = ?";
+    String sql = "SELECT id_plano, email_corporativo, nome_unidade, cnpj, status, nome_industria, ramo FROM fabrica WHERE id = ?";
     Fabrica f;
 
     // Definindo variável do comando SQL
