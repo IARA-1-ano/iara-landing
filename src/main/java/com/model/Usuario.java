@@ -1,5 +1,7 @@
 package com.model;
 
+import com.utils.DataUtils;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,13 +18,12 @@ public class Usuario {
   private String senha; // coluna: senha
   private String cargo; // coluna: cargo
   private TipoAcesso tipoAcesso; // coluna: tipo_acesso
-  private String descTipoAcesso; // coluna: desc_tipoacesso
   private LocalDateTime dataCriacao; // coluna: data_criacao
   private Boolean status; // coluna: status
   private Integer fkFabrica; // coluna: fk_fabrica
 
   // Construtor
-  public Usuario(UUID id, UUID idGerente, String nome, String genero, LocalDate dataNascimento, String email, String senha, String cargo, TipoAcesso tipoAcesso, String descTipoAcesso, LocalDateTime dataCriacao, Boolean status, Integer idFabrica) {
+  public Usuario(UUID id, UUID idGerente, String nome, String genero, LocalDate dataNascimento, String email, String senha, String cargo, TipoAcesso tipoAcesso, LocalDateTime dataCriacao, Boolean status, Integer idFabrica) {
     this.id = id;
     this.idGerente = idGerente;
     this.nome = nome;
@@ -31,10 +32,10 @@ public class Usuario {
     this.email = email;
     this.senha = senha;
     this.tipoAcesso = tipoAcesso;
-    this.descTipoAcesso = descTipoAcesso;
     this.dataCriacao = dataCriacao;
     this.status = status;
     this.fkFabrica = idFabrica;
+    this.cargo = cargo;
   }
 
   // Getters e Setters
@@ -110,14 +111,6 @@ public class Usuario {
     this.tipoAcesso = tipoAcesso;
   }
 
-  public String getDescTipoAcesso() {
-      return descTipoAcesso;
-  }
-
-  public void setDescTipoAcesso(String descTipoAcesso) {
-      this.descTipoAcesso = descTipoAcesso;
-  }
-
   public LocalDateTime getDataCriacao() {
     return dataCriacao;
   }
@@ -145,7 +138,8 @@ public class Usuario {
   // toString
   @Override
   public String toString() {
-    return "Usuario{id=%d, idGerente=%d, nome='%s', genero=%s, dataNascimento=%s, email='%s', senha='%s', cargo=%s, tipoAcesso=%s, descTipoAcesso=%s, dataCriacao=%s, status=%b, idFabrica=%d}"
-        .formatted(id, nome, email, senha, tipoAcesso, dataCriacao, status, fkFabrica);
+    String nascimento = dataNascimento.format(DataUtils.DMY);
+    return "Usuario{id=%s, idGerente=%s, nome='%s', genero='%s', dataNascimento=%s, email='%s', senha='%s', cargo='%s', tipoAcesso=%s, dataCriacao=%s, status=%b, idFabrica=%d}"
+        .formatted(id, idGerente, nome, genero, nascimento,  email, senha, tipoAcesso, dataCriacao, status, fkFabrica);
   }
 }

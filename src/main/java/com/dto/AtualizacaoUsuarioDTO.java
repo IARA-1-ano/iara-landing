@@ -13,12 +13,11 @@ public class AtualizacaoUsuarioDTO {
   private String cargo;
   private String email;
   private TipoAcesso tipoAcesso;
-  private String descTipoAcesso;
   private Boolean status;
   private Integer fkFabrica;
 
   // Construtor
-  public AtualizacaoUsuarioDTO(UUID id, String nome, String emailGerente, String genero, String cargo, String email, TipoAcesso tipoAcesso, String descTipoAcesso, Boolean status, Integer fkFabrica) {
+  public AtualizacaoUsuarioDTO(UUID id, String nome, String emailGerente, String genero, String cargo, String email, TipoAcesso tipoAcesso, Boolean status, Integer fkFabrica) {
     this.id = id;
     this.nome = nome;
     this.emailGerente = emailGerente;
@@ -26,7 +25,6 @@ public class AtualizacaoUsuarioDTO {
     this.cargo = cargo;
     this.email = email;
     this.tipoAcesso = tipoAcesso;
-    this.descTipoAcesso = descTipoAcesso;
     this.status = status;
     this.fkFabrica = fkFabrica;
   }
@@ -89,14 +87,6 @@ public class AtualizacaoUsuarioDTO {
     this.tipoAcesso = accessLevel;
   }
 
-  public String getDescTipoAcesso() {
-      return descTipoAcesso;
-  }
-
-  public void setDescTipoAcesso(String descTipoAcesso) {
-      this.descTipoAcesso = descTipoAcesso;
-  }
-
   public Boolean getStatus() {
     return status;
   }
@@ -116,7 +106,7 @@ public class AtualizacaoUsuarioDTO {
   // toString
   @Override
   public String toString() {
-    return "AtualizacaoUsuarioDTO{nome='%s', emailGerente='%s', genero='%s', cargo='%s', email='%s', tipoAcesso=%s, status=%b, fkFabrica=%d}"
-        .formatted(nome, emailGerente, genero, cargo, email, tipoAcesso, status, fkFabrica);
+    return "AtualizacaoUsuarioDTO{id=%s, nome='%s', emailGerente='%s', genero='%s', cargo='%s', email='%s', tipoAcesso=%s, status=%b, fkFabrica=%d}"
+        .formatted(id, nome, emailGerente, genero, cargo, email, tipoAcesso, status, fkFabrica);
   }
 }

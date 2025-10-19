@@ -8,6 +8,8 @@
   Map<Integer, String> fabricas = (Map<Integer, String>) request.getAttribute("fabricas");
   List<String> emailGerentes = (List<String>) request.getAttribute("emailGerentes");
   String erro = (String) request.getAttribute("erro");
+  
+  emailGerentes.add("");
 %>
 <html>
 <head>
@@ -21,44 +23,37 @@
   <input type="hidden" name="action" value="update">
   <input type="hidden" name="id" value="<%= usuario.getId() %>">
   <input type="text" name="nome" value="<%= usuario.getNome() %>" placeholder="Novo nome">
-
-  <select name="email_gerente" >
-      <% if (emailGerentes != null) {%>
-      <% for (String email:emailGerentes) { %>
-      <option value="<%= email %>" <%= email.equals(usuario.getEmailGerente()) ? "selected" : "" %>>
-          <%= email %>
-      </option>
-      <% } %>
-      <% } %>
+  
+  <select name="email_gerente">
+    <% for (String email : emailGerentes) { %>
+    <option value="<%= email %>" <%= email.equals(usuario.getEmailGerente()) ? "selected" : "" %>>
+      <%= email %>
+    </option>
+    <% } %>
   </select>
-
+  
   <select name="genero">
-      <% for (String genero: List.of("masculino", "feminino", "outros")) {%>
-      <option value=" <%= genero %>" <%= genero.equals(usuario.getGenero()) ? "selected" : ""%>>
-          <%= genero %>
-      </option>
-      <%}%>
+    <% for (String genero : List.of("masculino", "feminino", "outros")) {%>
+    <option value=" <%= genero %>" <%= genero.equals(usuario.getGenero()) ? "selected" : ""%>>
+      <%= genero %>
+    </option>
+    <%}%>
   </select>
-
+  
   <input type="text" name="cargo" value="<%= usuario.getCargo() %>" placeholder="Novo cargo">
   <input type="text" name="email" value="<%= usuario.getEmail() %>" placeholder="Novo email">
   
   <select name="nivel_acesso">
     <% for (TipoAcesso t : TipoAcesso.values()) { %>
-    <option value="<%= t.nivel() %>" <%= t == usuario.getTipoAcesso() ? "selected" : "" %>>
+    <option value="<%= t.nivel() %>" <%= usuario.getTipoAcesso().equals(t) ? "selected" : "" %>>
       <%= t.toString() %>
     </option>
     <% } %>
   </select>
-
-  <input type="text" name="desc_tipoacesso" value="<%= usuario.getDescTipoAcesso() %>" placeholder="Nova descrição do tipo de acesso">
   
   <select name="status">
-    <% for (boolean b : List.of(true, false)) { %>
-    <option value="<%= b %>" <%= b == usuario.getStatus() ? "selected" : "" %>>
-      <%= b ? "Ativo" : "Inativo" %>
-    </option>
-    <% } %>
+    <option value="true" <%= usuario.getStatus() ? "selected" : "" %>>Ativo</option>
+    <option value="false" <%= !usuario.getStatus() ? "selected" : "" %>>Inativo</option>
   </select>
   
   <select name="fk_fabrica">

@@ -16,13 +16,12 @@ public class UsuarioDTO {
   private String cargo;
   private String email;
   private TipoAcesso tipoAcesso;
-  private String descTipoAcesso;
   private LocalDateTime dataCriacao;
   private Boolean status;
   private String nomeFabrica;
 
   // Construtor
-  public UsuarioDTO(UUID id, String nome, String emailGerente, String genero, LocalDate dataNascimento, String email, String cargo, TipoAcesso tipoAcesso, String descTipoAcesso, LocalDateTime dataCriacao, Boolean status, String nomeFabrica) {
+  public UsuarioDTO(UUID id, String nome, String emailGerente, String genero, LocalDate dataNascimento, String email, String cargo, TipoAcesso tipoAcesso, LocalDateTime dataCriacao, Boolean status, String nomeFabrica) {
     this.id = id;
     this.nome = nome;
     this.emailGerente = emailGerente;
@@ -31,7 +30,6 @@ public class UsuarioDTO {
     this.cargo = cargo;
     this.email = email;
     this.tipoAcesso = tipoAcesso;
-    this.descTipoAcesso = descTipoAcesso;
     this.dataCriacao = dataCriacao;
     this.status = status;
     this.nomeFabrica = nomeFabrica;
@@ -103,14 +101,6 @@ public class UsuarioDTO {
     this.tipoAcesso = tipoAcesso;
   }
 
-  public String getDescTipoAcesso() {
-      return descTipoAcesso;
-  }
-
-  public void setDescTipoAcesso(String descTipoAcesso) {
-      this.descTipoAcesso = descTipoAcesso;
-  }
-
   public LocalDateTime getDataCriacao() {
     return dataCriacao;
   }
@@ -138,7 +128,7 @@ public class UsuarioDTO {
   // toString
   @Override
   public String toString() {
-    return "UsuarioDTO{id='%s', nome='%s', emailGerente='%s', genero='%s', dataNascimento=%s, cargo='%s', email='%s', tipoAcesso=%s, descTipoAcesso='%s', dataCriacao=%s, status=%b, nomeFabrica='%s'}"
-        .formatted(id, nome, emailGerente, genero, dataNascimento, email, cargo, tipoAcesso, descTipoAcesso, dataCriacao, status, nomeFabrica);
+    return "UsuarioDTO{id='%s', nome='%s', emailGerente='%s', genero='%s', dataNascimento=%s, cargo='%s', email='%s', tipoAcesso=%s, dataCriacao=%s, status=%b, nomeFabrica='%s'}"
+        .formatted(id, nome, emailGerente, genero, dataNascimento, email, cargo, tipoAcesso, dataCriacao, status, nomeFabrica);
   }
 }

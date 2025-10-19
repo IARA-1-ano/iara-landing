@@ -15,7 +15,6 @@ import java.util.*;
 public class UsuarioDAO extends DAO {
   // Constantes
   public static final Map<String, String> camposFiltraveis = Map.of(
-      "id", "ID",
       "nome", "Nome",
       "genero", "Gênero",
       "data_nascimento", "Data de Nascimento",
@@ -33,19 +32,19 @@ public class UsuarioDAO extends DAO {
   }
 
   // Converter Valor
-  public Object converterValor(String campo, String valor){
-      try{
-          return switch(campo){
-              case "tipo_acesso", "id_fabrica" -> Integer.parseInt(valor);
-              case "status" -> Boolean.parseBoolean(valor);
-              case "data_nascimento" -> LocalDate.parse(valor);
-              case "data_criacao" -> LocalDateTime.parse(valor);
-              case "nome", "genero", "cargo", "email" -> valor;
-              default -> new IllegalArgumentException();
-          };
-      } catch(DateTimeParseException | NumberFormatException | NullPointerException e){
-          return null;
-      }
+  public Object converterValor(String campo, String valor) {
+    try {
+      return switch (campo) {
+        case "tipo_acesso", "id_fabrica" -> Integer.parseInt(valor);
+        case "status" -> Boolean.parseBoolean(valor);
+        case "data_nascimento" -> LocalDate.parse(valor);
+        case "data_criacao" -> LocalDateTime.parse(valor);
+        case "nome", "genero", "cargo", "email" -> valor;
+        default -> new IllegalArgumentException();
+      };
+    } catch (DateTimeParseException | NumberFormatException | NullPointerException e) {
+      return null;
+    }
   }
 
 
@@ -100,33 +99,45 @@ public class UsuarioDAO extends DAO {
 
   // === READ ===
   public List<UsuarioDTO> listar(String campoFiltro, Object valorFiltro, String campoSequencia, String direcaoSequencia) throws SQLException {
+    // Variáveis
+    boolean temFiltro = true;
+
     // Lista de usuários
     List<UsuarioDTO> usuarios = new ArrayList<>();
 
     // Comando SQL
     String sql = """
-        SELECT u.id, u.nome, g.email as "email_gerente", u.genero, u.data_nascimento, u.email, u.cargo, u.tipo_acesso, u.desc_tipoacesso, u.data_criacao, u.status, f.nome_unidade as "nome_fabrica"
-        FROM usuario u
-        LEFT JOIN usuario g ON g.id = u.id_gerente
-        JOIN fabrica f ON f.id = u.fk_fabrica
-      """;
+          SELECT u.id, u.nome, g.email as "email_gerente", u.genero, u.data_nascimento, u.email, u.cargo, u.tipo_acesso, u.data_criacao, u.status, f.nome_unidade as "nome_fabrica"
+          FROM usuario u
+          LEFT JOIN usuario g ON g.id = u.id_gerente
+          JOIN fabrica f ON f.id = u.fk_fabrica
+        """;
 
     // Verificando campo do filtro
     if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
       sql += " WHERE u.%s = ?".formatted(campoFiltro);
+
+    } else if ("gerente".equals(campoFiltro)) {
+      sql += " WHERE g.email = ?";
+
+    } else {
+      temFiltro = false;
     }
 
     // Verificando campo e direcao da ordenação
     if (campoSequencia != null && camposFiltraveis.containsKey(campoSequencia)) {
       sql += " ORDER BY u.%s %s".formatted(campoSequencia, direcaoSequencia);
 
+    } else if ("gerente".equals(campoSequencia)) {
+      sql += " ORDER BY g.email %s".formatted(direcaoSequencia);
+
     } else {
-      sql += " ORDER BY id ASC";
+      sql += " ORDER BY u.id ASC";
     }
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       // Definindo variável do comando SQL
-      if (campoFiltro != null && camposFiltraveis.containsKey(campoFiltro)) {
+      if (temFiltro) {
         pstmt.setObject(1, valorFiltro);
       }
 
@@ -139,22 +150,21 @@ public class UsuarioDAO extends DAO {
           String emailGerente = rs.getString("email_gerente");
           String genero = rs.getString("genero");
 
-          Date temp = rs.getDate("data_nascimento");
-          LocalDate dataNascimento = (temp == null ? null : temp.toLocalDate());
+          Date dtNascimentoDate = rs.getDate("data_nascimento");
+          LocalDate dataNascimento = (dtNascimentoDate == null ? null : dtNascimentoDate.toLocalDate());
 
           String cargo = rs.getString("cargo");
           String email = rs.getString("email");
           TipoAcesso tipoAcesso = TipoAcesso.deNivel(rs.getInt("tipo_acesso"));
-          String descTipoAcesso = rs.getString("desc_tipoacesso");
 
-          Timestamp temp2 = rs.getTimestamp("data_criacao");
-          LocalDateTime dataCriacao = (temp2 == null ? null : temp2.toLocalDateTime());
+          Timestamp dtCriacaoTimestamp = rs.getTimestamp("data_criacao");
+          LocalDateTime dataCriacao = (dtCriacaoTimestamp == null ? null : dtCriacaoTimestamp.toLocalDateTime());
 
           boolean status = rs.getBoolean("status");
           String nomeFabrica = rs.getString("nome_fabrica");
 
           // Adicionando instância do DTO na lista de usuários
-          usuarios.add(new UsuarioDTO(id, nome, emailGerente, genero, dataNascimento, email, cargo, tipoAcesso, descTipoAcesso, dataCriacao, status, nomeFabrica));
+          usuarios.add(new UsuarioDTO(id, nome, emailGerente, genero, dataNascimento, email, cargo, tipoAcesso, dataCriacao, status, nomeFabrica));
         }
       }
     }
@@ -164,35 +174,36 @@ public class UsuarioDAO extends DAO {
     return usuarios;
   }
 
-  public List<String> emailGerentes() throws SQLException{
-      // Lista de emails
-      List<String> emailGerentes = new ArrayList<>();
+  public List<String> listarEmailGerentes() throws SQLException {
+    // Lista de emails
+    List<String> emailGerentes = new ArrayList<>();
 
-      // Comando SQL
-      String sql = "SELECT email FROM email_gerentes";
+    // Comando SQL
+    String sql = "SELECT email FROM email_gerentes";
 
-      try(PreparedStatement pstmt = conn.prepareStatement(sql)){
-          // Resgata do banco de dados a lista de email dos gerentes
-          try(ResultSet rs = pstmt.executeQuery()){
-              while(rs.next()){
-                  // Adicionando email na lista de email dos gerentes
-                  emailGerentes.add(rs.getString("email"));
-              }
-          }
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      // Resgata do banco de dados a lista de email dos gerentes
+      try (ResultSet rs = pstmt.executeQuery()) {
+        while (rs.next()) {
+          // Adicionando email na lista de email dos gerentes
+          emailGerentes.add(rs.getString("email"));
+        }
       }
+    }
 
-      // Retorna a lista de email dos gerentes
-      return emailGerentes;
+    // Retorna a lista de email dos gerentes
+    conn.commit();
+    return emailGerentes;
   }
 
   public AtualizacaoUsuarioDTO getCamposAlteraveis(UUID id) throws SQLException {
     // Comando SQL
     String sql = """
-        SELECT u.nome, g.email as "email_gerente", u.genero, u.data_nascimento, u.cargo, u.email, u.tipo_acesso, u.status, u.fk_fabrica, u.desc_tipoacesso
-        FROM usuario u
-        LEFT JOIN usuario g ON g.id = u.id_gerente
-        WHERE u.id = ?
-    """;
+            SELECT u.nome, g.email as "email_gerente", u.genero, u.data_nascimento, u.cargo, u.email, u.tipo_acesso, u.status, u.fk_fabrica
+            FROM usuario u
+            LEFT JOIN usuario g ON g.id = u.id_gerente
+            WHERE u.id = ?
+        """;
 
     // Objeto não instanciado de usuário
     AtualizacaoUsuarioDTO usuario;
@@ -209,19 +220,18 @@ public class UsuarioDAO extends DAO {
         }
 
         // Variáveis
-          String nome = rs.getString("nome");
-          String emailGerente = rs.getString("email_gerente");
-          String genero = rs.getString("genero");
-          String cargo = rs.getString("cargo");
-          String email = rs.getString("email");
-          TipoAcesso tipoAcesso = TipoAcesso.deNivel(rs.getInt("tipo_acesso"));
-          String descTipoAcesso = rs.getString("desc_tipoacesso");
-          boolean status = rs.getBoolean("status");
-          Integer fkFabrica = rs.getInt("fk_fabrica");
+        String nome = rs.getString("nome");
+        String emailGerente = rs.getString("email_gerente");
+        String genero = rs.getString("genero");
+        String cargo = rs.getString("cargo");
+        String email = rs.getString("email");
+        TipoAcesso tipoAcesso = TipoAcesso.deNivel(rs.getInt("tipo_acesso"));
+        boolean status = rs.getBoolean("status");
+        Integer fkFabrica = rs.getInt("fk_fabrica");
 
 
-          // Instância do DTO
-        usuario = new AtualizacaoUsuarioDTO(id, nome, emailGerente, genero, cargo, email, tipoAcesso, descTipoAcesso, status, fkFabrica);
+        // Instância do DTO
+        usuario = new AtualizacaoUsuarioDTO(id, nome, emailGerente, genero, cargo, email, tipoAcesso, status, fkFabrica);
       }
     }
 
@@ -233,12 +243,12 @@ public class UsuarioDAO extends DAO {
   public UsuarioDTO pesquisarPorEmail(String email) throws SQLException {
     // Comando SQL
     String sql = """
-        SELECT u.id, u.nome, g.email as "email_gerente", u.genero, u.data_nascimento, u.email, u.cargo, u.tipo_acesso, u.desc_tipoacesso, u.data_criacao, u.status, f.nome_unidade as "nome_fabrica"
-        FROM usuario u
-        JOIN usuario g ON g.id = u.id_gerente
-        JOIN fabrica f ON f.id = u.fk_fabrica
-        WHERE u.email = ?
-    """;
+            SELECT u.id, u.nome, g.email as "email_gerente", u.genero, u.data_nascimento, u.email, u.cargo, u.tipo_acesso, u.data_criacao, u.status, f.nome_unidade as "nome_fabrica"
+            FROM usuario u
+            JOIN usuario g ON g.id = u.id_gerente
+            JOIN fabrica f ON f.id = u.fk_fabrica
+            WHERE u.email = ?
+        """;
 
     // Objeto não instanciado de usuário
     UsuarioDTO usuario;
@@ -255,7 +265,6 @@ public class UsuarioDAO extends DAO {
         }
 
         // Variáveis
-        // TODO: testar o getObject
         UUID id = UUID.fromString(rs.getString("id"));
         String nome = rs.getString("nome");
         String emailGerente = rs.getString("email_gerente");
@@ -266,7 +275,6 @@ public class UsuarioDAO extends DAO {
 
         String cargo = rs.getString("cargo");
         TipoAcesso tipoAcesso = TipoAcesso.deNivel(rs.getInt("tipo_acesso"));
-        String descTipoAcesso = rs.getString("desc_tipoacesso");
 
         Timestamp temp1 = rs.getTimestamp("data_criacao");
         LocalDateTime dataCriacao = (temp1 == null ? null : temp1.toLocalDateTime());
@@ -275,7 +283,7 @@ public class UsuarioDAO extends DAO {
         String nomeFabrica = rs.getString("nome_fabrica");
 
         // Instância do DTO
-        usuario = new UsuarioDTO(id, nome, emailGerente, genero, dataNascimento, email, cargo, tipoAcesso, descTipoAcesso, dataCriacao, status, nomeFabrica);
+        usuario = new UsuarioDTO(id, nome, emailGerente, genero, dataNascimento, email, cargo, tipoAcesso, dataCriacao, status, nomeFabrica);
       }
     }
 
@@ -305,19 +313,19 @@ public class UsuarioDAO extends DAO {
       valores.add(nome);
     }
 
-    if (!Objects.equals(emailGerente, original.getEmailGerente())){
-        sql.append("id_gerente = (SELECT id FROM usuario WHERE email = ?), ");
-        valores.add(emailGerente);
+    if (!Objects.equals(emailGerente, original.getEmailGerente())) {
+      sql.append("id_gerente = (SELECT id FROM usuario WHERE email = ?), ");
+      valores.add(emailGerente);
     }
 
-    if (!Objects.equals(genero, original.getGenero())){
-        sql.append("genero = ?, ");
-        valores.add(genero);
+    if (!Objects.equals(genero, original.getGenero())) {
+      sql.append("genero = ?, ");
+      valores.add(genero);
     }
 
-    if (!Objects.equals(cargo, original.getCargo())){
-        sql.append("cargo = ?, ");
-        valores.add(cargo);
+    if (!Objects.equals(cargo, original.getCargo())) {
+      sql.append("cargo = ?, ");
+      valores.add(cargo);
     }
 
     if (!Objects.equals(email, original.getEmail())) {
@@ -326,8 +334,9 @@ public class UsuarioDAO extends DAO {
     }
 
     if (!Objects.equals(tipoAcesso, original.getTipoAcesso())) {
-      sql.append("tipo_acesso = ?, ");
+      sql.append("tipo_acesso = ?, desc_tipoacesso = ?, ");
       valores.add(tipoAcesso.nivel());
+      valores.add(tipoAcesso.descricao());
     }
 
     if (status != original.getStatus()) {

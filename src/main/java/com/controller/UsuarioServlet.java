@@ -56,7 +56,7 @@ public class UsuarioServlet extends HttpServlet {
         case "update" -> {
           AtualizacaoUsuarioDTO usuario = getInformacoesAlteraveis(req);
           Map<Integer, String> fabricas = getMapFabricas();
-          List<String> emailGerentes = getEmailGerentes();
+          List<String> emailGerentes = getListaEmailsGerentes();
 
           req.setAttribute("usuario", usuario);
           req.setAttribute("fabricas", fabricas);
@@ -66,7 +66,7 @@ public class UsuarioServlet extends HttpServlet {
 
         case "create" -> {
           Map<Integer, String> fabricas = getMapFabricas();
-          List<String> emailGerentes = getEmailGerentes();
+          List<String> emailGerentes = getListaEmailsGerentes();
 
           req.setAttribute("fabricas", fabricas);
           req.setAttribute("emailGerentes", emailGerentes);
@@ -153,19 +153,15 @@ public class UsuarioServlet extends HttpServlet {
   private void registrarUsuario(HttpServletRequest req) throws SQLException, ClassNotFoundException, ExcecaoDeJSP {
     // Dados da requisição
     String nome = req.getParameter("nome").trim();
-
-    String emailGerente = req.getParameter("email_gerentes");
-    if (emailGerente != null){
-        emailGerente = emailGerente.trim();
-    }
-
+    String emailGerente = req.getParameter("email_gerentes").trim();
     String genero = req.getParameter("genero").trim();
 
-    String temp = req.getParameter("data_nascimento");
+    String temp = req.getParameter("data_nascimento").trim();
     LocalDate dataNascimento = LocalDate.parse(temp);
 
     String cargo = req.getParameter("cargo").trim();
     String email = req.getParameter("email").trim();
+
     String senhaOriginal = req.getParameter("senha");
     String hashSenha = SenhaUtils.hashear(senhaOriginal);
 
@@ -216,9 +212,9 @@ public class UsuarioServlet extends HttpServlet {
     }
   }
 
-  private List<String> getEmailGerentes() throws SQLException, ClassNotFoundException{
+  private List<String> getListaEmailsGerentes() throws SQLException, ClassNotFoundException{
       try(UsuarioDAO dao = new UsuarioDAO()){
-          return dao.emailGerentes();
+          return dao.listarEmailGerentes();
       }
   }
 
@@ -243,12 +239,7 @@ public class UsuarioServlet extends HttpServlet {
     // Dados da requisição
     UUID id = UUID.fromString(req.getParameter("id"));
     String nome = req.getParameter("nome").trim();
-
-    String emailGerente = req.getParameter("email_gerentes");
-    if (emailGerente != null){
-        emailGerente = emailGerente.trim();
-    }
-
+    String emailGerente = req.getParameter("email_gerente").trim();
     String genero = req.getParameter("genero").trim();
     String cargo = req.getParameter("cargo").trim();
     String email = req.getParameter("email").trim();
@@ -256,7 +247,7 @@ public class UsuarioServlet extends HttpServlet {
     String temp = req.getParameter("status").trim();
     boolean status = Boolean.parseBoolean(temp);
 
-    temp = req.getParameter("fk_fabrica");
+    temp = req.getParameter("fk_fabrica").trim();
     if (temp.isBlank()){
       throw ExcecaoDeJSP.campoNecessarioFaltante("fabrica");
     }
@@ -266,10 +257,8 @@ public class UsuarioServlet extends HttpServlet {
     int nivelAcessoInt = Integer.parseInt(temp);
     TipoAcesso tipoAcesso = TipoAcesso.deNivel(nivelAcessoInt);
 
-    String descTipoAcesso = req.getParameter("desc_tipoacesso").trim();
-
     // Instância do DTO
-    AtualizacaoUsuarioDTO alteracoes = new AtualizacaoUsuarioDTO(id, nome, emailGerente, genero, cargo, email, tipoAcesso, descTipoAcesso, status, fkFabrica);
+    AtualizacaoUsuarioDTO alteracoes = new AtualizacaoUsuarioDTO(id, nome, emailGerente, genero, cargo, email, tipoAcesso, status, fkFabrica);
 
     try (UsuarioDAO dao = new UsuarioDAO()) {
       // Busca no banco de dados o usuário original

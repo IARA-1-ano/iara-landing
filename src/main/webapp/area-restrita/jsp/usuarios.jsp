@@ -4,7 +4,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.model.DirecaoOrdenacao" %>
 <%@ page import="static com.dao.UsuarioDAO.camposFiltraveis" %>
-<%@ page import="com.model.Usuario" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
   List<UsuarioDTO> usuarios = (List<UsuarioDTO>) request.getAttribute("usuarios");
@@ -22,33 +21,32 @@
 <form action="${pageContext.request.contextPath}/area-restrita/usuarios" method="get">
   <input type="hidden" name="action" value="read">
   
-    <label for="campoFiltro">Campo de Filtragem:</label>
-    <select id="campoFiltro" name="campo_filtro">
-      <option value="" selected>Nenhum selecionado</option>
-      <option value="nome" data-type="text">Nome</option>
-      <option value="genero" data-type="select">Gênero</option>
-      <option value="data_nascimento" data-type="date">Data de Nascimento</option>
-      <option value="cargo" data-type="text">Cargo</option>
-      <option value="email" data-type="email">Email</option>
-      <option value="tipo_acesso" data-type="select">Tipo de Acesso</option>
-      <option value="desc_tipoacesso" data-type="text">Descrição do Tipo de Acesso</option>
-      <option value="statusU" data-type="select">Status</option>
-      <option value="data_criacao" data-type="datetime-local">Data de Criação</option>
-    </select>
-
+  <label for="campoFiltro">Campo de Filtragem:</label>
+  <select id="campoFiltro" name="campo_filtro">
+    <option value="" selected>Nenhum selecionado</option>
+    <option value="nome" data-type="text">Nome</option>
+    <option value="genero" data-type="select">Gênero</option>
+    <option value="data_nascimento" data-type="date">Data de Nascimento</option>
+    <option value="cargo" data-type="text">Cargo</option>
+    <option value="email" data-type="email">Email</option>
+    <option value="tipo_acesso" data-type="select">Tipo de Acesso</option>
+    <option value="statusU" data-type="select">Status</option>
+    <option value="data_criacao" data-type="datetime-local">Data de Criação</option>
+  </select>
+  
   <div id="containerValorFiltro">
-      <label for="valorFiltro">Valor Filtrado:</label>
-      <input id="valorFiltro" type="text" name="valor_filtro">
+    <label for="valorFiltro">Valor Filtrado:</label>
+    <input id="valorFiltro" type="text" name="valor_filtro">
   </div>
   
   <label>
     Ordenar por:
     <select name="campo_sequencia">
-      <% for(String chave:camposFiltraveis.keySet()){%>
-      <option value="<%=chave%>">
-          <%=camposFiltraveis.get(chave)%>
+      <% for (String chave : camposFiltraveis.keySet()) { %>
+      <option value="<%= chave %>">
+        <%= camposFiltraveis.get(chave) %>
       </option>
-      <%}%>
+      <% } %>
     </select>
   </label>
   
@@ -80,19 +78,22 @@
     <th>Fábrica</th>
   </tr>
   
-  <% for (UsuarioDTO u : usuarios) { %>
+  <%
+    for (UsuarioDTO u : usuarios) {
+      String emailGerente = u.getEmailGerente();
+  %>
   <tr>
     <td>
       <%= u.getNome() %>
     </td>
     <td>
-      <%= u.getEmailGerente() %>
+      <%= emailGerente == null ? "Nenhum gerente registrado" : emailGerente %>
     </td>
     <td>
       <%= u.getGenero() %>
     </td>
     <td>
-      <%= u.getDataNascimento() %>
+      <%= u.getDataNascimento().format(DataUtils.DMY) %>
     </td>
     <td>
       <%= u.getCargo() %>
@@ -104,7 +105,7 @@
       <%= u.getTipoAcesso().toString() %>
     </td>
     <td>
-      <%= u.getDescTipoAcesso() %>
+      <%= u.getTipoAcesso().descricao() %>
     </td>
     <td>
       <%= u.getDataCriacao().format(DataUtils.DMY) %>
