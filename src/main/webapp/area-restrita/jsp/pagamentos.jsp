@@ -4,14 +4,12 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="com.model.DirecaoOrdenacao" %>
 <%@ page import="java.time.LocalDate" %>
-<%@ page import="java.time.LocalDateTime" %>
-<%@ page import="com.dto.PagamentoDTO" %>
+<%@ page import="com.utils.StringUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
   List<Pagamento> pagamentos = (List<Pagamento>) request.getAttribute("pagamentos");
   Map<Integer, String> fabricas = (Map<Integer, String>) request.getAttribute("fabricas");
-  Map<Integer, String> planos = (Map<Integer, String>) request.getAttribute("planos");
 %>
 
 <html>
@@ -103,7 +101,7 @@
       <%= dtPagto == null ? "Pagamento Pendente" : dtPagto %>
     </td>
     <td>
-        <%= dtInicio == null ? "Não informado" : dtInicio.toString().split("T")[0] %>
+      <%= StringUtils.capitalize(pagamento.getTipoPagamento()) %>
     </td>
     <td>
       <%= pagamento.getMetodoPagamento().toString() %>
