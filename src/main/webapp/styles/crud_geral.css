@@ -18,3 +18,8 @@
     width: 150px;
     height: 46px;
 }
+
+#tabela_usuarios{
+    overflow-x: auto;
+    overflow-y: auto;
+}
