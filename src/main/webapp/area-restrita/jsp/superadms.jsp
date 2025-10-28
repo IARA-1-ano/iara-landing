@@ -35,27 +35,27 @@
           <ul>
             <li>
               <img class="imagem" src="/assets/crud/home.svg" alt="icone home">
-              <a href="${pageContext.request.contextPath}/index.html">Página inicial</a>
+              <a href="${pageContext.request.contextPath}/area-restrita/index.jsp">Página inicial</a>
             </li>
             <li>
               <img class="imagem" src="/assets/crud/usuario.svg" alt="icone usuarios">
-              <a href="${pageContext.request.contextPath}/usuarios?action=read">Usuários</a>
+              <a href="${pageContext.request.contextPath}/area-restrita/usuarios">Usuários</a>
             </li>
             <li class="active">
               <img class="imagem" src="/assets/crud/super_adm.svg" alt="icone super adm">
-              <a href="${pageContext.request.contextPath}/superadms?action=read">Super ADM</a>
+              <a href="${pageContext.request.contextPath}/area-restrita/superadms">Super ADM</a>
             </li>
             <li>
               <img class="imagem" src="/assets/crud/planos.svg" alt="icone planos">
-              <a href="${pageContext.request.contextPath}/planos?action=read">Planos</a>
+              <a href="${pageContext.request.contextPath}/area-restrita/planos">Planos</a>
             </li>
             <li>
               <img class="imagem" src="/assets/crud/fabricas.svg" alt="icone fábricas">
-              <a href="${pageContext.request.contextPath}/fabricas?action=read">Fábricas</a>
+              <a href="${pageContext.request.contextPath}/area-restrita/fabricas">Fábricas</a>
             </li>
             <li>
               <img class="imagem" src="/assets/crud/pagamento.svg" alt="icone pagamentos">
-              <a href="${pageContext.request.contextPath}/pagamentos?action=read">Pagamentos</a>
+              <a href="${pageContext.request.contextPath}/area-restrita/pagamentos">Pagamentos</a>
             </li>
             <li>
               <img class="imagem" src="/assets/crud/BI.svg" alt="icone BI">
@@ -89,20 +89,20 @@
               </button>
 
               <div class="filtro-card">
-                <form action="${pageContext.request.contextPath}/superadms" method="get">
+                <form action="${pageContext.request.contextPath}/area-restrita/superadms" method="get">
                   <input type="hidden" name="action" value="read">
 
                   <div class="filtragem">
                     <label>
                       Campo de Filtragem:
-                      <select name="campoFiltro">
+                      <select name="campo_filtro">
                         <option value="" selected>Nenhum selecionado</option>
-
+                        
                         <% for (String chave : camposFiltraveis.keySet()) { %>
-                          <option value="<%= camposFiltraveis.get(chave) %>">
-                            <%= chave %>
-                          </option>
-                          <% } %>
+                        <option value="<%= chave %>">
+                          <%= camposFiltraveis.get(chave) %>
+                        </option>
+                        <% } %>
                       </select>
                     </label>
                   </div>
@@ -110,21 +110,21 @@
                   <div class="filtragem">
                     <label>
                       Valor Filtrado:
-                      <input type="text" name="valorFiltro">
+                      <input type="text" name="valor_filtro">
                     </label>
                   </div>
 
                   <div class="filtragem">
                     <label>
                       Ordenar por:
-                      <select name="campoSequencia">
+                      <select name="campo_sequencia">
                         <option value="" selected>Nenhum selecionado</option>
-
+                        
                         <% for (String chave : camposFiltraveis.keySet()) { %>
-                          <option value="<%= camposFiltraveis.get(chave) %>">
-                            <%= chave %>
-                          </option>
-                          <% } %>
+                        <option value="<%= chave %>">
+                          <%= camposFiltraveis.get(chave) %>
+                        </option>
+                        <% } %>
                       </select>
                     </label>
                   </div>
@@ -132,10 +132,10 @@
                   <div class="filtragem">
                     <label>
                       Direção de ordenação:
-                      <input type="radio" name="direcaoSequencia" value="<%= DirecaoOrdenacao.CRESCENTE.getSql() %>"
+                      <input type="radio" name="direcao_sequencia" value="<%= DirecaoOrdenacao.CRESCENTE.getSql() %>"
                         checked>
                       Crescente
-                      <input type="radio" name="direcaoSequencia" value="<%= DirecaoOrdenacao.DECRESCENTE.getSql() %>">
+                      <input type="radio" name="direcao_sequencia" value="<%= DirecaoOrdenacao.DECRESCENTE.getSql() %>">
                       Decrescente
                     </label>
                   </div>
@@ -145,12 +145,12 @@
               </div>
             </div>
 
-            <form action="${pageContext.request.contextPath}/fabricas" method="get">
+            <form action="${pageContext.request.contextPath}/area-restrita/superadms" method="get">
               <input type="hidden" name="action" value="read">
               <button id="limpaFiltro" type="submit">Limpar Filtros</button>
             </form>
 
-            <a id="cadastrar" href="${pageContext.request.contextPath}/usuarios?action=create">Cadastrar</a>
+            <a id="cadastrar" href="${pageContext.request.contextPath}/area-restrita/superadms?action=create">Cadastrar</a>
           </div>
 
         </div>
@@ -179,12 +179,12 @@
                   <%= adm.getEmail() %>
                 </td>
                 <td>
-                  <form action="${pageContext.request.contextPath}/superadms" method="get">
+                  <form action="${pageContext.request.contextPath}/area-restrita/superadms" method="get">
                     <input type="hidden" name="id" value="<%= adm.getId() %>">
                     <input type="hidden" name="action" value="update">
                     <button id="editar" type="submit">Editar</button>
                   </form>
-                  <form action="${pageContext.request.contextPath}/superadms" method="post">
+                  <form action="${pageContext.request.contextPath}/area-restrita/superadms" method="post">
                     <input type="hidden" name="id" value="<%= adm.getId() %>">
                     <input type="hidden" name="action" value="delete">
                     <button id="deletar" type="submit">Deletar</button>

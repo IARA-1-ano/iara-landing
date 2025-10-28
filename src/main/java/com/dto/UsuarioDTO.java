@@ -1,5 +1,6 @@
 package com.dto;
 
+import com.model.Genero;
 import com.model.TipoAcesso;
 
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ public class UsuarioDTO {
   private UUID id;
   private String nome;
   private String emailGerente;
-  private String genero;
+  private Genero genero;
   private LocalDate dataNascimento;
   private String cargo;
   private String email;
@@ -22,7 +23,7 @@ public class UsuarioDTO {
   private Boolean status;
   private String nomeFabrica;
 
-  public UsuarioDTO(UUID id, String nome, String emailGerente, String genero, LocalDate dataNascimento, String email, String cargo, TipoAcesso tipoAcesso, LocalDateTime dataCriacao, Boolean status, String nomeFabrica) {
+  public UsuarioDTO(UUID id, String nome, String emailGerente, Genero genero, LocalDate dataNascimento, String email, String cargo, TipoAcesso tipoAcesso, LocalDateTime dataCriacao, Boolean status, String nomeFabrica) {
     this.id = id;
     this.nome = nome;
     this.emailGerente = emailGerente;
@@ -60,11 +61,11 @@ public class UsuarioDTO {
       this.emailGerente = emailGerente;
   }
 
-  public String getGenero() {
+  public Genero getGenero() {
       return genero;
   }
 
-  public void setGenero(String genero) {
+  public void setGenero(Genero genero) {
       this.genero = genero;
   }
 

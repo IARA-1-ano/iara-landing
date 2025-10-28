@@ -63,7 +63,7 @@ public class PagamentoDAO extends DAO {
             pstmt.setDate(3, (dtVencimento == null ? null : Date.valueOf(dtVencimento)));
             pstmt.setTimestamp(4, (dtPagamento == null ? null : Timestamp.valueOf(dtPagamento)));
             pstmt.setTimestamp(5, (dtInicio == null ? null : Timestamp.valueOf(dtInicio)));
-            pstmt.setInt(6, pagamento.getMetodoPagamento().getNivel());
+            pstmt.setInt(6, pagamento.getMetodoPagamento().getId());
             pstmt.setInt(7, pagamento.getFkFabrica());
             pstmt.setInt(8, pagamento.getFkPlano());
 
@@ -123,7 +123,7 @@ public class PagamentoDAO extends DAO {
                     Timestamp dtInicioTimestamp = rs.getTimestamp("data_inicio");
                     LocalDateTime dtInicio = (dtInicioTimestamp == null ? null : dtInicioTimestamp.toLocalDateTime());
 
-                    MetodoPagamento metodoPagamento = MetodoPagamento.deNivel(rs.getInt("fk_metodopag"));
+                    MetodoPagamento metodoPagamento = MetodoPagamento.deId(rs.getInt("fk_metodopag"));
                     Integer fkFabrica = rs.getInt("fk_fabrica");
                     Integer fkPlano = rs.getInt("fk_plano");
 
@@ -180,7 +180,7 @@ public class PagamentoDAO extends DAO {
 
         if (!Objects.equals(metodoPagamento, original.getMetodoPagamento())) {
             sql.append("fk_metodopag = ?, ");
-            valores.add(metodoPagamento.getNivel());
+            valores.add(metodoPagamento.getId());
         }
 
         if (original.getFkFabrica() != fkFabrica) {
@@ -266,7 +266,7 @@ public class PagamentoDAO extends DAO {
                 Timestamp dtInicioTimestamp = rs.getTimestamp("data_inicio");
                 LocalDateTime dtInicio = (dtInicioTimestamp == null ? null : dtInicioTimestamp.toLocalDateTime());
 
-                MetodoPagamento metodoPagamento = MetodoPagamento.deNivel(rs.getInt("fk_metodopag"));
+                MetodoPagamento metodoPagamento = MetodoPagamento.deId(rs.getInt("fk_metodopag"));
                 int fkFabrica = rs.getInt("fk_fabrica");
                 int fkPlano = rs.getInt("fk_plano");
 

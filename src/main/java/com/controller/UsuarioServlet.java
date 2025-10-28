@@ -6,6 +6,7 @@ import com.dto.AtualizacaoUsuarioDTO;
 import com.dto.CadastroUsuarioDTO;
 import com.dto.UsuarioDTO;
 import com.exception.ExcecaoDeJSP;
+import com.model.Genero;
 import com.model.TipoAcesso;
 import com.utils.SenhaUtils;
 import jakarta.servlet.ServletException;
@@ -200,7 +201,7 @@ public class UsuarioServlet extends HttpServlet {
         UUID id = UUID.fromString(req.getParameter("id"));
         String nome = req.getParameter("nome").trim();
         String emailGerente = req.getParameter("email_gerente").trim();
-        String genero = req.getParameter("genero").trim();
+        Genero genero = Genero.parse(req.getParameter("genero").trim());
         String cargo = req.getParameter("cargo").trim();
         String email = req.getParameter("email").trim();
 

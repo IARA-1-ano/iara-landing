@@ -1,5 +1,6 @@
 package com.dto;
 
+import com.model.Genero;
 import com.model.TipoAcesso;
 
 import java.util.UUID;
@@ -11,14 +12,14 @@ public class AtualizacaoUsuarioDTO {
   private UUID id;
   private String nome;
   private String emailGerente;
-  private String genero;
+  private Genero genero;
   private String cargo;
   private String email;
   private TipoAcesso tipoAcesso;
   private Boolean status;
   private Integer fkFabrica;
 
-  public AtualizacaoUsuarioDTO(UUID id, String nome, String emailGerente, String genero, String cargo, String email, TipoAcesso tipoAcesso, Boolean status, Integer fkFabrica) {
+  public AtualizacaoUsuarioDTO(UUID id, String nome, String emailGerente, Genero genero, String cargo, String email, TipoAcesso tipoAcesso, Boolean status, Integer fkFabrica) {
     this.id = id;
     this.nome = nome;
     this.emailGerente = emailGerente;
@@ -54,11 +55,11 @@ public class AtualizacaoUsuarioDTO {
       this.emailGerente = emailGerente;
   }
 
-  public String getGenero() {
+  public Genero getGenero() {
       return genero;
   }
 
-  public void setGenero(String genero) {
+  public void setGenero(Genero genero) {
       this.genero = genero;
   }
 

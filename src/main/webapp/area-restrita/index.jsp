@@ -29,27 +29,27 @@
         <ul>
           <li class="active">
             <img class="imagem" src="/assets/crud/home_azul.svg" alt="icone home">
-            <a href="${pageContext.request.contextPath}/index.html">Página inicial</a>
+            <a href="${pageContext.request.contextPath}/area-restrita/index.jsp">Página inicial</a>
           </li>
           <li>
             <img class="imagem" src="/assets/crud/usuario.svg" alt="icone usuarios">
-            <a href="${pageContext.request.contextPath}/usuarios?action=read">Usuários</a>
+            <a href="${pageContext.request.contextPath}/area-restrita/usuarios">Usuários</a>
           </li>
           <li>
             <img class="imagem" src="/assets/crud/super_adm.svg" alt="icone super adm">
-            <a href="${pageContext.request.contextPath}/superadms?action=read">Super ADM</a>
+            <a href="${pageContext.request.contextPath}/area-restrita/superadms">Super ADM</a>
           </li>
           <li>
             <img class="imagem" src="/assets/crud/planos.svg" alt="icone planos">
-            <a href="${pageContext.request.contextPath}/planos?action=read">Planos</a>
+            <a href="${pageContext.request.contextPath}/area-restrita/planos">Planos</a>
           </li>
           <li>
             <img class="imagem" src="/assets/crud/fabricas.svg" alt="icone fábricas">
-            <a href="${pageContext.request.contextPath}/fabricas?action=read">Fábricas</a>
+            <a href="${pageContext.request.contextPath}/area-restrita/fabricas">Fábricas</a>
           </li>
           <li>
             <img class="imagem" src="/assets/crud/pagamento.svg" alt="icone pagamentos">
-            <a href="${pageContext.request.contextPath}/pagamentos?action=read">Pagamentos</a>
+            <a href="${pageContext.request.contextPath}/area-restrita/pagamentos">Pagamentos</a>
           </li>
           <li>
             <img class="imagem" src="/assets/crud/BI.svg" alt="icone BI">
