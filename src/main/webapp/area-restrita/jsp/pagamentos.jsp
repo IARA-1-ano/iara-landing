@@ -22,6 +22,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/planos.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/crud_geral.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -212,7 +213,7 @@
                                 <input type="hidden" name="action" value="update">
                                 <button id="editar" type="submit">Editar</button>
                             </form>
-                            <form action="${pageContext.request.contextPath}/area-restrita/pagamentos" method="post">
+                            <form action="${pageContext.request.contextPath}/area-restrita/pagamentos" method="post" onsubmit="confirmarDelete(event)">
                                 <input type="hidden" name="id" value="<%= pagamento.getId() %>">
                                 <input type="hidden" name="action" value="delete">
                                 <button id="deletar" type="submit">Deletar</button>

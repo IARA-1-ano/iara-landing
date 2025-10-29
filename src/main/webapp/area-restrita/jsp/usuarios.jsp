@@ -16,6 +16,7 @@
     <title>Landing Teste</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/usuarios.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/crud_geral.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -211,7 +212,7 @@
                                 <button id="editar" type="submit">Editar</button>
                             </form>
 
-                            <form action="${pageContext.request.contextPath}/area-restrita/usuarios" method="post">
+                            <form action="${pageContext.request.contextPath}/area-restrita/usuarios" method="post" onsubmit="confirmarDelete(event)">
                                 <input type="hidden" name="id" value="<%= u.getId() %>">
                                 <input type="hidden" name="action" value="delete">
                                 <button id="deletar" type="submit">Deletar</button>
