@@ -3,6 +3,7 @@ package com.dao;
 import com.dto.AtualizacaoUsuarioDTO;
 import com.dto.CadastroUsuarioDTO;
 import com.dto.UsuarioDTO;
+import com.model.Genero;
 import com.model.TipoAcesso;
 
 import java.sql.*;
@@ -137,7 +138,7 @@ public class UsuarioDAO extends DAO {
                     UUID id = UUID.fromString(rs.getString("id"));
                     String nome = rs.getString("nome");
                     String emailGerente = rs.getString("email_gerente");
-                    String genero = rs.getString("genero");
+                    Genero genero = Genero.parse(rs.getString("genero"));
 
                     Date dtNascimentoDate = rs.getDate("data_nascimento");
                     LocalDate dataNascimento = (dtNascimentoDate == null ? null : dtNascimentoDate.toLocalDate());
@@ -165,7 +166,7 @@ public class UsuarioDAO extends DAO {
     public void atualizar(AtualizacaoUsuarioDTO original, AtualizacaoUsuarioDTO alterado) throws SQLException {
         String nome = alterado.getNome();
         String emailGerente = alterado.getEmailGerente();
-        String genero = alterado.getGenero();
+        Genero genero = alterado.getGenero();
         String cargo = alterado.getCargo();
         String email = alterado.getEmail();
         TipoAcesso tipoAcesso = alterado.getTipoAcesso();
@@ -188,7 +189,7 @@ public class UsuarioDAO extends DAO {
 
         if (!Objects.equals(genero, original.getGenero())) {
             sql.append("genero = ?, ");
-            valores.add(genero);
+            valores.add(genero.name().toLowerCase());
         }
 
         if (!Objects.equals(cargo, original.getCargo())) {
@@ -302,7 +303,7 @@ public class UsuarioDAO extends DAO {
 
                 String nome = rs.getString("nome");
                 String emailGerente = rs.getString("email_gerente");
-                String genero = rs.getString("genero");
+                Genero genero = Genero.parse(rs.getString("genero"));
                 String cargo = rs.getString("cargo");
                 String email = rs.getString("email");
                 TipoAcesso tipoAcesso = TipoAcesso.deNivel(rs.getInt("tipo_acesso"));
@@ -342,7 +343,7 @@ public class UsuarioDAO extends DAO {
                 UUID id = UUID.fromString(rs.getString("id"));
                 String nome = rs.getString("nome");
                 String emailGerente = rs.getString("email_gerente");
-                String genero = rs.getString("genero");
+                Genero genero = Genero.parse(rs.getString("genero"));
 
                 Date temp = rs.getDate("data_nascimento");
                 LocalDate dataNascimento = (temp == null ? null : temp.toLocalDate());

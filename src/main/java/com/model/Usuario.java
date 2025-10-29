@@ -12,7 +12,7 @@ public class Usuario {
   private UUID id; // coluna: id
   private UUID idGerente; // coluna: id_gerente
   private String nome; // coluna: nome
-  private String genero; // coluna: genero
+  private Genero genero; // coluna: genero
   private LocalDate dataNascimento; // coluna: data_nascimento
   private String email; // coluna: email
   private String senha; // coluna: senha
@@ -22,7 +22,7 @@ public class Usuario {
   private Boolean status; // coluna: status
   private Integer fkFabrica; // coluna: fk_fabrica
 
-  public Usuario(UUID id, UUID idGerente, String nome, String genero, LocalDate dataNascimento, String email, String senha, String cargo, TipoAcesso tipoAcesso, LocalDateTime dataCriacao, Boolean status, Integer idFabrica) {
+  public Usuario(UUID id, UUID idGerente, String nome, Genero genero, LocalDate dataNascimento, String email, String senha, String cargo, TipoAcesso tipoAcesso, LocalDateTime dataCriacao, Boolean status, Integer idFabrica) {
     this.id = id;
     this.idGerente = idGerente;
     this.nome = nome;
@@ -61,11 +61,11 @@ public class Usuario {
     this.nome = nome;
   }
 
-  public String getGenero() {
+  public Genero getGenero() {
       return genero;
   }
 
-  public void setGenero(String genero) {
+  public void setGenero(Genero genero) {
       this.genero = genero;
   }
 

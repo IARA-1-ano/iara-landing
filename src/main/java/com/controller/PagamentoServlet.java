@@ -146,7 +146,7 @@ public class PagamentoServlet extends HttpServlet {
         LocalDate dataVencimento = LocalDate.parse(temp);
 
         temp = req.getParameter("data_inicio").trim();
-        LocalDateTime dataInicio = temp.isBlank() ? null : LocalDateTime.parse(temp);
+        LocalDateTime dataInicio = temp.isBlank() ? null : LocalDate.parse(temp).atStartOfDay();
 
         LocalDateTime dataPagamento = null;
         double valor;
@@ -159,7 +159,7 @@ public class PagamentoServlet extends HttpServlet {
                 throw ExcecaoDeJSP.campoNecessarioFaltante("Data do Pagamento");
             }
 
-            dataPagamento = LocalDateTime.parse(temp);
+            dataPagamento = LocalDate.parse(temp).atStartOfDay();
 
         }
 
@@ -167,8 +167,7 @@ public class PagamentoServlet extends HttpServlet {
         valor = Double.parseDouble(temp);
 
         temp = req.getParameter("metodo_pagamento").trim();
-        int metodoPagamentoNivel = Integer.parseInt(temp);
-        MetodoPagamento metodoPagamento = MetodoPagamento.deNivel(metodoPagamentoNivel);
+        MetodoPagamento metodoPagamento = MetodoPagamento.deId(Integer.parseInt(temp));
 
         temp = req.getParameter("fk_fabrica").trim();
         // Verifica se a fábrica foi preenchida
@@ -233,15 +232,15 @@ public class PagamentoServlet extends HttpServlet {
                 throw ExcecaoDeJSP.campoNecessarioFaltante("Data de Pagamento");
             }
 
-            dataPagamento = LocalDateTime.parse(temp);
+            dataPagamento = LocalDate.parse(temp).atStartOfDay();
         }
 
         temp = req.getParameter("data_inicio").trim();
-        LocalDateTime dataInicio = LocalDateTime.parse(temp);
+        LocalDateTime dataInicio = temp.isBlank() ? null : LocalDate.parse(temp).atStartOfDay();
 
-        temp = req.getParameter("fk_metodopag");
+        temp = req.getParameter("metodo_pagamento");
         int fkMetodopag = Integer.parseInt(temp);
-        MetodoPagamento metodoPagamento = MetodoPagamento.deNivel(fkMetodopag);
+        MetodoPagamento metodoPagamento = MetodoPagamento.deId(fkMetodopag);
 
         temp = req.getParameter("fk_fabrica").trim();
         int fkFabrica = Integer.parseInt(temp);

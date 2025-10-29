@@ -1,36 +1,53 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-  String erro = (String) request.getAttribute("erro");
+    String erro = (String) request.getAttribute("erro");
 %>
 <html lang="pt-BR">
+
 <head>
-  <title>Página de cadastro - Planos</title>
+    <title>Página de cadastro - Planos</title>
+    <link rel="stylesheet" href="/styles/cadastro-plano.css">
 </head>
+
 <body>
-<h1>Página de Teste para Cadastro</h1>
-<form action="${pageContext.request.contextPath}/area-restrita/planos" method="post">
-  <input type="hidden" name="action" value="create">
-  <label>Nome:</label>
-  <input type="text" name="nome" required>
-  <label>Valor:</label>
-  <input type="number" step="any" placeholder="R$" name="valor" required>
-  <label>Descrição:</label>
-  <input type="text" name="descricao" required>
-  <label>Anos:</label>
-  <input type="number" name="anos_duracao" min="0">
-  <label>Meses:</label>
-  <input type="number" name="meses_duracao" min="0">
-  <label>Dias:</label>
-  <input type="number" name="dias_duracao" min="0">
-  <input type="submit">
-</form>
-<a href="${pageContext.request.contextPath}/area-restrita/planos">Cancelar</a>
+<a href="${pageContext.request.contextPath}/area-restrita/planos" class="btn-sair">Cancelar</a>
+
+<main class="login-container">
+    <img src="/assets/Cadastro/fundo-cadastro.png" alt="Fundo decorativo" class="bg-particles">
+
+    <div class="left-side">
+        <img src="/assets/Cadastro/iara-direita_1-removebg-preview%201.png" alt="Mascote IARA" class="mascote">
+    </div>
+
+    <div class="right-side">
+        <div class="login-box">
+            <img src="/assets/IARA%20-%20Imagens%20Landing/Logo/logo-iara.png" alt="Logo IARA" class="logo">
+            <h2>Cadastre um Plano!</h2>
+            <form action="${pageContext.request.contextPath}/area-restrita/planos" method="post" class="LoginForm">
+                <input type="hidden" name="action" value="create">
+                <input type="text" name="nome" placeholder="Nome">
+                <input type="number" step="any" placeholder="Valor (R$)" name="valor">
+                <input type="text" name="descricao" placeholder="Descrição">
+                <input type="number" min="0" placeholder="Anos" name="anos_duracao">
+                <input type="number" min="0" placeholder="Meses" name="meses_duracao">
+                <input type="number" min="0" placeholder="Dias" name="dias_duracao">
+                <button type="submit">Cadastrar</button>
+            </form>
+
+        </div>
+    </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/javascript/script.js"></script>
+
 <%
-  if (erro != null && !erro.isBlank()) {
+    if (erro != null && !erro.isBlank()) {
 %>
 <p>
-  <%= erro %>
+    <%= erro %>
 </p>
 <% } %>
 </body>
+
 </html>
