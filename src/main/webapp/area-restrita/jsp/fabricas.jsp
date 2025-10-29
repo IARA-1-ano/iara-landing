@@ -168,6 +168,7 @@
                         <th>Empresa</th>
                         <th>Plano</th>
                         <th>Ramo</th>
+                        <th>Endereço</th>
                     </tr>
                     <% for (FabricaDTO f : fabricas) { %>
                     <tr>

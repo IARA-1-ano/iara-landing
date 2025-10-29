@@ -39,7 +39,7 @@
                 <input type="date" name="data_inicio" data-placeholder="Selecione a Data de Início">
                 <input type="date" name="data_vencimento" data-placeholder="Selecione a Data de Vencimento">
                 <input type="date" name="data_pagamento" data-placeholder="Selecione a Data do Pagamento">
-                <input type="number" name="valor" step="0.01" min="0" placeholder="R$">
+                <input type="number" name="valor" step="0.01" min="0" placeholder="Valor (em R$)">
 
                 <select name="metodo_pagamento">
                     <option value="" select>-- Selecione --</option>

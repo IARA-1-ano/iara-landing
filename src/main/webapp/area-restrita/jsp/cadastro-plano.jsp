@@ -26,7 +26,7 @@
             <form action="${pageContext.request.contextPath}/area-restrita/planos" method="post" class="LoginForm">
                 <input type="hidden" name="action" value="create">
                 <input type="text" name="nome" placeholder="Nome">
-                <input type="number" step="any" placeholder="R$" name="valor">
+                <input type="number" step="any" placeholder="Valor (R$)" name="valor">
                 <input type="text" name="descricao" placeholder="Descrição">
                 <input type="number" min="0" placeholder="Anos" name="anos_duracao">
                 <input type="number" min="0" placeholder="Meses" name="meses_duracao">

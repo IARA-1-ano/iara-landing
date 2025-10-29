@@ -166,6 +166,7 @@
                         <th>Nome</th>
                         <th>Valor</th>
                         <th>Descrição</th>
+                        <th>Duração</th>
                     </tr>
 
                     <% for (Plano plano : planos) { %>
