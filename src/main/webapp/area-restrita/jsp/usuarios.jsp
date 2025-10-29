@@ -154,7 +154,7 @@
                     <button id="limpaFiltro" type="submit">Limpar Filtros</button>
                 </form>
 
-                <a id="cadastrar" href="${pageContext.request.contextPath}/area-restrita/pagamentos?action=create">Cadastrar</a>
+                <a id="cadastrar" href="${pageContext.request.contextPath}/area-restrita/usuarios?action=create">Cadastrar</a>
             </div>
 
             <div id="tabela_usuarios">

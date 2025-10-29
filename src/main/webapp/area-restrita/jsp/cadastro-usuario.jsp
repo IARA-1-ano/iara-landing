@@ -33,7 +33,7 @@
                 <input type="text" pattern=".{8,}" title="A senha deve ter 8 ou mais caractéres" name="senha"
                        placeholder="Senha">
                 <input type="email" name="email_gerente" placeholder="Email do Gerente">
-                <input type="text" name="cargo">
+                <input type="text" name="cargo" placeholder="Cargo">
 
                 <select name="fk_fabrica" required>
                     <option value="" selected>Selecione</option>
