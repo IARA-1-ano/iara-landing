@@ -3,11 +3,12 @@
     display: flex;
     justify-content: space-between;
     min-height: calc(507.4px - 102px);
-    margin-left: 12%;
+    margin-left: 14%;
+    margin-top: -2%;
 }
 
 .texto {
-    max-width: 37%;
+    max-width: 43%;
     display: flex;
     flex-direction: column;
     gap: 28px;

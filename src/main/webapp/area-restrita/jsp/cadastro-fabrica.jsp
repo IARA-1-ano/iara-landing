@@ -31,7 +31,7 @@
 
                 <div class="form-container">
                     <div class="form-section">
-                        <h2>Dados da Fábrica</h2>
+                        <h2>Dados</h2>
                         <input type="text" name="nome" placeholder="Nome">
                         <input type="text" name="cnpj" pattern="\d{14}" title="CNPJ inválido" placeholder="CNPJ">
                         <input type="email" name="email" placeholder="Email para contato">
@@ -49,7 +49,7 @@
 
 
                     <div class="form-section">
-                        <h2>Endereço da Fábrica</h2>
+                        <h2>Endereço</h2>
                         <input type="text" name="cep" pattern="\d{8}" title="Insira um CEP válido" placeholder="CEP">
                         <input type="text" name="logradouro" placeholder="Logradouro">
                         <input type="number" name="numero" placeholder="n°">

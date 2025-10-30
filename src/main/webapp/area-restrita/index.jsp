@@ -80,7 +80,7 @@
           Registre, altere, delete e veja todos os dados.</p>
         <hr>
         <div id="slogan">
-          <img id="iarazinha" src="/assets/boneca/boneca.svg" alt="Iarazinha">
+          <img id="iarazinha" src="/assets/boneca/iara-direita.svg" alt="Iarazinha">
           <p id="frase">Quem conta com IARA<br> não perde a conta</p>
         </div>
       </div>
