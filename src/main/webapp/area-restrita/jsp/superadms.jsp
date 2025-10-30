@@ -154,7 +154,6 @@
             <div id="tabela_usuarios">
                 <table border="0">
                     <tr>
-                        <th>ID</th>
                         <th>Nome</th>
                         <th>Cargo</th>
                         <th>Email</th>
@@ -162,9 +161,6 @@
 
                     <% for (SuperAdmDTO adm : adms) { %>
                     <tr>
-                        <td>
-                            <%= adm.getId() %>
-                        </td>
                         <td>
                             <%= adm.getNome() %>
                         </td>
