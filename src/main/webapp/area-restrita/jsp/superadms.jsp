@@ -73,9 +73,6 @@
                 <h2>Gerenciar Super Administradores</h2>
                 <p>Gerencie e organize seus Super ADMs</p>
             </div>
-            <div id="foto_perfil">
-                <img id="perfil" src="/assets/crud/foto_perfil.svg" alt="foto de perfil">
-            </div>
         </div>
 
         <div id="tela_principal">

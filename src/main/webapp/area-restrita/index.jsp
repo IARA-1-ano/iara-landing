@@ -66,9 +66,6 @@
       <div id="local">
         <h2>Página Inicial</h2>
       </div>
-      <div id="foto_perfil">
-        <img id="perfil" src="/assets/crud/foto_perfil.svg" alt="foto de perfil">
-      </div>
     </div>
 
 

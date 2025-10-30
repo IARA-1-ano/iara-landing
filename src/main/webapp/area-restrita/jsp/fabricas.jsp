@@ -77,9 +77,6 @@
                 <h2>Gerenciar Fábricas</h2>
                 <p>Gerencie e organize suas Fábricas</p>
             </div>
-            <div id="foto_perfil">
-                <img id="perfil" src="/assets/crud/foto_perfil.svg" alt="foto de perfil">
-            </div>
         </div>
 
         <div id="tela_principal">
