@@ -89,7 +89,7 @@
                     </button>
 
                     <div class="filtro-card">
-                        <form action="${pageContext.request.contextPath}/area-restrita/pagamentos" method="get">
+                        <form action="${pageContext.request.contextPath}/area-restrita/usuarios" method="get">
                             <input type="hidden" name="action" value="read">
 
                             <div class="filtragem">
@@ -146,7 +146,7 @@
                     </div>
                 </div>
 
-                <form action="${pageContext.request.contextPath}/area-restrita/pagamentos" method="get">
+                <form action="${pageContext.request.contextPath}/area-restrita/usuarios" method="get">
                     <input type="hidden" name="action" value="read">
                     <button id="limpaFiltro" type="submit">Limpar Filtros</button>
                 </form>
