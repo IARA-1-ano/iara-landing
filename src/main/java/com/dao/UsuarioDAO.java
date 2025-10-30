@@ -227,8 +227,8 @@ public class UsuarioDAO extends DAO {
         sql.setLength(sql.length() - 2);
 
         // Adiciona a cláusula WHERE
-        sql.append(" WHERE email = ?");
-        valores.add(email);
+        sql.append(" WHERE id = ?");
+        valores.add(original.getId());
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
             for (int i = 0; i < valores.size(); i++) {
