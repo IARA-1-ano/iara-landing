@@ -82,9 +82,10 @@ body {
     padding: 40px;
     border-radius: 12px;
     width: 100%;
-    max-width: 700px;
+    max-width: 1000px;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
     text-align: center;
+    z-index: 0;
 }
 
 .logo {
@@ -140,6 +141,36 @@ button {
 
 button:hover {
     background: #1f285e;
+}
+
+#divisao1{
+    display: flex;
+}
+
+#coluna1_1{
+    display: flex;
+    flex-direction: column;
+}
+
+#coluna1_2{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+#divisao2{
+    display: flex;
+}
+
+#coluna2_1{
+    display: flex;
+    flex-direction: column;
+}
+
+#coluna2_2{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
 }
 
 @keyframes float {

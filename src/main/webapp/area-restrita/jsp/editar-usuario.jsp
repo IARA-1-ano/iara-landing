@@ -34,54 +34,58 @@
             </h2>
 
             <form action="${pageContext.request.contextPath}/area-restrita/usuarios" method="post">
-                <input type="hidden" name="action" value="update">
-                <input type="hidden" name="id" value="<%= usuario.getId() %>">
-                <label for="nome">Nome:</label>
-                <input type="text" id="nome" name="nome" value="<%= usuario.getNome() %>" placeholder="Novo nome">
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email" value="<%= usuario.getEmail() %>" placeholder="Novo email">
-                <label for="email_gerente">Email do Gerente:</label>
-                <input type="email" id="email_gerente" name="email_gerente" value="<%= usuario.getEmailGerente() %>"
-                       placeholder="Email do novo gerente">
-                <label for="cargo">Cargo:</label>
-                <input type="text" id="cargo" name="cargo" value="<%= usuario.getCargo() %>">
+                <div id="divisao">
+                    <div id="coluna1">
+                        <input type="hidden" name="action" value="update">
+                        <input type="hidden" name="id" value="<%= usuario.getId() %>">
+                        <label for="nome">Nome:</label>
+                        <input type="text" id="nome" name="nome" value="<%= usuario.getNome() %>" placeholder="Novo nome">
+                        <label for="email">Email:</label>
+                        <input type="text" id="email" name="email" value="<%= usuario.getEmail() %>" placeholder="Novo email">
+                        <label for="email_gerente">Email do Gerente:</label>
+                        <input type="email" id="email_gerente" name="email_gerente" value="<%= usuario.getEmailGerente() %>"
+                               placeholder="Email do novo gerente">
+                        <label for="cargo">Cargo:</label>
+                        <input type="text" id="cargo" name="cargo" value="<%= usuario.getCargo() %>">
+                    </div>
+                    <div id="coluna2">
+                        <label for="nivel_acesso">Nível de Acesso:</label>
+                        <select name="nivel_acesso" id="nivel_acesso">
+                            <% for (TipoAcesso t : TipoAcesso.values()) { %>
+                            <option value="<%= t.nivel() %>" <%=t == usuario.getTipoAcesso() ? "selected" : "" %>>
+                                <%= t.descricao() %>
+                            </option>
+                            <% } %>
+                        </select>
 
-                <label for="nivel_acesso">Nível de Acesso:</label>
-                <select name="nivel_acesso" id="nivel_acesso">
-                    <% for (TipoAcesso t : TipoAcesso.values()) { %>
-                    <option value="<%= t.nivel() %>" <%=t == usuario.getTipoAcesso() ? "selected" : "" %>>
-                        <%= t.descricao() %>
-                    </option>
-                    <% } %>
-                </select>
+                        <label id="status">Status:</label>
+                        <select name="status" id="status">
+                            <% for (boolean b : List.of(true, false)) { %>
+                            <option value="<%= b %>" <%=b == usuario.getStatus() ? "selected" : "" %>>
+                                <%= b ? "Ativo" : "Inativo" %>
+                            </option>
+                            <% } %>
+                        </select>
 
-                <label id="status">Status:</label>
-                <select name="status" id="status">
-                    <% for (boolean b : List.of(true, false)) { %>
-                    <option value="<%= b %>" <%=b == usuario.getStatus() ? "selected" : "" %>>
-                        <%= b ? "Ativo" : "Inativo" %>
-                    </option>
-                    <% } %>
-                </select>
+                        <label for="fk_fabrica">Fábrica:</label>
+                        <select name="fk_fabrica" id="fk_fabrica">
+                            <% for (int id : fabricas.keySet()) { %>
+                            <option value="<%= id %>" <%=id == usuario.getFkFabrica() ? "selected" : "" %>>
+                                <%= fabricas.get(id) %>
+                            </option>
+                            <% } %>
+                        </select>
 
-                <label for="fk_fabrica">Fábrica:</label>
-                <select name="fk_fabrica" id="fk_fabrica">
-                    <% for (int id : fabricas.keySet()) { %>
-                    <option value="<%= id %>" <%=id == usuario.getFkFabrica() ? "selected" : "" %>>
-                        <%= fabricas.get(id) %>
-                    </option>
-                    <% } %>
-                </select>
-
-                <label for="genero">Gênero:</label>
-                <select name="genero" id="genero">
-                    <% for (Genero g : Genero.values()) { %>
-                    <option value="<%= g.name().toLowerCase() %>" <%= g.equals(usuario.getGenero()) ? "selected" : "" %>>
-                        <%= g.toString() %>
-                    </option>
-                    <% } %>
-                </select>
-
+                        <label for="genero">Gênero:</label>
+                        <select name="genero" id="genero">
+                            <% for (Genero g : Genero.values()) { %>
+                            <option value="<%= g.name().toLowerCase() %>" <%= g.equals(usuario.getGenero()) ? "selected" : "" %>>
+                                <%= g.toString() %>
+                            </option>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
                 <button type="submit">Salvar</button>
             </form>
         </div>

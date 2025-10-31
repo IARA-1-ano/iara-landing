@@ -35,63 +35,70 @@
             </h2>
 
             <form action="${pageContext.request.contextPath}/area-restrita/pagamentos" method="post">
-                <input type="hidden" name="id" value="<%= pagamento.getId() %>">
-                <input type="hidden" name="action" value="update">
+                <div id="divisao">
+                    <div id="coluna1">
+                        <input type="hidden" name="id" value="<%= pagamento.getId() %>">
+                        <input type="hidden" name="action" value="update">
 
-                <label for="valor_pago">Valor Pago:</label>
-                <input type="number" id="valor_pago" placeholder="Digite o novo valor" name="valor_pago"
-                       value="<%= pagamento.getValor() %>">
+                        <label for="valor_pago">Valor Pago:</label>
+                        <input type="number" id="valor_pago" placeholder="Digite o novo valor" name="valor_pago"
+                               value="<%= pagamento.getValor() %>">
 
-                <label for="status">Status:</label>
-                <select id="status" name="status">
-                    <option value="" selected>Selecione o status do Pagamento</option>
-                    <option value="true" <%=pagamento.getStatus() ? "selected" : "" %>>Pagamento realizado ✅</option>
-                    <option value="false" <%=!pagamento.getStatus() ? "selected" : "" %>>Pagamento pendente ❌</option>
-                </select>
+                        <label for="status">Status:</label>
+                        <select id="status" name="status">
+                            <option value="" selected>Selecione o status do Pagamento</option>
+                            <option value="true" <%=pagamento.getStatus() ? "selected" : "" %>>Pagamento realizado ✅</option>
+                            <option value="false" <%=!pagamento.getStatus() ? "selected" : "" %>>Pagamento pendente ❌</option>
+                        </select>
 
-                <label for="data_inicio">Data de Ínicio:</label>
-                <input type="date" id="data_inicio" name="data_inicio" data-placeholder="Selecione a Data de Início"
-                       value="<%= pagamento.getDataInicio() %>">
+                        <label for="data_inicio">Data de Ínicio:</label>
+                        <input type="date" id="data_inicio" name="data_inicio" data-placeholder="Selecione a Data de Início"
+                               value="<%= pagamento.getDataInicio() %>">
 
-                <label for="data_vencimento">Data de Venciemento:</label>
-                <input type="date" id="data_vencimento" name="data_vencimento" data-placeholder="Selecione a Data de Vencimento"
-                       value="<%= pagamento.getDataVencimento() %>">
+                        <label for="data_vencimento">Data de Venciemento:</label>
+                        <input type="date" id="data_vencimento" name="data_vencimento" data-placeholder="Selecione a Data de Vencimento"
+                               value="<%= pagamento.getDataVencimento() %>">
+                    </div>
 
-                <label for="data_pagamento">Data de Pagamento:</label>
-                <input type="date" id="data_pagamento" name="data_pagamento" data-placeholder="Selecione a Data de Pagamento"
-                       value="<%= pagamento.getDataPagamento() %>">
+                    <div id="coluna2">
+                        <label for="data_pagamento">Data de Pagamento:</label>
+                        <input type="date" id="data_pagamento" name="data_pagamento" data-placeholder="Selecione a Data de Pagamento"
+                               value="<%= pagamento.getDataPagamento() %>">
 
-                <label for="metodo_pagamento">Método de Pagamento:</label>
-                <select id="metodo_pagamento" name="metodo_pagamento">
-                    <option value="" select>-- Selecione --</option>
+                        <label for="metodo_pagamento">Método de Pagamento:</label>
+                        <select id="metodo_pagamento" name="metodo_pagamento">
+                            <option value="" select>-- Selecione --</option>
 
-                    <% for (MetodoPagamento m : MetodoPagamento.values()) { %>
-                    <option value="<%= m.getId() %>" <%= m.equals(pagamento.getMetodoPagamento()) ? "selected" : "" %>>
-                        <%= m.toString() %>
-                    </option>
-                    <% } %>
-                </select>
+                            <% for (MetodoPagamento m : MetodoPagamento.values()) { %>
+                            <option value="<%= m.getId() %>" <%= m.equals(pagamento.getMetodoPagamento()) ? "selected" : "" %>>
+                                <%= m.toString() %>
+                            </option>
+                            <% } %>
+                        </select>
 
-                <label for="fk_fabrica">Fábrica:</label>
-                <select id="fk_fabrica" name="fk_fabrica">
-                    <option value="" selected>Selecione o ID da Fábrica que o pagamento refere-se</option>
-                    <% for (int id : fabricas.keySet()) { %>
-                    <option value="<%= id %>" <%=id == pagamento.getFkFabrica() ? "selected" : "" %>>
-                        <%= fabricas.get(id) %>
-                    </option>
-                    <% } %>
-                </select>
+                        <label for="fk_fabrica">Fábrica:</label>
+                        <select id="fk_fabrica" name="fk_fabrica">
+                            <option value="" selected>Selecione o ID da Fábrica que o pagamento refere-se</option>
+                            <% for (int id : fabricas.keySet()) { %>
+                            <option value="<%= id %>" <%=id == pagamento.getFkFabrica() ? "selected" : "" %>>
+                                <%= fabricas.get(id) %>
+                            </option>
+                            <% } %>
+                        </select>
 
-                <label for="fk_plano">Plano:</label>
-                <select id="fk_plano" name="fk_plano">
-                    <option value="" selected>-- Selecione --</option>
+                        <label for="fk_plano">Plano:</label>
+                        <select id="fk_plano" name="fk_plano">
+                            <option value="" selected>-- Selecione --</option>
 
-                    <% for (int id : planos.keySet()) { %>
-                    <option value="<%= id %>" <%= id == pagamento.getFkPlano() ? "selected" : "" %>>
-                        <%= planos.get(id) %>
-                    </option>
-                    <% } %>
-                </select>
+                            <% for (int id : planos.keySet()) { %>
+                            <option value="<%= id %>" <%= id == pagamento.getFkPlano() ? "selected" : "" %>>
+                                <%= planos.get(id) %>
+                            </option>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+
                 <button type="submit">Salvar</button>
             </form>
         </div>

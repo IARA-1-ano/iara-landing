@@ -85,9 +85,10 @@ body {
     padding: 40px;
     border-radius: 12px;
     width: 100%;
-    max-width: 700px;
+    max-width: 800px;
     box-shadow: 0px 6px 12px rgba(0,0,0,0.1);
     text-align: center;
+    z-index: 0;
 }
 
 .logo {
@@ -163,6 +164,21 @@ button:hover {
     width: 70%;
     max-width: 350px;
     animation: float 3s ease-in-out infinite;
+}
+
+#divisao{
+    display: flex;
+}
+
+#coluna1{
+    display: flex;
+    flex-direction: column;
+}
+
+#coluna2{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
 }
 
 @keyframes float {
