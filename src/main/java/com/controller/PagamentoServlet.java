@@ -193,14 +193,20 @@ public class PagamentoServlet extends HttpServlet {
     // === READ ===
     private List<Pagamento> listarPagamentos(HttpServletRequest req) throws SQLException, ClassNotFoundException {
         String campoFiltro = req.getParameter("campo_filtro");
-
-        if (Objects.equals(campoFiltro, "statusP")) {
-            campoFiltro = "status";
-        }
-
         String campoSequencia = req.getParameter("campo_sequencia");
         String direcaoSequencia = req.getParameter("direcao_sequencia");
-        String valorFiltro = req.getParameter("valor_filtro");
+        String valorFiltro = null;
+
+        // Verifica se o campo é 'null' para realizar o switch. Se for 'null', o valor do filtro fica como nulo também
+        if (campoFiltro != null){
+
+            // Resgata um parâmetro diferente de acordo com o nome do campo de filtragem
+            switch (campoFiltro) {
+                case "fk_plano" -> valorFiltro = req.getParameter("valor_plano");
+                case "fk_fabrica" -> valorFiltro = req.getParameter("valor_fabrica");
+                default -> valorFiltro = req.getParameter("valor_filtro");
+            }
+        }
 
         try (PagamentoDAO dao = new PagamentoDAO()) {
             Object valorFiltroConvertido = dao.converterValor(campoFiltro, valorFiltro);
