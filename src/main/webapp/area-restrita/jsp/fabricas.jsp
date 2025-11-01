@@ -2,10 +2,12 @@
 <%@ page import="static com.dao.FabricaDAO.camposFiltraveis" %>
 <%@ page import="com.model.DirecaoOrdenacao" %>
 <%@ page import="com.dto.FabricaDTO" %>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
     List<FabricaDTO> fabricas = (List<FabricaDTO>) request.getAttribute("fabricas");
+    Map<Integer, String> planos = (Map<Integer, String>) request.getAttribute("planos");
 %>
 
 <!DOCTYPE html>
@@ -100,23 +102,31 @@
                             <div class="filtragem">
                                 <label>
                                     Campo de Filtragem:
-                                    <select id="campoFiltro" name="campo_filtro">
+                                    <select id="campoFiltro" name="campo_filtro" onchange="tipoCampoFabrica()">
                                         <option value="" selected>Nenhum selecionado</option>
-                                        <option value="id" data-type="number">ID</option>
                                         <option value="nome_unidade" data-type="text">Nome</option>
                                         <option value="cnpj" data-type="number">CNPJ</option>
-                                        <option value="statusF" data-type="select">Status</option>
+                                        <option value="status" data-type="select">Status</option>
                                         <option value="nome_industria" data-type="text">Empresa</option>
                                         <option value="ramo" data-type="text">Ramo</option>
+                                        <option value="plano" data-type="plano">Plano</option>
                                     </select>
                                 </label>
                             </div>
 
-                            <div class="filtragem">
-                                <label>
-                                    Valor Filtrado:
-                                    <input type="text" name="valor_filtro">
-                                </label>
+                            <div class="filtragem" id="filtroGeral">
+                                <label for="valorFiltro">Valor Filtrado:</label>
+                                <input type="text" id="valorFiltro" name="valor_filtro">
+                            </div>
+
+                            <div class="filtragem" style="display: none">
+                                <label for="valorPlano">Valor Filtrado:</label>
+                                <select name="valor_plano" id="valorPlano">
+                                    <option value="">--- SELECIONE ---</option>
+                                    <% for (String plano : planos.values()) {%>
+                                    <option value="<%=plano%>"><%=plano%></option>
+                                    <% } %>
+                                </select>
                             </div>
 
                             <div class="filtragem">
