@@ -42,10 +42,12 @@
                         <div id="divisao1">
                             <div id="divisao1_1">
                                 <label for="nome">Nome da Fábrica:</label>
-                                <input type="text" id="nome" name="nome" value="<%= f.getNomeUnidade() %>" placeholder="Nome">
+                                <input type="text" id="nome" name="nome" value="<%= f.getNomeUnidade() %>"
+                                       placeholder="Nome">
                                 <label for="cnpj">CNPJ:</label>
-                                <input type="text" id="cnpj" name="cnpj" value="<%= f.getCnpj() %>" pattern="\d{14}" title="CNPJ inválido"
-                                       placeholder="XX.XXX.XXX/YYYY-ZZ">
+                                <input type="text" id="cnpj" name="cnpj" value="<%= f.getCnpj() %>" pattern="\d{14}"
+                                       title="CNPJ inválido"
+                                       placeholder="00.000.000/0000-00">
                                 <label for="email">Email Corporativo:</label>
                                 <input type="email" id="email" name="email" value="<%= f.getEmailCorporativo() %>"
                                        placeholder="Email para contato">
@@ -55,7 +57,8 @@
 
                             <div id="coluna1_2">
                                 <label for="nome_empresa">Nome da Empresa:</label>
-                                <input type="text" id="nome_empresa" name="nome_empresa" value="<%= f.getNomeIndustria() %>"
+                                <input type="text" id="nome_empresa" name="nome_empresa"
+                                       value="<%= f.getNomeIndustria() %>"
                                        placeholder="Nome da empresa">
 
                                 <label for="status">Status:</label>
@@ -88,21 +91,27 @@
                                        title="Insira um CEP válido"
                                        placeholder="XXXXX-XXX">
                                 <label for="logradouro">Logradouro:</label>
-                                <input type="text" id="logradouro" name="logradouro" value="<%= e.getRua() %>" placeholder="Logradouro">
+                                <input type="text" id="logradouro" name="logradouro" value="<%= e.getRua() %>"
+                                       placeholder="Logradouro">
                                 <label for="numero">Número:</label>
-                                <input type="number" id="numero" name="numero" value="<%= e.getNumero() %>" placeholder="n°">
+                                <input type="number" id="numero" name="numero" value="<%= e.getNumero() %>"
+                                       placeholder="n°">
                                 <label for="complemento">Complemento:</label>
-                                <input type="text" id="complemento" name="complemento" value="<%= complemento != null ? complemento : "" %>"
+                                <input type="text" id="complemento" name="complemento"
+                                       value="<%= complemento != null ? complemento : "" %>"
                                        placeholder="Complemento">
                             </div>
 
                             <div id="coluna2_2">
                                 <label for="estado">Estado:</label>
-                                <input type="text" id="estado" name="estado" value="<%= e.getEstado() %>" placeholder="Estado">
+                                <input type="text" id="estado" name="estado" value="<%= e.getEstado() %>"
+                                       placeholder="Estado">
                                 <label for="bairro">Bairro:</label>
-                                <input type="text" id="bairro" name="bairro" value="<%= e.getBairro() %>" placeholder="Bairro">
+                                <input type="text" id="bairro" name="bairro" value="<%= e.getBairro() %>"
+                                       placeholder="Bairro">
                                 <label for="cidade">Cidade:</label>
-                                <input type="text" id="cidade" name="cidade" value="<%= e.getCidade() %>" placeholder="Cidade">
+                                <input type="text" id="cidade" name="cidade" value="<%= e.getCidade() %>"
+                                       placeholder="Cidade">
                             </div>
                         </div>
                     </div>
