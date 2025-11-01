@@ -3,28 +3,31 @@
 <html lang="pt-BR">
 
 <head>
-  <title>Landing Teste</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/area-restrita.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/crud_geral.css">
+  <title>Home | Área Restrita</title>
+  <link rel="stylesheet" href="/styles/area-restrita.css">
+  <link rel="stylesheet" href="/styles/crud_geral.css">
+  <link rel="icon" href="../assets/IARA%20-%20Imagens%20Landing/Geral/Mascote%20IARA.png">
 </head>
 
 <body>
 <main>
   <div id="sidebar">
     <aside>
-
+      
       <div id="logout">
-        <img class="imagem" src="${pageContext.request.contextPath}/assets/crud/pagina_anterior.svg" alt="simbolo de sair">
+        <img class="imagem" src="${pageContext.request.contextPath}/assets/crud/pagina_anterior.svg"
+             alt="simbolo de sair">
         <form action="${pageContext.request.contextPath}/login-handler" method="post">
           <input type="hidden" name="action" value="logout">
           <button type="submit">Sair</button>
         </form>
       </div>
-
+      
       <div id="imagem">
-        <img id="logo-iara" src="${pageContext.request.contextPath}/assets/imagens gerais/iara_maior.svg" alt="Logo IARA">
+        <img id="logo-iara" src="${pageContext.request.contextPath}/assets/imagens gerais/iara_maior.svg"
+             alt="Logo IARA">
       </div>
-
+      
       <nav>
         <ul>
           <li class="active">
@@ -36,7 +39,8 @@
             <a href="${pageContext.request.contextPath}/area-restrita/usuarios">Usuários</a>
           </li>
           <li>
-            <img class="imagem" src="${pageContext.request.contextPath}/assets/crud/super_adm.svg" alt="icone super adm">
+            <img class="imagem" src="${pageContext.request.contextPath}/assets/crud/super_adm.svg"
+                 alt="icone super adm">
             <a href="${pageContext.request.contextPath}/area-restrita/superadms">Super ADM</a>
           </li>
           <li>
@@ -48,30 +52,24 @@
             <a href="${pageContext.request.contextPath}/area-restrita/fabricas">Fábricas</a>
           </li>
           <li>
-            <img class="imagem" src="${pageContext.request.contextPath}/assets/crud/pagamento.svg" alt="icone pagamentos">
+            <img class="imagem" src="${pageContext.request.contextPath}/assets/crud/pagamento.svg"
+                 alt="icone pagamentos">
             <a href="${pageContext.request.contextPath}/area-restrita/pagamentos">Pagamentos</a>
-          </li>
-          <li>
-            <img class="imagem" src="${pageContext.request.contextPath}/assets/crud/BI.svg" alt="icone BI">
-            <a href="https://iara-area-restrita.vercel.app/home/dashboard">BI</a>
           </li>
         </ul>
       </nav>
     </aside>
   </div>
-
+  
   <div id="fundo_tela">
-
+    
     <div id="topo">
       <div id="local">
         <h2>Página Inicial</h2>
       </div>
-      <div id="foto_perfil">
-        <img id="perfil" src="${pageContext.request.contextPath}/assets/crud/foto_perfil.svg" alt="foto de perfil">
-      </div>
     </div>
-
-
+    
+    
     <div id="tela_principal">
       <div id="conteudo">
         <h1 id="titulo">BEM-VINDO</h1>
@@ -80,12 +78,12 @@
           Registre, altere, delete e veja todos os dados.</p>
         <hr>
         <div id="slogan">
-          <img id="iarazinha" src="${pageContext.request.contextPath}/assets/boneca/boneca.svg" alt="Iarazinha">
+          <img id="iarazinha" src="${pageContext.request.contextPath}/assets/boneca/iara-direita.svg" alt="Iarazinha">
           <p id="frase">Quem conta com IARA<br> não perde a conta</p>
         </div>
       </div>
     </div>
-
+  
   </div>
 
 </main>

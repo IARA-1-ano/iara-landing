@@ -23,18 +23,18 @@ import java.util.Objects;
 @WebServlet("/area-restrita/pagamentos")
 public class PagamentoServlet extends HttpServlet {
 
-    private static final String PAGINA_PRINCIPAL = "jsp/pagamentos.jsp";
-    private static final String PAGINA_CADASTRO = "jsp/cadastro-pagamento.jsp";
-    private static final String PAGINA_EDICAO = "jsp/editar-pagamento.jsp";
-    private static final String PAGINA_ERRO = "/html/erro.html";
+  private static final String PAGINA_PRINCIPAL = "jsp/pagamentos.jsp";
+  private static final String PAGINA_CADASTRO = "jsp/cadastro-pagamento.jsp";
+  private static final String PAGINA_EDICAO = "jsp/editar-pagamento.jsp";
+  private static final String PAGINA_ERRO = "/html/erro.html";
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
-        action = (action == null ? "read" : action.trim());
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String action = req.getParameter("action");
+    action = (action == null ? "read" : action.trim());
 
-        boolean erro = true;
-        String destino = null;
+    boolean erro = true;
+    String destino = null;
 
         try {
             switch (action) {

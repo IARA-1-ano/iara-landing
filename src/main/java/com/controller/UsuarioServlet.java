@@ -8,6 +8,7 @@ import com.dto.UsuarioDTO;
 import com.exception.ExcecaoDeJSP;
 import com.model.Genero;
 import com.model.TipoAcesso;
+import com.utils.RegexUtils;
 import com.utils.SenhaUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
