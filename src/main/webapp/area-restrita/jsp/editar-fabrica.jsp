@@ -4,87 +4,123 @@
 <%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    String erro = (String) request.getAttribute("erro");
-    Fabrica f = (Fabrica) request.getAttribute("fabrica");
-    Endereco e = (Endereco) request.getAttribute("endereco");
-    Map<Integer, String> planos = (Map<Integer, String>) request.getAttribute("planos");
-    String complemento = e.getComplemento();
+  String erro = (String) request.getAttribute("erro");
+  Fabrica f = (Fabrica) request.getAttribute("fabrica");
+  Endereco e = (Endereco) request.getAttribute("endereco");
+  Map<Integer, String> planos = (Map<Integer, String>) request.getAttribute("planos");
+  String complemento = e.getComplemento();
 %>
 <html lang="pt-BR">
 
 <head>
-    <title>Title</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/editar-fabrica.css">
+  <title>Editar Fábrica | Área Restrita</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/editar-fabrica.css">
+  <link rel="icon"
+        href="${pageContext.request.contextPath}/assets/IARA%20-%20Imagens%20Landing/Geral/Mascote%20IARA.png">
 </head>
 
 <body>
 <a href="${pageContext.request.contextPath}/area-restrita/fabricas" class="btn-sair">Cancelar</a>
 
 <main class="login-container">
-    <img src="${pageContext.request.contextPath}/assets/Cadastro/fundo-cadastro.png" alt="Fundo decorativo" class="bg-particles">
-
-    <div class="left-side">
-        <img src="${pageContext.request.contextPath}/assets/Cadastro/iara-direita_1-removebg-preview%201.png" alt="Mascote IARA" class="mascote">
-    </div>
-
-    <div class="right-side">
-        <div class="login-box">
-            <img src="${pageContext.request.contextPath}/assets/IARA%20-%20Imagens%20Landing/Logo/logo-iara.png" alt="Logo IARA" class="logo">
-            <h2>Editar Fábrica - ID: <%= f.getId() %>
-            </h2>
-
-            <form action="${pageContext.request.contextPath}/area-restrita/fabricas" method="post">
-                <div class="form-container">
-                    <div class="form-section">
-                        <h2>Dados da Fábrica</h2>
-                        <input type="text" name="nome" value="<%= f.getNomeUnidade() %>" placeholder="Nome">
-                        <input type="text" name="cnpj" value="<%= f.getCnpj() %>" pattern="\d{14}" title="CNPJ inválido"
-                               placeholder="CNPJ">
-                        <input type="email" name="email" value="<%= f.getEmailCorporativo() %>"
-                               placeholder="Email para contato">
-                        <input type="text" name="ramo" value="<%= f.getRamo() %>" placeholder="Ramo">
-                        <input type="text" name="nome_empresa" value="<%= f.getNomeIndustria() %>"
-                               placeholder="Nome da empresa">
-
-                        <select name="status">
-                            <% for (Boolean b : List.of(true, false)) { %>
-                            <option value="<%= b.toString() %>" <%=b ? "selected" : "" %>>
-                                <%= b ? "Ativa" : "Inativa" %>
-                            </option>
-                            <% } %>
-                        </select>
-
-                        <select name="id_plano">
-                            <% for (int idPlano : planos.keySet()) { %>
-                            <option value="<%= idPlano %>" <%=idPlano == f.getIdPlano() ? "selected" : "" %>>
-                                <%= planos.get(idPlano) %>
-                            </option>
-                            <% } %>
-                        </select>
-                    </div>
-
-                    <div class="form-section">
-                        <h2>Endereço da Fábrica</h2>
-                        <input type="text" name="cep" value="<%= e.getCep() %>" pattern="\d{8}"
-                               title="Insira um CEP válido"
-                               placeholder="CEP">
-                        <input type="text" name="logradouro" value="<%= e.getRua() %>" placeholder="Logradouro">
-                        <input type="number" name="numero" value="<%= e.getNumero() %>" placeholder="n°">
-                        <input type="text" name="complemento" value="<%= complemento != null ? complemento : "" %>"
-                               placeholder="Complemento">
-                        <input type="text" name="estado" value="<%= e.getEstado() %>" placeholder="Estado">
-                        <input type="text" name="bairro" value="<%= e.getBairro() %>" placeholder="Bairro">
-                        <input type="text" name="cidade" value="<%= e.getCidade() %>" placeholder="Cidade">
-                    </div>
-                </div>
-
-                <input type="hidden" name="id_fabrica" value="<%= f.getId() %>">
-                <input type="hidden" name="action" value="update">
-
-                <button type="submit" style="display: block">Salvar</button>
-            </form>
+  <img src="${pageContext.request.contextPath}/assets/Cadastro/fundo-cadastro.png" alt="Fundo decorativo"
+       class="bg-particles">
+  
+  <div class="left-side">
+    <img src="${pageContext.request.contextPath}/assets/Cadastro/iara-direita_1-removebg-preview%201.png"
+         alt="Mascote IARA" class="mascote">
+  </div>
+  
+  <div class="right-side">
+    <div class="login-box">
+      <div id="container_logo">
+        <img src="${pageContext.request.contextPath}/assets/IARA%20-%20Imagens%20Landing/Logo/logo-iara.png"
+             alt="Logo IARA" class="logo">
+      </div>
+      <h2 id="titulo">Editar Fábrica</h2>
+      
+      <form action="${pageContext.request.contextPath}/area-restrita/fabricas" method="post">
+        <div class="form-container">
+          <div class="form-section">
+            <h2>Dados da Fábrica</h2>
+            <div id="divisao1">
+              <div id="divisao1_1">
+                <label for="nome">Nome da Fábrica:</label>
+                <input type="text" id="nome" name="nome" value="<%= f.getNomeUnidade() %>" placeholder="Nome">
+                <label for="cnpj">CNPJ:</label>
+                <input type="text" id="cnpj" name="cnpj" value="<%= f.getCnpj() %>" pattern="\d{14}"
+                       title="CNPJ inválido"
+                       placeholder="XX.XXX.XXX/YYYY-ZZ">
+                <label for="email">Email Corporativo:</label>
+                <input type="email" id="email" name="email" value="<%= f.getEmailCorporativo() %>"
+                       placeholder="Email para contato">
+                <label for="ramo">Ramo:</label>
+                <input type="text" id="ramo" name="ramo" value="<%= f.getRamo() %>" placeholder="Ramo">
+              </div>
+              
+              <div id="coluna1_2">
+                <label for="nome_empresa">Nome da Empresa:</label>
+                <input type="text" id="nome_empresa" name="nome_empresa" value="<%= f.getNomeIndustria() %>"
+                       placeholder="Nome da empresa">
+                
+                <label for="status">Status:</label>
+                <select id="status" name="status">
+                  <% for (Boolean b : List.of(true, false)) { %>
+                  <option value="<%= b.toString() %>" <%=b ? "selected" : "" %>>
+                    <%= b ? "Ativa" : "Inativa" %>
+                  </option>
+                  <% } %>
+                </select>
+                
+                <label for="id_plano">Plano:</label>
+                <select id="id_plano" name="id_plano">
+                  <% for (int idPlano : planos.keySet()) { %>
+                  <option value="<%= idPlano %>" <%=idPlano == f.getIdPlano() ? "selected" : "" %>>
+                    <%= planos.get(idPlano) %>
+                  </option>
+                  <% } %>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-section">
+            <h2>Endereço da Fábrica</h2>
+            <div id="divisao2">
+              <div id="coluna2_1">
+                <label for="cep">CEP:</label>
+                <input type="text" id="cep" name="cep" value="<%= e.getCep() %>" pattern="\d{8}"
+                       title="Insira um CEP válido"
+                       placeholder="XXXXX-XXX">
+                <label for="logradouro">Logradouro:</label>
+                <input type="text" id="logradouro" name="logradouro" value="<%= e.getRua() %>" placeholder="Logradouro">
+                <label for="numero">Número:</label>
+                <input type="number" id="numero" name="numero" value="<%= e.getNumero() %>" placeholder="n°">
+                <label for="complemento">Complemento:</label>
+                <input type="text" id="complemento" name="complemento"
+                       value="<%= complemento != null ? complemento : "" %>"
+                       placeholder="Complemento">
+              </div>
+              
+              <div id="coluna2_2">
+                <label for="estado">Estado:</label>
+                <input type="text" id="estado" name="estado" value="<%= e.getEstado() %>" placeholder="Estado">
+                <label for="bairro">Bairro:</label>
+                <input type="text" id="bairro" name="bairro" value="<%= e.getBairro() %>" placeholder="Bairro">
+                <label for="cidade">Cidade:</label>
+                <input type="text" id="cidade" name="cidade" value="<%= e.getCidade() %>" placeholder="Cidade">
+              </div>
+            </div>
+          </div>
         </div>
+        
+        <input type="hidden" name="id_fabrica" value="<%= f.getId() %>">
+        <input type="hidden" name="action" value="update">
+        
+        <button type="submit" style="display: block">Salvar</button>
+      </form>
     </div>
+  </div>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -92,7 +128,7 @@
 
 <% if (erro != null && !erro.isBlank()) { %>
 <p>
-    <%= erro %>
+  <%= erro %>
 </p>
 <% } %>
 
