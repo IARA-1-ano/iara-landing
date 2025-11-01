@@ -163,6 +163,9 @@ public class UsuarioServlet extends HttpServlet {
     // --- Validação de dados ---
     if (nome.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("nome");
+
+    } else if (nome.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("nome");
     }
 
     if (!RegexUtils.validarEmail(emailGerente)) {
@@ -170,14 +173,23 @@ public class UsuarioServlet extends HttpServlet {
 
     } else if (emailGerente.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("email do gerente");
+
+    } else if (emailGerente.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("email do gerente");
     }
 
     if (genero.length() > 20) {
       throw ExcecaoDeJSP.textoMuitoLongo("gênero");
+
+    } else if (genero.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("gênero");
     }
 
     if (cargo.length() > 50) {
       throw ExcecaoDeJSP.textoMuitoLongo("cargo");
+
+    } else if (cargo.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("cargo");
     }
 
     if (!RegexUtils.validarEmail(email)) {
@@ -185,6 +197,9 @@ public class UsuarioServlet extends HttpServlet {
 
     } else if (email.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("email do gerente");
+
+    } else if (email.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("email");
     }
 
     if (senhaOriginal.length() < 8) {
@@ -245,6 +260,47 @@ public class UsuarioServlet extends HttpServlet {
     temp = req.getParameter("nivel_acesso").trim();
     int nivelAcessoInt = Integer.parseInt(temp);
     TipoAcesso tipoAcesso = TipoAcesso.deNivel(nivelAcessoInt);
+    if (nome.length() > 100) {
+      throw ExcecaoDeJSP.textoMuitoLongo("nome");
+
+    } else if (nome.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("nome");
+    }
+
+    if (!RegexUtils.validarEmail(emailGerente)) {
+      throw ExcecaoDeJSP.valorInvalido("email do gerente");
+
+    } else if (emailGerente.length() > 100) {
+      throw ExcecaoDeJSP.textoMuitoLongo("email do gerente");
+
+    } else if (emailGerente.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("email do gerente");
+    }
+
+    if (genero == null || genero.toString().isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("gênero");
+
+    } else if (genero.toString().length() > 20) {
+      throw ExcecaoDeJSP.textoMuitoLongo("gênero");
+    }
+
+    if (cargo.length() > 50) {
+      throw ExcecaoDeJSP.textoMuitoLongo("cargo");
+
+    } else if (cargo.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("cargo");
+    }
+
+    if (!RegexUtils.validarEmail(email)) {
+      throw ExcecaoDeJSP.valorInvalido("email do gerente");
+
+    } else if (email.length() > 100) {
+      throw ExcecaoDeJSP.textoMuitoLongo("email do gerente");
+
+    } else if (email.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("email");
+    }
+
 
     AtualizacaoUsuarioDTO alteracoes = new AtualizacaoUsuarioDTO(id, nome, emailGerente, genero, cargo, email, tipoAcesso, status, fkFabrica);
 

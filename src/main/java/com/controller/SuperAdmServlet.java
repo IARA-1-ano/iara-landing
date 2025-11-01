@@ -125,10 +125,16 @@ public class SuperAdmServlet extends HttpServlet {
     // --- Validação de dados ---
     if (nome.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("nome");
+
+    } else if (nome.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("nome");
     }
 
     if (cargo.length() > 50) {
       throw ExcecaoDeJSP.textoMuitoLongo("cargo");
+
+    } else if (cargo.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("cargo");
     }
 
     if (!RegexUtils.validarEmail(email)) {
@@ -136,6 +142,9 @@ public class SuperAdmServlet extends HttpServlet {
 
     } else if (email.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("email");
+
+    } else if (email.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("email");
     }
 
     if (senhaOriginal.length() < 8) {
@@ -188,10 +197,16 @@ public class SuperAdmServlet extends HttpServlet {
     // --- Validação de dados ---
     if (nome.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("nome");
+
+    } else if (nome.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("nome");
     }
 
     if (cargo.length() > 50) {
       throw ExcecaoDeJSP.textoMuitoLongo("cargo");
+
+    } else if (cargo.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("cargo");
     }
 
     if (!RegexUtils.validarEmail(email)) {
@@ -199,6 +214,9 @@ public class SuperAdmServlet extends HttpServlet {
 
     } else if (email.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("email");
+
+    } else if (email.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("email");
     }
 
     SuperAdm alterado = new SuperAdm(id, nome, cargo, email, novaSenha);

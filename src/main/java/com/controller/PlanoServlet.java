@@ -152,6 +152,9 @@ public class PlanoServlet extends HttpServlet {
 
     if (nome.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("nome");
+
+    } else if (nome.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("nome");
     }
 
     if (valor < 0) {
@@ -234,6 +237,9 @@ public class PlanoServlet extends HttpServlet {
 
     if (nome.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("nome");
+
+    } else if (nome.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("nome");
     }
 
     if (valor < 0) {

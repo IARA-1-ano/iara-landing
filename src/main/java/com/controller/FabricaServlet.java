@@ -147,10 +147,16 @@ public class FabricaServlet extends HttpServlet {
     // --- Validação de dados: Endereço
     if (!RegexUtils.validarCep(cep)) {
       throw ExcecaoDeJSP.valorInvalido("cep");
+
+    } else if (cep.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("cep");
     }
 
     if (rua.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("logradouro");
+
+    } else if (rua.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("logradouro");
     }
 
     if (complemento.length() > 100) {
@@ -159,14 +165,23 @@ public class FabricaServlet extends HttpServlet {
 
     if (bairro.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("bairro");
+
+    } else if (bairro.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("bairro");
     }
 
     if (cidade.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("cidade");
+
+    } else if (cidade.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("cidade");
     }
 
     if (estado.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("estado");
+
+    } else if (estado.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("estado");
     }
 
 
@@ -185,6 +200,9 @@ public class FabricaServlet extends HttpServlet {
     // --- Validação de dados: Fábrica ---
     if (nome.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("nome");
+
+    } else if (nome.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("nome");
     }
 
     if (!RegexUtils.validarEmail(email)) {
@@ -192,10 +210,16 @@ public class FabricaServlet extends HttpServlet {
 
     } else if (email.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("email");
+
+    } else if (email.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("email");
     }
 
     if (!RegexUtils.validarCnpj(cnpj)) {
       throw ExcecaoDeJSP.valorInvalido("cnpj");
+
+    } else if (cnpj.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("cnpj");
     }
 
     if (empresa.length() > 150) {
@@ -204,6 +228,9 @@ public class FabricaServlet extends HttpServlet {
 
     if (ramo.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("ramo");
+
+    } else if (ramo.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("ramo");
     }
 
     CadastroFabricaDTO credenciais = new CadastroFabricaDTO(nome, cnpj, email, empresa, ramo, idPlano);
@@ -265,6 +292,9 @@ public class FabricaServlet extends HttpServlet {
     // --- Validação de dados: Fábrica ---
     if (nome.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("nome");
+
+    } else if (nome.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("nome");
     }
 
     if (!RegexUtils.validarEmail(email)) {
@@ -272,10 +302,16 @@ public class FabricaServlet extends HttpServlet {
 
     } else if (email.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("email");
+
+    } else if (email.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("email");
     }
 
     if (!RegexUtils.validarCnpj(cnpj)) {
       throw ExcecaoDeJSP.valorInvalido("cnpj");
+
+    } else if (cnpj.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("cnpj");
     }
 
     if (nomeEmpresa.length() > 150) {
@@ -284,6 +320,9 @@ public class FabricaServlet extends HttpServlet {
 
     if (ramo.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("ramo");
+
+    } else if (ramo.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("ramo");
     }
 
     // Instância do Model
@@ -304,10 +343,16 @@ public class FabricaServlet extends HttpServlet {
     // --- Validação de dados: Endereço
     if (!RegexUtils.validarCep(cep)) {
       throw ExcecaoDeJSP.valorInvalido("cep");
+
+    } else if (cep.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("cep");
     }
 
     if (rua.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("logradouro");
+
+    } else if (rua.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("logradouro");
     }
 
     if (complemento.length() > 100) {
@@ -316,14 +361,23 @@ public class FabricaServlet extends HttpServlet {
 
     if (bairro.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("bairro");
+
+    } else if (bairro.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("bairro");
     }
 
     if (cidade.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("cidade");
+
+    } else if (cidade.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("cidade");
     }
 
     if (estado.length() > 100) {
       throw ExcecaoDeJSP.textoMuitoLongo("estado");
+
+    } else if (estado.isBlank()) {
+      throw ExcecaoDeJSP.campoNecessarioFaltante("estado");
     }
 
     Endereco endAlterado = new Endereco(null, cep, numero, rua, complemento, idFabrica, bairro, cidade, estado);
