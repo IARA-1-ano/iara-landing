@@ -154,10 +154,12 @@ table {
 
 #editar{
     color: green;
+    transition: transform 0.3s ease-in-out;
 }
 
 #deletar{
     color: red;
+    transition: transform 0.3s ease-in-out;
 }
 
 #titulo {
@@ -193,6 +195,7 @@ table {
     border-radius: 10px;
     text-align: center;
     align-content: center;
+    transition: transform 0.3s ease-in-out;
 }
 
 .filtro-card {
@@ -255,5 +258,9 @@ li a:hover {
 }
 
 #deletar:hover {
+    transform: scale(1.2);
+}
+
+.btn-filtro:hover {
     transform: scale(1.2);
 }
