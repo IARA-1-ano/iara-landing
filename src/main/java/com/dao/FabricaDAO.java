@@ -15,7 +15,6 @@ import java.util.*;
 public class FabricaDAO extends DAO {
     // Constante dos campos utilizados para ordenação e filtragem da listagem dos dados
     public static final Map<String, String> camposFiltraveis = Map.of(
-            "id", "Id",
             "cnpj_unidade", "CNPJ",
             "nome_unidade", "Nome da Unidade",
             "status", "Status",

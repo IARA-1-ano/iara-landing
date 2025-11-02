@@ -15,7 +15,6 @@ import java.util.Objects;
 public class PagamentoDAO extends DAO {
     // Constante dos campos utilizados para ordenação e filtragem da listagem dos dados
     public static final Map<String, String> camposFiltraveis = Map.of(
-            "id", "Id",
             "valor", "Valor Pago",
             "status", "Status",
             "tipo_pagamento", "Tipo de Pagamento",

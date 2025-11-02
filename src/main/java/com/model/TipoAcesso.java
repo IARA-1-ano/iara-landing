@@ -43,6 +43,6 @@ public enum TipoAcesso {
 
   @Override
   public String toString() {
-    return StringUtils.capitalize(name());
+    return StringUtils.capitalize(name()).replace("cif", "CIF");
   }
 }

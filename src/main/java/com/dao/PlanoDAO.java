@@ -7,14 +7,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class PlanoDAO extends DAO {
     // Constante dos campos utilizados para ordenação e filtragem da listagem dos dados
     public static final Map<String, String> camposFiltraveis = Map.of(
-            "id", "Id",
             "nome", "Nome",
             "valor", "Valor",
             "descricao", "Descrição",
