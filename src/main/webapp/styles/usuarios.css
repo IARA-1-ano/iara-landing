@@ -152,11 +152,11 @@ table {
     text-align: left;
 }
 
-#editar{
+#editar {
     color: green;
 }
 
-#deletar{
+#deletar {
     color: red;
 }
 
@@ -215,11 +215,11 @@ table {
     text-align: left;
 }
 
-.filtragem{
+.filtragem {
     padding: 10px;
 }
 
-#filtrar{
+#filtrar {
     background-color: #323c8d;
     color: #FFFFFF;
     padding: 10px;
@@ -230,7 +230,7 @@ table {
     margin-top: 2px;
 }
 
-#limpaFiltro{
+#limpaFiltro {
     font-size: 20px;
     color: #FFFFFF;
     background-color: #383F91;
@@ -248,4 +248,12 @@ li a:hover {
 
 #sair:hover {
     color: #2B3078;
+}
+
+#editar:hover {
+    transform: scale(1.2);
+}
+
+#deletar:hover {
+    transform: scale(1.2);
 }

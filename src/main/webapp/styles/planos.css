@@ -96,10 +96,6 @@ h2 {
     color: #2B3078;
 }
 
-p {
-    color: #2B3078;
-}
-
 #fundo_tela {
     background-color: #F8F8F8;
     align-content: center;
@@ -277,4 +273,12 @@ li a:hover {
 
 #sair:hover {
     color: #2B3078;
+}
+
+#editar:hover {
+    transform: scale(1.2);
+}
+
+#deletar:hover {
+    transform: scale(1.2);
 }
