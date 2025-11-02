@@ -79,12 +79,13 @@ body {
 
 .login-box {
     background: white;
-    padding: 40px;
+    padding: 40px 30px;
     border-radius: 12px;
     width: 100%;
     max-width: 1000px;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
     z-index: 0;
+    overflow: hidden;
 }
 
 .logo {
@@ -100,20 +101,22 @@ body {
 
 .form-container {
     display: flex;
-    gap: 20px;
+    gap: 70px;
+    justify-content: space-between;
 }
 
 .form-section {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .form-section h2 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-bottom: 15px;
     color: #2E3B84;
-    text-align: left;
+    text-align: center;
 }
 
 input,
@@ -122,7 +125,9 @@ select {
     border: 1px solid #ccc;
     border-radius: 6px;
     margin-bottom: 15px;
-    font-size: 1rem;
+    font-size: 0.9rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 button {
@@ -142,42 +147,55 @@ button:hover {
     background: #1f285e;
 }
 
-#divisao1{
-    display: flex;
-}
-
-#coluna1_1{
+/* DADOS DA FÁBRICA - COLUNA ÚNICA */
+#divisao1 {
     display: flex;
     flex-direction: column;
+    gap: 0;
 }
 
-#coluna1_2{
+#coluna1_1, #coluna1_2 {
     display: flex;
     flex-direction: column;
-    margin-left: 20px;
+    width: 100%;
 }
 
-#divisao2{
-    display: flex;
+/* Remove a divisão em duas colunas para dados da fábrica */
+#coluna1_2 {
+    margin-left: 0;
 }
 
-#coluna2_1{
-    display: flex;
-    flex-direction: column;
-}
-
-#coluna2_2{
+/* ENDEREÇO DA FÁBRICA - AGORA TAMBÉM EM COLUNA ÚNICA */
+#divisao2 {
     display: flex;
     flex-direction: column;
-    margin-left: 20px;
+    gap: 0;
 }
 
-#titulo{
+#coluna2_1, #coluna2_2 {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+#coluna2_2 {
+    margin-left: 0;
+}
+
+#titulo {
     text-align: center;
 }
 
-#container_logo{
+#container_logo {
     text-align: center;
+}
+
+label {
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: 500;
+    display: block;
 }
 
 @keyframes float {
@@ -215,5 +233,19 @@ button:hover {
 
     .form-container {
         flex-direction: column;
+        gap: 30px;
+    }
+
+    .login-box {
+        padding: 30px 20px;
+    }
+
+    #divisao1, #divisao2 {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    #coluna2_1, #coluna2_2 {
+        width: 100%;
     }
 }

@@ -96,10 +96,6 @@ h2 {
     color: #2B3078;
 }
 
-p {
-    color: #2B3078;
-}
-
 #fundo_tela {
     background-color: #F8F8F8;
     align-content: center;
@@ -156,12 +152,14 @@ table {
     text-align: left;
 }
 
-#editar{
+#editar {
     color: green;
+    transition: transform 0.3s ease-in-out;
 }
 
-#deletar{
+#deletar {
     color: red;
+    transition: transform 0.3s ease-in-out;
 }
 
 #titulo {
@@ -197,6 +195,7 @@ table {
     border-radius: 10px;
     text-align: center;
     align-content: center;
+    transition: transform 0.3s ease-in-out;
 }
 
 .filtro-card {
@@ -219,11 +218,11 @@ table {
     text-align: left;
 }
 
-.filtragem{
+.filtragem {
     padding: 10px;
 }
 
-#filtrar{
+#filtrar {
     background-color: #323c8d;
     color: #FFFFFF;
     padding: 10px;
@@ -234,7 +233,7 @@ table {
     margin-top: 2px;
 }
 
-#limpaFiltro{
+#limpaFiltro {
     font-size: 20px;
     color: #FFFFFF;
     background-color: #383F91;
@@ -244,4 +243,24 @@ table {
     border-radius: 10px;
     text-align: center;
     align-content: center;
+}
+
+li a:hover {
+    color: #2B3078;
+}
+
+#sair:hover {
+    color: #2B3078;
+}
+
+#editar:hover {
+    transform: scale(1.2);
+}
+
+#deletar:hover {
+    transform: scale(1.2);
+}
+
+.btn-filtro:hover {
+    transform: scale(1.2);
 }

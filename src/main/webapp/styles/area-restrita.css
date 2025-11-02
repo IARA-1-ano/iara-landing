@@ -120,16 +120,16 @@ h2{
     color: #2B3078;
 }
 
-p{
-    color: #2B3078;
-}
-
 #titulo{
+    font-weight: normal;
+    color: #383F91;
     font-size: 80px;
     padding: 5px;
 }
 
 #subtitulo{
+    font-weight: normal;
+    color: #383F91;
     font-size: 27px;
     padding: 20px;
 }
@@ -158,4 +158,16 @@ p{
 
 #frase{
     font-size: 24px;
+}
+
+a:hover {
+    color: #2B3078;
+}
+
+li:hover {
+    color: #2B3078;
+}
+
+button:hover {
+    color: #2B3078;
 }
