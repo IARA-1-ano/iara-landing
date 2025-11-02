@@ -1,0 +1,111 @@
+package com.dto;
+
+import com.model.Genero;
+import com.model.TipoAcesso;
+
+import java.util.UUID;
+
+// DTO da tabela usuario utilizado para a atualização de usuários registrados no banco de dados
+
+public class AtualizacaoUsuarioDTO {
+
+  private UUID id;
+  private String nome;
+  private String emailGerente;
+  private Genero genero;
+  private String cargo;
+  private String email;
+  private TipoAcesso tipoAcesso;
+  private Boolean status;
+  private Integer fkFabrica;
+
+  public AtualizacaoUsuarioDTO(UUID id, String nome, String emailGerente, Genero genero, String cargo, String email, TipoAcesso tipoAcesso, Boolean status, Integer fkFabrica) {
+    this.id = id;
+    this.nome = nome;
+    this.emailGerente = emailGerente;
+    this.genero = genero;
+    this.cargo = cargo;
+    this.email = email;
+    this.tipoAcesso = tipoAcesso;
+    this.status = status;
+    this.fkFabrica = fkFabrica;
+  }
+
+  public UUID getId() {
+      return id;
+  }
+
+  public void setId(UUID id) {
+     this.id = id;
+  }
+
+  public String getNome() {
+    return nome;
+  }
+
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
+
+  public String getEmailGerente() {
+      return emailGerente;
+  }
+
+  public void setEmailGerente(String emailGerente) {
+      this.emailGerente = emailGerente;
+  }
+
+  public Genero getGenero() {
+      return genero;
+  }
+
+  public void setGenero(Genero genero) {
+      this.genero = genero;
+  }
+
+  public String getCargo() {
+      return cargo;
+  }
+
+  public void setCargo(String cargo) {
+      this.cargo = cargo;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public TipoAcesso getTipoAcesso() {
+    return tipoAcesso;
+  }
+
+  public void setTipoAcesso(TipoAcesso accessLevel) {
+    this.tipoAcesso = accessLevel;
+  }
+
+  public Boolean getStatus() {
+    return status;
+  }
+
+  public void setStatus(Boolean status) {
+    this.status = status;
+  }
+
+  public Integer getFkFabrica() {
+    return fkFabrica;
+  }
+
+  public void setFkFabrica(Integer fkFabrica) {
+    this.fkFabrica = fkFabrica;
+  }
+
+  @Override
+  public String toString() {
+    return "AtualizacaoUsuarioDTO{id=%s, nome='%s', emailGerente='%s', genero='%s', cargo='%s', email='%s', tipoAcesso=%s, status=%b, fkFabrica=%d}"
+        .formatted(id, nome, emailGerente, genero, cargo, email, tipoAcesso, status, fkFabrica);
+  }
+}

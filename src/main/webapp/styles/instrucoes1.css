@@ -1,0 +1,204 @@
+/* INTRODUCTION */
+#introducao {
+    display: flex;
+    justify-content: space-between;
+    min-height: calc(507.4px - 102px);
+    margin-left: 14%;
+    margin-top: -2%;
+}
+
+.texto {
+    max-width: 43%;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    margin: auto;
+}
+
+#introducao h1 {
+    font-size: 3rem;
+    color: #12131A;
+    opacity: 0.82;
+}
+
+#introducao p {
+    font-size: 1.3rem;
+    color: #333333;
+    opacity: 0.5;
+    text-align: justify;
+}
+
+#introducao .imagem img {
+    max-width: 85%;
+    height: auto;
+}
+
+
+/* STEPS */
+
+#passos{
+    width: 90%;
+    margin: auto;
+    margin-top: 11%;
+}
+
+#passos .subtitulo {
+    color: #383F91;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+}
+
+#passos h2 {
+    font-size: 2.5rem;
+    color: #12131A;
+}
+
+#todos_passos {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+
+#passos h3{
+    color: #12131A;
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+#todos_passos p{
+    color: #000000;
+    opacity: 0.5;
+    font-size: 1.3rem;
+    width: 80%;
+    margin: auto;
+}
+
+#passos img{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.etapa{
+    margin-bottom: 200px;
+}
+
+/* USERS */
+
+#usuarios{
+    width: 90%;
+    margin: auto;
+}
+
+#usuarios .subtitulo {
+    color: #383F91;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+}
+
+#usuarios h2 {
+    font-size: 2.5rem;
+    color: #12131A;
+}
+
+#todos_usuarios {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+
+#usuarios h3{
+    margin-top: 40px;
+    color: #12131A;
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+    width: 80%;
+    margin: auto;
+}
+
+#usuarios img{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+/* RESPONSIVITY */
+@media screen and (max-width: 1170px) {
+    .imagem {
+        display: none;
+    }
+
+    #btn-principal {
+        width: 100%;
+        align-items: center;
+    }
+
+    #introducao{
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    #passos{
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        padding: 40px 20px;
+    }
+
+    #todos_passos{
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        padding: 40px 20px;
+    }
+
+    #usuarios{
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        padding: 40px 20px;
+    }
+
+    #todos_usuarios{
+        display: grid;
+        grid-template-areas:
+            "usuario1 usuario2"
+            "usuario3 usuario4";
+
+    }
+
+    #todos_usuarios #usuario1{
+        grid-area: usuario1;
+    }
+
+    #todos_usuarios #usuario2{
+        grid-area: usuario2;
+    }
+
+    #todos_usuarios #usuario3{
+        grid-area: usuario3;
+    }
+
+    #todos_usuarios #usuario4{
+        grid-area: usuario4;
+    }
+
+    .etapa{
+        margin-bottom: 50px;
+    }
+
+    .texto_responsivo {
+        max-width: 100%;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .trabalhador{
+        width: 120px;
+    }
+}
